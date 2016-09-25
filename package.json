@@ -1,0 +1,50 @@
+{
+  "name": "react-moment",
+  "version": "0.0.1",
+  "main": "dist/index.js",
+  "description": "React component for the moment date library.",
+  "author": {
+    "name": "Sean Hickey",
+    "web": "http://headzoo.io"
+  },
+  "license": "MIT",
+  "keywords": [
+    "react-component",
+    "react",
+    "moment",
+    "date",
+    "time"
+  ],
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/headzoo/react-moment.git"
+  },
+  "peerDependencies": {
+    "react": "^15.0.0",
+    "moment": "^2.15.1"
+  },
+  "devDependencies": {
+    "babel-core": "^6.14.0",
+    "babel-jest": "^15.0.0",
+    "babel-loader": "^6.2.5",
+    "babel-preset-es2015": "^6.14.0",
+    "babel-preset-react": "^6.11.1",
+    "babel-preset-stage-2": "^6.13.0",
+    "jest": "^15.1.1",
+    "moment": "^2.15.1",
+    "react": "^15.3.1",
+    "react-addons-test-utils": "^15.3.1",
+    "react-dom": "^15.3.1",
+    "rimraf": "^2.5.4",
+    "webpack": "^1.13.2"
+  },
+  "dependencies": {},
+  "scripts": {
+    "build": "npm run clean && webpack",
+    "clean": "rimraf ./dist/index.js",
+    "test": "jest"
+  },
+  "jest": {
+    "testRegex": "/tests/.*"
+  }
+}

@@ -1,0 +1,299 @@
+react-moment
+============
+React component for the [moment](http://momentjs.com/) date library.
+
+* [Installing](#installing)
+* [Quick Start](#quick-start)
+* [Formatting](#formatting)
+* [Parsing Dates](#parsing-dates)
+* [From Now](#form-now)
+* [From](#from)
+* [To Now](#to-now)
+* [To](#to)
+* [Unix Timestamps](#unix-timestamps)
+* [Other Props](#other-props)
+
+
+### Installing
+
+```sh
+npm install --save moment react-moment
+```
+
+
+### Quick Start
+
+```js
+import React  from 'react';
+import Moment from 'react-moment';
+
+exports default class MyComponent {
+    render() {
+        let dateToFormat = '1976-04-19T12:59-0500';
+        <Moment>{dateToFormat}</Moment>
+    }
+}
+```
+
+Outputs:
+
+```html
+<time>Mon Apr 19 1976 12:59:00 GMT-0500</time>
+```
+
+The above example could also be written this way if you prefer to pass
+the date using an attribute rather than as a child to `<Moment>`.
+
+```js
+import React  from 'react';
+import Moment from 'react-moment';
+
+exports default class MyComponent {
+    render() {
+        let dateToFormat = '1976-04-19T12:59-0500';
+        <Moment date={dateToFormat} />
+    }
+}
+```
+
+The date value may be a string, object, array, or `Date` instance.
+
+```js
+import React  from 'react';
+import Moment from 'react-moment';
+
+exports default class MyComponent {
+    render() {
+        let dateToFormat = new Date('1976-04-19T12:59-0500');
+        <Moment date={dateToFormat} />
+    }
+}
+```
+
+
+### Formatting
+
+```js
+import React  from 'react';
+import Moment from 'react-moment';
+
+exports default class MyComponent {
+    render() {
+        <Moment format="YYYY/MM/DD">1976-04-19T12:59-0500</Moment>
+    }
+}
+```
+
+Outputs:
+
+```html
+<time>1976/04/19</time>
+```
+
+
+### Parsing Dates
+
+Moment can parse most standard date formats. Use the `parse` attribute
+to tell moment how to parse the given date when non-standard.
+
+```js
+import React  from 'react';
+import Moment from 'react-moment';
+
+exports default class MyComponent {
+    render() {
+        <Moment parse="YYYY-MM-DD HH:mm">1976-04-19 12:59</Moment>
+    }
+}
+```
+
+
+### From Now
+
+```js
+import React  from 'react';
+import Moment from 'react-moment';
+
+exports default class MyComponent {
+    render() {
+        <Moment fromNow>1976-04-19T12:59-0500</Moment>
+    }
+}
+```
+
+Outputs:
+
+```html
+<time>40 years</time>
+```
+
+```js
+import React  from 'react';
+import Moment from 'react-moment';
+
+exports default class MyComponent {
+    render() {
+        <Moment fromNow ago>1976-04-19T12:59-0500</Moment>
+    }
+}
+```
+
+Outputs:
+
+```html
+<time>40 years ago</time>
+```
+
+
+### From
+
+```js
+import React  from 'react';
+import Moment from 'react-moment';
+
+exports default class MyComponent {
+    render() {
+        <Moment from="2015-04-19">1976-04-19T12:59-0500</Moment>
+    }
+}
+```
+
+Outputs:
+
+```html
+<time>39 years</time>
+```
+
+```js
+import React  from 'react';
+import Moment from 'react-moment';
+
+exports default class MyComponent {
+    render() {
+        <Moment from="2015-04-19" ago>1976-04-19T12:59-0500</Moment>
+    }
+}
+```
+
+Outputs:
+
+```html
+<time>39 years ago</time>
+```
+
+
+### To Now
+
+```js
+import React  from 'react';
+import Moment from 'react-moment';
+
+exports default class MyComponent {
+    render() {
+        <Moment toNow>1976-04-19T12:59-0500</Moment>
+    }
+}
+```
+
+Outputs:
+
+```html
+<time>40 years</time>
+```
+
+```js
+import React  from 'react';
+import Moment from 'react-moment';
+
+exports default class MyComponent {
+    render() {
+        <Moment toNow ago>1976-04-19T12:59-0500</Moment>
+    }
+}
+```
+
+Outputs:
+
+```html
+<time>in 40 years</time>
+```
+
+
+### To
+
+```js
+import React  from 'react';
+import Moment from 'react-moment';
+
+exports default class MyComponent {
+    render() {
+        <Moment to="2015-04-19">1976-04-19T12:59-0500</Moment>
+    }
+}
+```
+
+Outputs:
+
+```html
+<time>39 years</time>
+```
+
+```js
+import React  from 'react';
+import Moment from 'react-moment';
+
+exports default class MyComponent {
+    render() {
+        <Moment to="2015-04-19" ago>1976-04-19T12:59-0500</Moment>
+    }
+}
+```
+
+Outputs:
+
+```html
+<time>in 39 years</time>
+```
+
+
+### Unix Timestamps
+
+```js
+import React  from 'react';
+import Moment from 'react-moment';
+
+exports default class MyComponent {
+    render() {
+        let unixTimestamp = 198784740;
+        <Moment unix>{unixTimestamp}</Moment>
+    }
+}
+```
+
+Outputs:
+
+```html
+<time>Mon Apr 19 1976 12:59:00 GMT-0500</time>
+```
+
+
+### Other Props
+
+Any other properties are passed to the `<time>` element.
+
+```js
+import React  from 'react';
+import Moment from 'react-moment';
+
+exports default class MyComponent {
+    render() {
+        <Moment className="datetime" aria-hidden={true}>1976-04-19T12:59-0500</Moment>
+    }
+}
+```
+
+Outputs:
+
+```html
+<time class="datetime" aria-hidden="true">Mon Apr 19 1976 12:59:00 GMT-0500</time>
+```
