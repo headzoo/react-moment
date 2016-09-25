@@ -27,7 +27,7 @@ npm install --save moment react-moment
 import React  from 'react';
 import Moment from 'react-moment';
 
-exports default class MyComponent {
+exports default class MyComponent extends React.Component {
     render() {
         let dateToFormat = '1976-04-19T12:59-0500';
         <Moment>{dateToFormat}</Moment>
@@ -48,7 +48,7 @@ the date using an attribute rather than as a child to `<Moment>`.
 import React  from 'react';
 import Moment from 'react-moment';
 
-exports default class MyComponent {
+exports default class MyComponent extends React.Component {
     render() {
         let dateToFormat = '1976-04-19T12:59-0500';
         <Moment date={dateToFormat} />
@@ -62,7 +62,7 @@ The date value may be a string, object, array, or `Date` instance.
 import React  from 'react';
 import Moment from 'react-moment';
 
-exports default class MyComponent {
+exports default class MyComponent extends React.Component {
     render() {
         let dateToFormat = new Date('1976-04-19T12:59-0500');
         <Moment date={dateToFormat} />
@@ -77,7 +77,7 @@ exports default class MyComponent {
 import React  from 'react';
 import Moment from 'react-moment';
 
-exports default class MyComponent {
+exports default class MyComponent extends React.Component {
     render() {
         <Moment format="YYYY/MM/DD">1976-04-19T12:59-0500</Moment>
     }
@@ -100,7 +100,7 @@ to tell moment how to parse the given date when non-standard.
 import React  from 'react';
 import Moment from 'react-moment';
 
-exports default class MyComponent {
+exports default class MyComponent extends React.Component {
     render() {
         <Moment parse="YYYY-MM-DD HH:mm">1976-04-19 12:59</Moment>
     }
@@ -114,7 +114,7 @@ exports default class MyComponent {
 import React  from 'react';
 import Moment from 'react-moment';
 
-exports default class MyComponent {
+exports default class MyComponent extends React.Component {
     render() {
         <Moment fromNow>1976-04-19T12:59-0500</Moment>
     }
@@ -131,7 +131,7 @@ Outputs:
 import React  from 'react';
 import Moment from 'react-moment';
 
-exports default class MyComponent {
+exports default class MyComponent extends React.Component {
     render() {
         <Moment fromNow ago>1976-04-19T12:59-0500</Moment>
     }
@@ -151,7 +151,7 @@ Outputs:
 import React  from 'react';
 import Moment from 'react-moment';
 
-exports default class MyComponent {
+exports default class MyComponent extends React.Component {
     render() {
         <Moment from="2015-04-19">1976-04-19T12:59-0500</Moment>
     }
@@ -168,7 +168,7 @@ Outputs:
 import React  from 'react';
 import Moment from 'react-moment';
 
-exports default class MyComponent {
+exports default class MyComponent extends React.Component {
     render() {
         <Moment from="2015-04-19" ago>1976-04-19T12:59-0500</Moment>
     }
@@ -188,7 +188,7 @@ Outputs:
 import React  from 'react';
 import Moment from 'react-moment';
 
-exports default class MyComponent {
+exports default class MyComponent extends React.Component {
     render() {
         <Moment toNow>1976-04-19T12:59-0500</Moment>
     }
@@ -205,7 +205,7 @@ Outputs:
 import React  from 'react';
 import Moment from 'react-moment';
 
-exports default class MyComponent {
+exports default class MyComponent extends React.Component {
     render() {
         <Moment toNow ago>1976-04-19T12:59-0500</Moment>
     }
@@ -225,7 +225,7 @@ Outputs:
 import React  from 'react';
 import Moment from 'react-moment';
 
-exports default class MyComponent {
+exports default class MyComponent extends React.Component {
     render() {
         <Moment to="2015-04-19">1976-04-19T12:59-0500</Moment>
     }
@@ -242,7 +242,7 @@ Outputs:
 import React  from 'react';
 import Moment from 'react-moment';
 
-exports default class MyComponent {
+exports default class MyComponent extends React.Component {
     render() {
         <Moment to="2015-04-19" ago>1976-04-19T12:59-0500</Moment>
     }
@@ -262,7 +262,7 @@ Outputs:
 import React  from 'react';
 import Moment from 'react-moment';
 
-exports default class MyComponent {
+exports default class MyComponent extends React.Component {
     render() {
         let unixTimestamp = 198784740;
         <Moment unix>{unixTimestamp}</Moment>
@@ -285,7 +285,7 @@ Any other properties are passed to the `<time>` element.
 import React  from 'react';
 import Moment from 'react-moment';
 
-exports default class MyComponent {
+exports default class MyComponent extends React.Component {
     render() {
         <Moment className="datetime" aria-hidden={true}>1976-04-19T12:59-0500</Moment>
     }
