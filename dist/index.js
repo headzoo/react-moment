@@ -54,7 +54,7 @@ return /******/ (function(modules) { // webpackBootstrap
 /* 0 */
 /***/ function(module, exports, __webpack_require__) {
 
-	'use strict';
+	/* WEBPACK VAR INJECTION */(function(global) {'use strict';
 
 	Object.defineProperty(exports, "__esModule", {
 	    value: true
@@ -86,32 +86,53 @@ return /******/ (function(modules) { // webpackBootstrap
 	    _inherits(Moment, _React$Component);
 
 	    function Moment() {
+	        var _ref;
+
+	        var _temp, _this, _ret;
+
 	        _classCallCheck(this, Moment);
 
-	        return _possibleConstructorReturn(this, (Moment.__proto__ || Object.getPrototypeOf(Moment)).apply(this, arguments));
+	        for (var _len = arguments.length, args = Array(_len), _key = 0; _key < _len; _key++) {
+	            args[_key] = arguments[_key];
+	        }
+
+	        return _ret = (_temp = (_this = _possibleConstructorReturn(this, (_ref = Moment.__proto__ || Object.getPrototypeOf(Moment)).call.apply(_ref, [this].concat(args))), _this), _this.state = {
+	            content: ''
+	        }, _temp), _possibleConstructorReturn(_this, _ret);
 	    }
 
 	    _createClass(Moment, [{
-	        key: 'render',
-	        value: function render() {
-	            var _props = this.props;
-	            var date = _props.date;
-	            var parse = _props.parse;
-	            var format = _props.format;
-	            var fromNow = _props.fromNow;
-	            var from = _props.from;
-	            var toNow = _props.toNow;
-	            var to = _props.to;
-	            var calendar = _props.calendar;
-	            var ago = _props.ago;
-	            var utc = _props.utc;
-	            var unix = _props.unix;
+	        key: 'componentWillMount',
+	        value: function componentWillMount() {
+	            this.generateContent();
+	        }
+	    }, {
+	        key: 'componentDidMount',
+	        value: function componentDidMount() {
+	            var _this2 = this;
 
-	            var other = _objectWithoutProperties(_props, ['date', 'parse', 'format', 'fromNow', 'from', 'toNow', 'to', 'calendar', 'ago', 'utc', 'unix']);
+	            this.interval = global.setInterval(function () {
+	                _this2.generateContent();
+	            }, 60000);
+	        }
+	    }, {
+	        key: 'componentWillUnmount',
+	        value: function componentWillUnmount() {
+	            clearInterval(this.interval);
+	        }
+	    }, {
+	        key: 'getDatetime',
+	        value: function getDatetime() {
+	            var _props = this.props,
+	                date = _props.date,
+	                parse = _props.parse,
+	                utc = _props.utc,
+	                unix = _props.unix;
 
 	            date = date || this.props.children;
 
 	            var datetime = null;
+
 	            if (utc) {
 	                datetime = _moment2.default.utc(date, parse);
 	            } else if (unix) {
@@ -119,6 +140,24 @@ return /******/ (function(modules) { // webpackBootstrap
 	            } else {
 	                datetime = (0, _moment2.default)(date, parse);
 	            }
+
+	            return datetime;
+	        }
+	    }, {
+	        key: 'generateContent',
+	        value: function generateContent() {
+	            var _props2 = this.props,
+	                format = _props2.format,
+	                fromNow = _props2.fromNow,
+	                from = _props2.from,
+	                toNow = _props2.toNow,
+	                to = _props2.to,
+	                calendar = _props2.calendar,
+	                ago = _props2.ago,
+	                unix = _props2.unix;
+
+
+	            var datetime = this.getDatetime();
 
 	            var content = '';
 	            if (format) {
@@ -136,6 +175,29 @@ return /******/ (function(modules) { // webpackBootstrap
 	            } else {
 	                content = datetime.toString();
 	            }
+
+	            this.setState({ content: content });
+	        }
+	    }, {
+	        key: 'render',
+	        value: function render() {
+	            var _props3 = this.props,
+	                date = _props3.date,
+	                parse = _props3.parse,
+	                format = _props3.format,
+	                fromNow = _props3.fromNow,
+	                from = _props3.from,
+	                toNow = _props3.toNow,
+	                to = _props3.to,
+	                calendar = _props3.calendar,
+	                ago = _props3.ago,
+	                utc = _props3.utc,
+	                unix = _props3.unix,
+	                other = _objectWithoutProperties(_props3, ['date', 'parse', 'format', 'fromNow', 'from', 'toNow', 'to', 'calendar', 'ago', 'utc', 'unix']);
+
+	            var datetime = this.getDatetime();
+	            var content = this.state.content;
+
 
 	            return _react2.default.createElement(
 	                'time',
@@ -177,6 +239,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	    unix: false,
 	    utc: false
 	};
+	/* WEBPACK VAR INJECTION */}.call(exports, (function() { return this; }())))
 
 /***/ },
 /* 1 */
