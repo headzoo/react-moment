@@ -4,25 +4,36 @@ import React  from 'react';
 import moment from 'moment';
 
 export default class Moment extends React.Component {
-    
-    render() {
+
+    state = {
+        content: '',
+    }
+
+    componentWillMount() {
+        this.generateContent();
+    }
+
+    componentDidMount() {
+        this.interval = global.setInterval(() => {
+            this.generateContent();
+        }, 60000);
+    }
+
+    componentWillUnmount() {
+        clearInterval(this.interval);
+    }
+
+    getDatetime() {
         let {
             date,
             parse,
-            format,
-            fromNow,
-            from,
-            toNow,
-            to,
-            calendar,
-            ago,
             utc,
             unix,
-            ...other,
-            } = this.props;
+        } = this.props;
         date = date || this.props.children;
-        
+
         let datetime = null;
+
         if (utc) {
             datetime = moment.utc(date, parse);
         } else if (unix) {
@@ -30,7 +41,24 @@ export default class Moment extends React.Component {
         } else {
             datetime = moment(date, parse);
         }
-        
+
+        return datetime
+    }
+
+    generateContent() {
+        let {
+            format,
+            fromNow,
+            from,
+            toNow,
+            to,
+            calendar,
+            ago,
+            unix,
+        } = this.props;
+
+        let datetime = this.getDatetime()
+
         let content  = '';
         if (format) {
             content = datetime.format(format);
@@ -47,7 +75,30 @@ export default class Moment extends React.Component {
         } else {
             content = datetime.toString();
         }
-        
+
+        this.setState({ content })
+    }
+
+    render() {
+        let {
+            date,
+            parse,
+            format,
+            fromNow,
+            from,
+            toNow,
+            to,
+            calendar,
+            ago,
+            utc,
+            unix,
+            ...other,
+        } = this.props;
+        let datetime = this.getDatetime()
+        let {
+          content,
+        } = this.state;
+
         return (
             <time dateTime={datetime.format()} {...other}>{content}</time>
         )
