@@ -12,6 +12,8 @@ React component for the [moment](http://momentjs.com/) date library.
 * [To](#to)
 * [Unix Timestamps](#unix-timestamps)
 * [Other Props](#other-props)
+* [License](#license)
+* [Contributors](#contributors)
 
 
 ### Installing
@@ -297,3 +299,11 @@ Outputs:
 ```html
 <time class="datetime" aria-hidden="true">Mon Apr 19 1976 12:59:00 GMT-0500</time>
 ```
+
+### License
+This software is released under the MIT license. See LICENSE for more details.
+
+
+### Contributors
+
+* [markacola](https://github.com/markacola)
