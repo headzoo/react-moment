@@ -6,7 +6,7 @@ React component for the [moment](http://momentjs.com/) date library.
 * [Quick Start](#quick-start)
 * [Formatting](#formatting)
 * [Parsing Dates](#parsing-dates)
-* [From Now](#form-now)
+* [From Now](#from-now)
 * [From](#from)
 * [To Now](#to-now)
 * [To](#to)
