@@ -104,7 +104,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	    _createClass(Moment, [{
 	        key: 'componentWillMount',
 	        value: function componentWillMount() {
-	            this.generateContent();
+	            this.generateContent(this.props);
 	        }
 	    }, {
 	        key: 'componentDidMount',
@@ -112,7 +112,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	            var _this2 = this;
 
 	            this.interval = global.setInterval(function () {
-	                _this2.generateContent();
+	                _this2.generateContent(_this2.props);
 	            }, 60000);
 	        }
 	    }, {
@@ -121,15 +121,19 @@ return /******/ (function(modules) { // webpackBootstrap
 	            clearInterval(this.interval);
 	        }
 	    }, {
+	        key: 'componentWillReceiveProps',
+	        value: function componentWillReceiveProps(nextProps) {
+	            this.generateContent(nextProps);
+	        }
+	    }, {
 	        key: 'getDatetime',
-	        value: function getDatetime() {
-	            var _props = this.props,
-	                date = _props.date,
-	                parse = _props.parse,
-	                utc = _props.utc,
-	                unix = _props.unix;
+	        value: function getDatetime(props) {
+	            var date = props.date,
+	                parse = props.parse,
+	                utc = props.utc,
+	                unix = props.unix;
 
-	            date = date || this.props.children;
+	            date = date || props.children;
 
 	            var datetime = null;
 
@@ -145,19 +149,18 @@ return /******/ (function(modules) { // webpackBootstrap
 	        }
 	    }, {
 	        key: 'generateContent',
-	        value: function generateContent() {
-	            var _props2 = this.props,
-	                format = _props2.format,
-	                fromNow = _props2.fromNow,
-	                from = _props2.from,
-	                toNow = _props2.toNow,
-	                to = _props2.to,
-	                calendar = _props2.calendar,
-	                ago = _props2.ago,
-	                unix = _props2.unix;
+	        value: function generateContent(props) {
+	            var format = props.format,
+	                fromNow = props.fromNow,
+	                from = props.from,
+	                toNow = props.toNow,
+	                to = props.to,
+	                calendar = props.calendar,
+	                ago = props.ago,
+	                unix = props.unix;
 
 
-	            var datetime = this.getDatetime();
+	            var datetime = this.getDatetime(props);
 
 	            var content = '';
 	            if (format) {
@@ -181,21 +184,21 @@ return /******/ (function(modules) { // webpackBootstrap
 	    }, {
 	        key: 'render',
 	        value: function render() {
-	            var _props3 = this.props,
-	                date = _props3.date,
-	                parse = _props3.parse,
-	                format = _props3.format,
-	                fromNow = _props3.fromNow,
-	                from = _props3.from,
-	                toNow = _props3.toNow,
-	                to = _props3.to,
-	                calendar = _props3.calendar,
-	                ago = _props3.ago,
-	                utc = _props3.utc,
-	                unix = _props3.unix,
-	                other = _objectWithoutProperties(_props3, ['date', 'parse', 'format', 'fromNow', 'from', 'toNow', 'to', 'calendar', 'ago', 'utc', 'unix']);
+	            var _props = this.props,
+	                date = _props.date,
+	                parse = _props.parse,
+	                format = _props.format,
+	                fromNow = _props.fromNow,
+	                from = _props.from,
+	                toNow = _props.toNow,
+	                to = _props.to,
+	                calendar = _props.calendar,
+	                ago = _props.ago,
+	                utc = _props.utc,
+	                unix = _props.unix,
+	                other = _objectWithoutProperties(_props, ['date', 'parse', 'format', 'fromNow', 'from', 'toNow', 'to', 'calendar', 'ago', 'utc', 'unix']);
 
-	            var datetime = this.getDatetime();
+	            var datetime = this.getDatetime(this.props);
 	            var content = this.state.content;
 
 
