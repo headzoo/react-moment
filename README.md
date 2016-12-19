@@ -307,3 +307,4 @@ This software is released under the MIT license. See LICENSE for more details.
 ### Contributors
 
 * [markacola](https://github.com/markacola)
+* [nclavaud](https://github.com/nclavaud)
