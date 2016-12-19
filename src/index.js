@@ -10,12 +10,12 @@ export default class Moment extends React.Component {
     }
 
     componentWillMount() {
-        this.generateContent();
+        this.generateContent(this.props);
     }
 
     componentDidMount() {
         this.interval = global.setInterval(() => {
-            this.generateContent();
+            this.generateContent(this.props);
         }, 60000);
     }
 
@@ -23,14 +23,18 @@ export default class Moment extends React.Component {
         clearInterval(this.interval);
     }
 
-    getDatetime() {
+    componentWillReceiveProps(nextProps) {
+        this.generateContent(nextProps);
+    }
+
+    getDatetime(props) {
         let {
             date,
             parse,
             utc,
             unix,
-        } = this.props;
-        date = date || this.props.children;
+        } = props;
+        date = date || props.children;
 
         let datetime = null;
 
@@ -45,7 +49,7 @@ export default class Moment extends React.Component {
         return datetime
     }
 
-    generateContent() {
+    generateContent(props) {
         let {
             format,
             fromNow,
@@ -55,9 +59,9 @@ export default class Moment extends React.Component {
             calendar,
             ago,
             unix,
-        } = this.props;
+        } = props;
 
-        let datetime = this.getDatetime()
+        let datetime = this.getDatetime(props)
 
         let content  = '';
         if (format) {
@@ -94,7 +98,7 @@ export default class Moment extends React.Component {
             unix,
             ...other,
         } = this.props;
-        let datetime = this.getDatetime()
+        let datetime = this.getDatetime(this.props)
         let {
           content,
         } = this.state;
