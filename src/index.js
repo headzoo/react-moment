@@ -2,6 +2,7 @@
 
 import React  from 'react';
 import moment from 'moment';
+import 'moment-timezone';
 
 export default class Moment extends React.Component {
 
@@ -33,6 +34,7 @@ export default class Moment extends React.Component {
             parse,
             utc,
             unix,
+            tz
         } = props;
         date = date || props.children;
 
@@ -44,6 +46,10 @@ export default class Moment extends React.Component {
             datetime = moment.unix(date);
         } else {
             datetime = moment(date, parse);
+        }
+
+        if (tz) {
+            datetime = datetime.tz(tz);
         }
 
         return datetime
@@ -96,6 +102,7 @@ export default class Moment extends React.Component {
             ago,
             utc,
             unix,
+            tz,
             ...other,
         } = this.props;
         let datetime = this.getDatetime(this.props)
@@ -132,7 +139,8 @@ Moment.propTypes = {
     to:         React.PropTypes.oneOfType(dateTypes),
     calendar:   React.PropTypes.bool,
     unix:       React.PropTypes.bool,
-    utc:        React.PropTypes.bool
+    utc:        React.PropTypes.bool,
+    tz:         React.PropTypes.string
 };
 
 Moment.defaultProps = {
