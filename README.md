@@ -332,3 +332,4 @@ This software is released under the MIT license. See LICENSE for more details.
 
 * [markacola](https://github.com/markacola)
 * [nclavaud](https://github.com/nclavaud)
+* [Idan Gozlan](https://github.com/idangozlan)
