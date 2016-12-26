@@ -11,6 +11,7 @@ React component for the [moment](http://momentjs.com/) date library.
 * [To Now](#to-now)
 * [To](#to)
 * [Unix Timestamps](#unix-timestamps)
+* [Timezone](#timezone)
 * [Other Props](#other-props)
 * [License](#license)
 * [Contributors](#contributors)
