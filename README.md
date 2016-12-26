@@ -6,7 +6,7 @@ React component for the [moment](http://momentjs.com/) date library.
 * [Quick Start](#quick-start)
 * [Formatting](#formatting)
 * [Parsing Dates](#parsing-dates)
-* [From Now](#form-now)
+* [From Now](#from-now)
 * [From](#from)
 * [To Now](#to-now)
 * [To](#to)
@@ -279,6 +279,30 @@ Outputs:
 ```
 
 
+### Timezone
+
+To enable server side rendering (SSR), client and server has to provide same datetime, based on common Timezone.
+`tz` attribute will enable set the common timezone.
+
+```js
+import React  from 'react';
+import Moment from 'react-moment';
+
+exports default class MyComponent extends React.Component {
+    render() {
+        let unixTimestamp = 198784740;
+        <Moment unix tz="America/Los_Angeles">{unixTimestamp}</Moment>
+    }
+}
+```
+
+Outputs:
+
+```html
+<time>Mon Apr 19 1976 09:59:00 GMT-0800</time>
+```
+
+
 ### Other Props
 
 Any other properties are passed to the `<time>` element.
@@ -307,3 +331,5 @@ This software is released under the MIT license. See LICENSE for more details.
 ### Contributors
 
 * [markacola](https://github.com/markacola)
+* [nclavaud](https://github.com/nclavaud)
+* [Idan Gozlan](https://github.com/idangozlan)

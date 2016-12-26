@@ -25,20 +25,26 @@ module.exports = {
         }
     ],
     module: {
-        loaders: [{
+        loaders: [
+          {
+            include: /\.json$/,
+            loader: require.resolve('json-loader'),
+          },
+          {
             test: /\.js$/,
             exclude: /(node_modules)/,
             loader: require.resolve('babel-loader'),
             query: {
-                presets: [
-                    'babel-preset-es2015',
-                    'babel-preset-stage-2',
-                    'babel-preset-react'
-                ].map(require.resolve)
+              presets: [
+                'babel-preset-es2015',
+                'babel-preset-stage-2',
+                'babel-preset-react'
+              ].map(require.resolve)
             }
-        }]
+          }
+        ]
     },
     resolve: {
-        extensions: ['', '.js', '.jsx']
+      extensions: ['', '.json', '.js', '.jsx']
     }
 };

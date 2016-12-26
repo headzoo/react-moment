@@ -2,6 +2,7 @@
 
 import React  from 'react';
 import moment from 'moment';
+import 'moment-timezone';
 
 export default class Moment extends React.Component {
 
@@ -10,12 +11,12 @@ export default class Moment extends React.Component {
     }
 
     componentWillMount() {
-        this.generateContent();
+        this.generateContent(this.props);
     }
 
     componentDidMount() {
         this.interval = global.setInterval(() => {
-            this.generateContent();
+            this.generateContent(this.props);
         }, 60000);
     }
 
@@ -23,14 +24,19 @@ export default class Moment extends React.Component {
         clearInterval(this.interval);
     }
 
-    getDatetime() {
+    componentWillReceiveProps(nextProps) {
+        this.generateContent(nextProps);
+    }
+
+    getDatetime(props) {
         let {
             date,
             parse,
             utc,
             unix,
-        } = this.props;
-        date = date || this.props.children;
+            tz
+        } = props;
+        date = date || props.children;
 
         let datetime = null;
 
@@ -42,10 +48,14 @@ export default class Moment extends React.Component {
             datetime = moment(date, parse);
         }
 
+        if (tz) {
+            datetime = datetime.tz(tz);
+        }
+
         return datetime
     }
 
-    generateContent() {
+    generateContent(props) {
         let {
             format,
             fromNow,
@@ -55,9 +65,9 @@ export default class Moment extends React.Component {
             calendar,
             ago,
             unix,
-        } = this.props;
+        } = props;
 
-        let datetime = this.getDatetime()
+        let datetime = this.getDatetime(props)
 
         let content  = '';
         if (format) {
@@ -92,9 +102,10 @@ export default class Moment extends React.Component {
             ago,
             utc,
             unix,
+            tz,
             ...other,
         } = this.props;
-        let datetime = this.getDatetime()
+        let datetime = this.getDatetime(this.props)
         let {
           content,
         } = this.state;
@@ -128,7 +139,8 @@ Moment.propTypes = {
     to:         React.PropTypes.oneOfType(dateTypes),
     calendar:   React.PropTypes.bool,
     unix:       React.PropTypes.bool,
-    utc:        React.PropTypes.bool
+    utc:        React.PropTypes.bool,
+    tz:         React.PropTypes.string
 };
 
 Moment.defaultProps = {
