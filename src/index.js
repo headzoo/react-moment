@@ -7,8 +7,8 @@ import 'moment-timezone';
 export default class Moment extends React.Component {
 
     state = {
-        content: '',
-    }
+        content: ''
+    };
 
     componentWillMount() {
         this.generateContent(this.props);
@@ -28,7 +28,7 @@ export default class Moment extends React.Component {
         this.generateContent(nextProps);
     }
 
-    getDatetime(props) {
+    static getDatetime(props) {
         let {
             date,
             parse,
@@ -47,7 +47,6 @@ export default class Moment extends React.Component {
         } else {
             datetime = moment(date, parse);
         }
-
         if (tz) {
             datetime = datetime.tz(tz);
         }
@@ -63,11 +62,10 @@ export default class Moment extends React.Component {
             toNow,
             to,
             calendar,
-            ago,
-            unix,
+            ago
         } = props;
 
-        let datetime = this.getDatetime(props)
+        let datetime = Moment.getDatetime(props);
 
         let content  = '';
         if (format) {
@@ -103,9 +101,9 @@ export default class Moment extends React.Component {
             utc,
             unix,
             tz,
-            ...other,
+            ...other
         } = this.props;
-        let datetime = this.getDatetime(this.props)
+        let datetime = Moment.getDatetime(this.props);
         let {
           content,
         } = this.state;

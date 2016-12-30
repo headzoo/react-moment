@@ -130,11 +130,11 @@ return /******/ (function(modules) { // webpackBootstrap
 	    }, {
 	        key: 'getDatetime',
 	        value: function getDatetime(props) {
-	            var date = props.date,
-	                parse = props.parse,
-	                utc = props.utc,
-	                unix = props.unix,
-	                tz = props.tz;
+	            var date = props.date;
+	            var parse = props.parse;
+	            var utc = props.utc;
+	            var unix = props.unix;
+	            var tz = props.tz;
 
 	            date = date || props.children;
 
@@ -147,7 +147,6 @@ return /******/ (function(modules) { // webpackBootstrap
 	            } else {
 	                datetime = (0, _moment2.default)(date, parse);
 	            }
-
 	            if (tz) {
 	                datetime = datetime.tz(tz);
 	            }
@@ -157,14 +156,14 @@ return /******/ (function(modules) { // webpackBootstrap
 	    }, {
 	        key: 'generateContent',
 	        value: function generateContent(props) {
-	            var format = props.format,
-	                fromNow = props.fromNow,
-	                from = props.from,
-	                toNow = props.toNow,
-	                to = props.to,
-	                calendar = props.calendar,
-	                ago = props.ago,
-	                unix = props.unix;
+	            var format = props.format;
+	            var fromNow = props.fromNow;
+	            var from = props.from;
+	            var toNow = props.toNow;
+	            var to = props.to;
+	            var calendar = props.calendar;
+	            var ago = props.ago;
+	            var unix = props.unix;
 
 
 	            var datetime = this.getDatetime(props);
@@ -191,20 +190,21 @@ return /******/ (function(modules) { // webpackBootstrap
 	    }, {
 	        key: 'render',
 	        value: function render() {
-	            var _props = this.props,
-	                date = _props.date,
-	                parse = _props.parse,
-	                format = _props.format,
-	                fromNow = _props.fromNow,
-	                from = _props.from,
-	                toNow = _props.toNow,
-	                to = _props.to,
-	                calendar = _props.calendar,
-	                ago = _props.ago,
-	                utc = _props.utc,
-	                unix = _props.unix,
-	                tz = _props.tz,
-	                other = _objectWithoutProperties(_props, ['date', 'parse', 'format', 'fromNow', 'from', 'toNow', 'to', 'calendar', 'ago', 'utc', 'unix', 'tz']);
+	            var _props = this.props;
+	            var date = _props.date;
+	            var parse = _props.parse;
+	            var format = _props.format;
+	            var fromNow = _props.fromNow;
+	            var from = _props.from;
+	            var toNow = _props.toNow;
+	            var to = _props.to;
+	            var calendar = _props.calendar;
+	            var ago = _props.ago;
+	            var utc = _props.utc;
+	            var unix = _props.unix;
+	            var tz = _props.tz;
+
+	            var other = _objectWithoutProperties(_props, ['date', 'parse', 'format', 'fromNow', 'from', 'toNow', 'to', 'calendar', 'ago', 'utc', 'unix', 'tz']);
 
 	            var datetime = this.getDatetime(this.props);
 	            var content = this.state.content;
