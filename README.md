@@ -144,7 +144,7 @@ exports default class MyComponent extends React.Component {
 Outputs:
 
 ```html
-<time>40 years ago</time>
+<time>40 years</time>
 ```
 
 
@@ -181,7 +181,7 @@ exports default class MyComponent extends React.Component {
 Outputs:
 
 ```html
-<time>39 years ago</time>
+<time>39 years</time>
 ```
 
 
