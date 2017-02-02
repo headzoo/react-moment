@@ -10,17 +10,23 @@ module.exports = {
     },
     externals: [
         {
-            react: {
+            'react': {
                 root: 'react',
                 commonjs2: 'react',
                 commonjs: 'react',
                 amd: 'react'
             },
-            moment: {
+            'moment': {
                 root: 'moment',
                 commonjs2: 'moment',
                 commonjs: 'moment',
                 amd: 'moment'
+            },
+            'moment-timezone': {
+                root: 'moment-timezone',
+                commonjs2: 'moment-timezone',
+                commonjs: 'moment-timezone',
+                amd: 'moment-timezone'
             }
         }
     ],

@@ -18,9 +18,11 @@ React component for the [moment](http://momentjs.com/) date library.
 
 
 ### Installing
+Use npm to install react-moment, along with its peer dependencies, `moment`
+and `moment-timezone`.
 
 ```sh
-npm install --save moment react-moment
+npm install --save moment moment-timezone react-moment
 ```
 
 

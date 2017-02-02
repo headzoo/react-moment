@@ -38,6 +38,7 @@
   "main": "dist/index.js",
   "peerDependencies": {
     "moment": "^2.15.1",
+    "moment-timezone": "^0.5.11",
     "react": "^15.0.0"
   },
   "repository": {
