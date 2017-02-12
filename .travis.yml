@@ -2,3 +2,7 @@ language: node_js
 node_js:
   - "6"
   - "5.8.0"
+before_install:
+  - export TZ=America/New_York
+  - date
+  
