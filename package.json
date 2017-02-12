@@ -48,6 +48,6 @@
   "scripts": {
     "build": "npm run clean && webpack",
     "clean": "rimraf ./dist/index.js",
-    "test": "jest"
+    "test": "export TZ=America/New_York; jest"
   }
 }
