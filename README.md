@@ -2,6 +2,8 @@ react-moment
 ============
 React component for the [moment](http://momentjs.com/) date library.
 
+[![Build Status](https://travis-ci.org/headzoo/react-moment.svg?branch=master)](https://travis-ci.org/headzoo/react-moment)
+
 * [Installing](#installing)
 * [Quick Start](#quick-start)
 * [Formatting](#formatting)
