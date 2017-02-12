@@ -5,10 +5,11 @@ import moment from 'moment';
 import 'moment-timezone';
 
 export default class Moment extends React.Component {
+    constructor(props) {
+      super(props);
 
-    state = {
-        content: ''
-    };
+      this.state = { content: '' };
+    }
 
     componentWillMount() {
         this.generateContent(this.props);
@@ -31,6 +32,7 @@ export default class Moment extends React.Component {
     static getDatetime(props) {
         let {
             date,
+            locale,
             parse,
             utc,
             unix,
@@ -39,13 +41,17 @@ export default class Moment extends React.Component {
         date = date || props.children;
 
         let datetime = null;
+        locale = locale ? locale : moment.locale();
 
         if (utc) {
-            datetime = moment.utc(date, parse);
+            datetime = moment.utc(date, parse, locale);
         } else if (unix) {
-            datetime = moment.unix(date);
+            // moment#unix fails because of a deprecation,
+            // but since moment#unix(s) is implemented as moment(s * 1000),
+            // this works equivalently
+            datetime = moment(date * 1000, parse, locale);
         } else {
-            datetime = moment(date, parse);
+            datetime = moment(date, parse, locale);
         }
         if (tz) {
             datetime = datetime.tz(tz);
@@ -101,6 +107,7 @@ export default class Moment extends React.Component {
             utc,
             unix,
             tz,
+            locale,
             ...other
         } = this.props;
         let datetime = Moment.getDatetime(this.props);
