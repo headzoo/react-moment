@@ -145,7 +145,8 @@ Moment.propTypes = {
     calendar:   React.PropTypes.bool,
     unix:       React.PropTypes.bool,
     utc:        React.PropTypes.bool,
-    tz:         React.PropTypes.string
+    tz:         React.PropTypes.string,
+    locale:     React.PropTypes.string
 };
 
 Moment.defaultProps = {

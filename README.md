@@ -12,6 +12,7 @@ React component for the [moment](http://momentjs.com/) date library.
 * [To](#to)
 * [Unix Timestamps](#unix-timestamps)
 * [Timezone](#timezone)
+* [Locale](#locale)
 * [Other Props](#other-props)
 * [License](#license)
 * [Contributors](#contributors)
@@ -306,6 +307,21 @@ Outputs:
 ```
 
 
+### Locale
+
+```js
+import React  from 'react';
+import Moment from 'react-moment';
+
+exports default class MyComponent extends React.Component {
+    render() {
+        let dateToFormat = '1976-04-19T12:59-0500';
+        <Moment locale="de">{dateToFormat}</Moment>
+    }
+}
+```
+
+
 ### Other Props
 
 Any other properties are passed to the `<time>` element.
@@ -336,3 +352,4 @@ This software is released under the MIT license. See LICENSE for more details.
 * [markacola](https://github.com/markacola)
 * [nclavaud](https://github.com/nclavaud)
 * [Idan Gozlan](https://github.com/idangozlan)
+* [Oliver Vartiainen](https://github.com/firoxer)
