@@ -3,6 +3,7 @@ react-moment
 React component for the [moment](http://momentjs.com/) date library.
 
 [![Build Status](https://travis-ci.org/headzoo/react-moment.svg?branch=master)](https://travis-ci.org/headzoo/react-moment)
+[![MIT License](https://img.shields.io/badge/license-MIT-blue.svg?style=flat-square)](https://raw.githubusercontent.com/headzoo/react-moment/master/LICENSE)
 
 * [Installing](#installing)
 * [Quick Start](#quick-start)
