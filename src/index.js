@@ -62,6 +62,7 @@ export default class Moment extends React.Component {
 
     generateContent(props) {
         let {
+            as,
             format,
             fromNow,
             from,
@@ -90,7 +91,7 @@ export default class Moment extends React.Component {
             content = datetime.toString();
         }
 
-        this.setState({ content })
+        this.setState({ content, as })
     }
 
     render() {
@@ -116,7 +117,7 @@ export default class Moment extends React.Component {
         } = this.state;
 
         return (
-            <time dateTime={datetime.format()} {...other}>{content}</time>
+            <this.state.as dateTime={datetime.format()} {...other}>{content}</this.state.as>
         )
     }
 }
@@ -134,6 +135,7 @@ const parseTypes = [
 ];
 
 Moment.propTypes = {
+    as:         React.PropTypes.element,
     date:       React.PropTypes.oneOfType(dateTypes),
     parse:      React.PropTypes.oneOfType(parseTypes),
     format:     React.PropTypes.string,
@@ -150,6 +152,7 @@ Moment.propTypes = {
 };
 
 Moment.defaultProps = {
+    as:         "time",
     fromNow:    false,
     toNow:      false,
     calendar:   false,
