@@ -22,7 +22,8 @@
     "react-addons-test-utils": "^15.3.1",
     "react-dom": "^15.3.1",
     "rimraf": "^2.5.4",
-    "webpack": "^1.13.2"
+    "webpack": "^1.13.2",
+    "prop-types": "^15.5.8"
   },
   "jest": {
     "testRegex": "/tests/.*"
