@@ -1,6 +1,7 @@
 'use strict';
 
 import React  from 'react';
+import PropTypes from 'prop-types';
 import moment from 'moment';
 import 'moment-timezone';
 
@@ -122,31 +123,31 @@ export default class Moment extends React.Component {
 }
 
 const dateTypes = [
-    React.PropTypes.string,
-    React.PropTypes.number,
-    React.PropTypes.array,
-    React.PropTypes.object
+    PropTypes.string,
+    PropTypes.number,
+    PropTypes.array,
+    PropTypes.object
 ];
 
 const parseTypes = [
-    React.PropTypes.string,
-    React.PropTypes.array
+    PropTypes.string,
+    PropTypes.array
 ];
 
 Moment.propTypes = {
-    date:       React.PropTypes.oneOfType(dateTypes),
-    parse:      React.PropTypes.oneOfType(parseTypes),
-    format:     React.PropTypes.string,
-    ago:        React.PropTypes.bool,
-    fromNow:    React.PropTypes.bool,
-    from:       React.PropTypes.oneOfType(dateTypes),
-    toNow:      React.PropTypes.bool,
-    to:         React.PropTypes.oneOfType(dateTypes),
-    calendar:   React.PropTypes.bool,
-    unix:       React.PropTypes.bool,
-    utc:        React.PropTypes.bool,
-    tz:         React.PropTypes.string,
-    locale:     React.PropTypes.string
+    date:       PropTypes.oneOfType(dateTypes),
+    parse:      PropTypes.oneOfType(parseTypes),
+    format:     PropTypes.string,
+    ago:        PropTypes.bool,
+    fromNow:    PropTypes.bool,
+    from:       PropTypes.oneOfType(dateTypes),
+    toNow:      PropTypes.bool,
+    to:         PropTypes.oneOfType(dateTypes),
+    calendar:   PropTypes.bool,
+    unix:       PropTypes.bool,
+    utc:        PropTypes.bool,
+    tz:         PropTypes.string,
+    locale:     PropTypes.string
 };
 
 Moment.defaultProps = {
