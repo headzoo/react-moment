@@ -22,7 +22,8 @@
     "react": "^15.5.4",
     "react-dom": "^15.5.4",
     "rimraf": "^2.5.4",
-    "webpack": "^1.13.2"
+    "webpack": "^1.13.2",
+    "prop-types": "^15.5.8"
   },
   "jest": {
     "testRegex": "/tests/.*"
