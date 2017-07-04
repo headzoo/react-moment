@@ -63,6 +63,7 @@ export default class Moment extends React.Component {
 
     generateContent(props) {
         let {
+            as,
             format,
             fromNow,
             from,
@@ -91,7 +92,7 @@ export default class Moment extends React.Component {
             content = datetime.toString();
         }
 
-        this.setState({ content })
+        this.setState({ content, as })
     }
 
     render() {
@@ -117,7 +118,7 @@ export default class Moment extends React.Component {
         } = this.state;
 
         return (
-            <time dateTime={datetime.format()} {...other}>{content}</time>
+            <this.state.as dateTime={datetime.format()} {...other}>{content}</this.state.as>
         )
     }
 }
@@ -135,22 +136,24 @@ const parseTypes = [
 ];
 
 Moment.propTypes = {
-    date:       PropTypes.oneOfType(dateTypes),
-    parse:      PropTypes.oneOfType(parseTypes),
-    format:     PropTypes.string,
-    ago:        PropTypes.bool,
-    fromNow:    PropTypes.bool,
-    from:       PropTypes.oneOfType(dateTypes),
-    toNow:      PropTypes.bool,
-    to:         PropTypes.oneOfType(dateTypes),
-    calendar:   PropTypes.bool,
-    unix:       PropTypes.bool,
-    utc:        PropTypes.bool,
-    tz:         PropTypes.string,
-    locale:     PropTypes.string
+    as:         React.PropTypes.element,
+    date:       React.PropTypes.oneOfType(dateTypes),
+    parse:      React.PropTypes.oneOfType(parseTypes),
+    format:     React.PropTypes.string,
+    ago:        React.PropTypes.bool,
+    fromNow:    React.PropTypes.bool,
+    from:       React.PropTypes.oneOfType(dateTypes),
+    toNow:      React.PropTypes.bool,
+    to:         React.PropTypes.oneOfType(dateTypes),
+    calendar:   React.PropTypes.bool,
+    unix:       React.PropTypes.bool,
+    utc:        React.PropTypes.bool,
+    tz:         React.PropTypes.string,
+    locale:     React.PropTypes.string
 };
 
 Moment.defaultProps = {
+    as:         "time",
     fromNow:    false,
     toNow:      false,
     calendar:   false,

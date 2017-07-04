@@ -16,6 +16,7 @@ React component for the [moment](http://momentjs.com/) date library.
 * [Unix Timestamps](#unix-timestamps)
 * [Timezone](#timezone)
 * [Locale](#locale)
+* [as](#as)
 * [Other Props](#other-props)
 * [License](#license)
 * [Contributors](#contributors)
@@ -322,6 +323,27 @@ exports default class MyComponent extends React.Component {
         <Moment locale="de">{dateToFormat}</Moment>
     }
 }
+```
+
+### as
+
+An element type to render as (string or function).
+
+```js
+import React  from 'react';
+import Moment from 'react-moment';
+
+exports default class MyComponent extends React.Component {
+    render() {
+        <Moment as="i">1976-04-19T12:59-0500</Moment>
+    }
+}
+```
+
+Outputs:
+
+```html
+<i>Mon Apr 19 1976 12:59:00 GMT-0500</i>
 ```
 
 
