@@ -1,6 +1,7 @@
 'use strict';
 
 import React  from 'react';
+import PropTypes from 'prop-types';
 import moment from 'moment';
 import 'moment-timezone';
 
@@ -123,15 +124,15 @@ export default class Moment extends React.Component {
 }
 
 const dateTypes = [
-    React.PropTypes.string,
-    React.PropTypes.number,
-    React.PropTypes.array,
-    React.PropTypes.object
+    PropTypes.string,
+    PropTypes.number,
+    PropTypes.array,
+    PropTypes.object
 ];
 
 const parseTypes = [
-    React.PropTypes.string,
-    React.PropTypes.array
+    PropTypes.string,
+    PropTypes.array
 ];
 
 Moment.propTypes = {

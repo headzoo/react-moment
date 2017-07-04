@@ -1,7 +1,7 @@
 {
   "name": "react-moment",
   "description": "React component for the moment date library.",
-  "version": "0.2.2",
+  "version": "0.2.3",
   "author": {
     "name": "Sean Hickey",
     "web": "http://headzoo.io"
@@ -18,9 +18,9 @@
     "json-loader": "^0.5.4",
     "moment": "^2.15.1",
     "moment-timezone": "^0.5.11",
-    "react": "^15.3.1",
-    "react-addons-test-utils": "^15.3.1",
-    "react-dom": "^15.3.1",
+    "prop-types": "^15.5.8",
+    "react": "^15.5.4",
+    "react-dom": "^15.5.4",
     "rimraf": "^2.5.4",
     "webpack": "^1.13.2"
   },
@@ -39,6 +39,7 @@
   "peerDependencies": {
     "moment": "^2.15.1",
     "moment-timezone": "^0.5.11",
+    "prop-types": "^15.5.8",
     "react": "^15.0.0"
   },
   "repository": {
@@ -49,5 +50,6 @@
     "build": "npm run clean && webpack",
     "clean": "rimraf ./dist/index.js",
     "test": "export TZ=America/New_York; jest"
-  }
+  },
+  "types": "dist/index.d.ts"
 }
