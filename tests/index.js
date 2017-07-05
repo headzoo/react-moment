@@ -31,6 +31,13 @@ describe('react-moment', () => {
         expect(ReactDOM.findDOMNode(date).innerHTML).toEqual(DATE_OUTPUT);
     });
     
+    it('as', () => {
+        let date = TestUtils.renderIntoDocument(
+          <Moment as="span" parse="YYYY-MM-DD HH:mm">1976-04-19 12:59</Moment>
+        );
+        expect(ReactDOM.findDOMNode(date).tagName).toEqual('SPAN');
+    });
+    
     it('date', () => {
         let date = TestUtils.renderIntoDocument(
             <Moment />

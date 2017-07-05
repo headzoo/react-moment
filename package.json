@@ -47,7 +47,7 @@
     "url": "git+https://github.com/headzoo/react-moment.git"
   },
   "scripts": {
-    "build": "npm run clean && webpack",
+    "build": "npm run clean && webpack -p",
     "clean": "rimraf ./dist/index.js",
     "test": "export TZ=America/New_York; jest"
   },

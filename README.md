@@ -335,7 +335,7 @@ import Moment from 'react-moment';
 
 exports default class MyComponent extends React.Component {
     render() {
-        <Moment as="i">1976-04-19T12:59-0500</Moment>
+        <Moment as="span">1976-04-19T12:59-0500</Moment>
     }
 }
 ```
@@ -378,3 +378,6 @@ This software is released under the MIT license. See LICENSE for more details.
 * [nclavaud](https://github.com/nclavaud)
 * [Idan Gozlan](https://github.com/idangozlan)
 * [Oliver Vartiainen](https://github.com/firoxer)
+* [a-x-](https://github.com/a-x-)
+* [khell](https://github.com/khell)
+* [ali-master](https://github.com/ali-master)

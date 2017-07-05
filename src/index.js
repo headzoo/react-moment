@@ -1,35 +1,36 @@
 'use strict';
 
-import React  from 'react';
+import React from 'react';
 import PropTypes from 'prop-types';
 import moment from 'moment';
 import 'moment-timezone';
 
 export default class Moment extends React.Component {
     constructor(props) {
-      super(props);
-
-      this.state = { content: '' };
+        super(props);
+        this.state = {
+            content: ''
+        };
     }
-
+    
     componentWillMount() {
         this.generateContent(this.props);
     }
-
+    
     componentDidMount() {
         this.interval = global.setInterval(() => {
             this.generateContent(this.props);
         }, 60000);
     }
-
+    
     componentWillUnmount() {
         clearInterval(this.interval);
     }
-
+    
     componentWillReceiveProps(nextProps) {
         this.generateContent(nextProps);
     }
-
+    
     static getDatetime(props) {
         let {
             date,
@@ -40,10 +41,10 @@ export default class Moment extends React.Component {
             tz
         } = props;
         date = date || props.children;
-
+        
         let datetime = null;
-        locale = locale ? locale : moment.locale();
-
+        locale       = locale ? locale : moment.locale();
+        
         if (utc) {
             datetime = moment.utc(date, parse, locale);
         } else if (unix) {
@@ -57,13 +58,12 @@ export default class Moment extends React.Component {
         if (tz) {
             datetime = datetime.tz(tz);
         }
-
+        
         return datetime
     }
-
+    
     generateContent(props) {
         let {
-            as,
             format,
             fromNow,
             from,
@@ -72,10 +72,9 @@ export default class Moment extends React.Component {
             calendar,
             ago
         } = props;
-
+        
         let datetime = Moment.getDatetime(props);
-
-        let content  = '';
+        let content = '';
         if (format) {
             content = datetime.format(format);
         } else if (from) {
@@ -91,12 +90,13 @@ export default class Moment extends React.Component {
         } else {
             content = datetime.toString();
         }
-
-        this.setState({ content, as })
+        
+        this.setState({content})
     }
-
+    
     render() {
-        let {
+        const {
+            as,
             date,
             parse,
             format,
@@ -112,14 +112,18 @@ export default class Moment extends React.Component {
             locale,
             ...other
         } = this.props;
-        let datetime = Moment.getDatetime(this.props);
-        let {
-          content,
+        const {
+            content
         } = this.state;
-
-        return (
-            <this.state.as dateTime={datetime.format()} {...other}>{content}</this.state.as>
-        )
+        
+        return React.createElement(
+          this.props.as,
+          {
+              dateTime: Moment.getDatetime(this.props),
+              ...other
+          },
+          content
+        );
     }
 }
 
@@ -136,28 +140,28 @@ const parseTypes = [
 ];
 
 Moment.propTypes = {
-    as:         React.PropTypes.element,
-    date:       React.PropTypes.oneOfType(dateTypes),
-    parse:      React.PropTypes.oneOfType(parseTypes),
-    format:     React.PropTypes.string,
-    ago:        React.PropTypes.bool,
-    fromNow:    React.PropTypes.bool,
-    from:       React.PropTypes.oneOfType(dateTypes),
-    toNow:      React.PropTypes.bool,
-    to:         React.PropTypes.oneOfType(dateTypes),
-    calendar:   React.PropTypes.bool,
-    unix:       React.PropTypes.bool,
-    utc:        React.PropTypes.bool,
-    tz:         React.PropTypes.string,
-    locale:     React.PropTypes.string
+    as: PropTypes.string,
+    date: PropTypes.oneOfType(dateTypes),
+    parse: PropTypes.oneOfType(parseTypes),
+    format: PropTypes.string,
+    ago: PropTypes.bool,
+    fromNow: PropTypes.bool,
+    from: PropTypes.oneOfType(dateTypes),
+    toNow: PropTypes.bool,
+    to: PropTypes.oneOfType(dateTypes),
+    calendar: PropTypes.bool,
+    unix: PropTypes.bool,
+    utc: PropTypes.bool,
+    tz: PropTypes.string,
+    locale: PropTypes.string
 };
 
 Moment.defaultProps = {
-    as:         "time",
-    fromNow:    false,
-    toNow:      false,
-    calendar:   false,
-    ago:        false,
-    unix:       false,
-    utc:        false
+    as: "time",
+    fromNow: false,
+    toNow: false,
+    calendar: false,
+    ago: false,
+    unix: false,
+    utc: false
 };
