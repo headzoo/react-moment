@@ -1,11 +1,47 @@
-'use strict';
-
 import React from 'react';
 import PropTypes from 'prop-types';
 import moment from 'moment';
 import 'moment-timezone';
 
+const dateTypes = [
+  PropTypes.string,
+  PropTypes.number,
+  PropTypes.array,
+  PropTypes.object
+];
+
+const parseTypes = [
+  PropTypes.string,
+  PropTypes.array
+];
+
 export default class Moment extends React.Component {
+    static propTypes = {
+      as: PropTypes.any,
+      date: PropTypes.oneOfType(dateTypes),
+      parse: PropTypes.oneOfType(parseTypes),
+      format: PropTypes.string,
+      ago: PropTypes.bool,
+      fromNow: PropTypes.bool,
+      from: PropTypes.oneOfType(dateTypes),
+      toNow: PropTypes.bool,
+      to: PropTypes.oneOfType(dateTypes),
+      calendar: PropTypes.bool,
+      unix: PropTypes.bool,
+      utc: PropTypes.bool,
+      tz: PropTypes.string,
+      locale: PropTypes.string
+    };
+    
+    static defaultProps = {
+      fromNow: false,
+      toNow: false,
+      calendar: false,
+      ago: false,
+      unix: false,
+      utc: false
+    };
+    
     constructor(props) {
         super(props);
         this.state = {
@@ -126,41 +162,3 @@ export default class Moment extends React.Component {
         );
     }
 }
-
-const dateTypes = [
-    PropTypes.string,
-    PropTypes.number,
-    PropTypes.array,
-    PropTypes.object
-];
-
-const parseTypes = [
-    PropTypes.string,
-    PropTypes.array
-];
-
-Moment.propTypes = {
-    as: PropTypes.any,
-    date: PropTypes.oneOfType(dateTypes),
-    parse: PropTypes.oneOfType(parseTypes),
-    format: PropTypes.string,
-    ago: PropTypes.bool,
-    fromNow: PropTypes.bool,
-    from: PropTypes.oneOfType(dateTypes),
-    toNow: PropTypes.bool,
-    to: PropTypes.oneOfType(dateTypes),
-    calendar: PropTypes.bool,
-    unix: PropTypes.bool,
-    utc: PropTypes.bool,
-    tz: PropTypes.string,
-    locale: PropTypes.string
-};
-
-Moment.defaultProps = {
-    fromNow: false,
-    toNow: false,
-    calendar: false,
-    ago: false,
-    unix: false,
-    utc: false
-};
