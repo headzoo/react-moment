@@ -6,6 +6,7 @@ React component for the [moment](http://momentjs.com/) date library.
 [![MIT License](https://img.shields.io/badge/license-MIT-blue.svg?style=flat-square)](https://raw.githubusercontent.com/headzoo/react-moment/master/LICENSE)
 
 * [Installing](#installing)
+* [Timezone Support](#timezone-support)
 * [Quick Start](#quick-start)
 * [Formatting](#formatting)
 * [Parsing Dates](#parsing-dates)
@@ -16,7 +17,7 @@ React component for the [moment](http://momentjs.com/) date library.
 * [Unix Timestamps](#unix-timestamps)
 * [Timezone](#timezone)
 * [Locale](#locale)
-* [as](#as)
+* [As](#as)
 * [Other Props](#other-props)
 * [Usage with React Native](#usage-with-react-native)
 * [License](#license)
@@ -24,13 +25,30 @@ React component for the [moment](http://momentjs.com/) date library.
 
 
 ### Installing
-Use npm to install react-moment, along with its peer dependencies, `moment`
-and `moment-timezone`.
+Use npm to install `react-moment` along with its peer dependency, `moment`.
 
 ```sh
-npm install --save moment moment-timezone react-moment
+npm install --save moment react-moment
 ```
 
+### Timezone Support
+The `moment-timezone` package is required to use the timezone related functions.
+
+```sh
+npm install --save moment-timezone
+```
+
+Then import the package into your project.
+
+```jsx
+import React from 'react';
+import Moment from 'react-moment';
+import 'moment-timezone';
+
+export default class App extends React.Component {
+    ...
+}
+```
 
 ### Quick Start
 
@@ -296,6 +314,7 @@ To enable server side rendering (SSR), client and server has to provide same dat
 ```js
 import React  from 'react';
 import Moment from 'react-moment';
+import 'moment-timezone';
 
 exports default class MyComponent extends React.Component {
     render() {

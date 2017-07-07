@@ -21,12 +21,6 @@ module.exports = {
                 commonjs2: 'moment',
                 commonjs: 'moment',
                 amd: 'moment'
-            },
-            'moment-timezone': {
-                root: 'moment-timezone',
-                commonjs2: 'moment-timezone',
-                commonjs: 'moment-timezone',
-                amd: 'moment-timezone'
             }
         }
     ],
