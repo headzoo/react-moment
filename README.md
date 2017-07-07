@@ -368,6 +368,21 @@ Outputs:
 <time class="datetime" aria-hidden="true">Mon Apr 19 1976 12:59:00 GMT-0500</time>
 ```
 
+## Usage with React Native
+
+If you are using React Native then you'll have to pass in `Text`.
+
+```javascript
+import Moment from 'react-moment';
+import { Text } from 'react-native';
+```
+
+Then:
+
+```html
+<Moment as={Text} >1976-04-19T12:59-0500</Moment>
+```
+
 ### License
 This software is released under the MIT license. See LICENSE for more details.
 
@@ -381,3 +396,4 @@ This software is released under the MIT license. See LICENSE for more details.
 * [a-x-](https://github.com/a-x-)
 * [khell](https://github.com/khell)
 * [ali-master](https://github.com/ali-master)
+* [tujoworker](https://github.com/tujoworker)
