@@ -34,7 +34,7 @@ module.exports = {
         loaders: [
           {
             include: /\.json$/,
-            loader: require.resolve('json-loader'),
+            loader: require.resolve('json-loader')
           },
           {
             test: /\.js$/,
