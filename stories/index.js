@@ -1,6 +1,6 @@
 import React from 'react';
 import { setAddon, storiesOf } from '@storybook/react';
-import { withKnobs, text } from '@storybook/addon-knobs';
+import { withKnobs, text, number } from '@storybook/addon-knobs';
 import Moment from '../src/index';
 
 const dateToFormat = '1976-04-19T12:59-0500';
@@ -25,7 +25,7 @@ storiesOf('Moment', module)
   })
   .addWithJSX('unix', () => {
     return (
-      <Moment unix date={text('unix time', 198784740)} />
+      <Moment unix date={number('unix time', 198784740)} />
     )
   })
 ;
