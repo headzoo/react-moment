@@ -18,6 +18,7 @@ React component for the [moment](http://momentjs.com/) date library.
 * [Locale](#locale)
 * [as](#as)
 * [Other Props](#other-props)
+* [Usage with React Native](#usage-with-react-native)
 * [License](#license)
 * [Contributors](#contributors)
 

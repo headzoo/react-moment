@@ -140,6 +140,7 @@ const parseTypes = [
 ];
 
 Moment.propTypes = {
+    as: PropTypes.any,
     date: PropTypes.oneOfType(dateTypes),
     parse: PropTypes.oneOfType(parseTypes),
     format: PropTypes.string,
