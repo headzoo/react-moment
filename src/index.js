@@ -117,7 +117,7 @@ export default class Moment extends React.Component {
         } = this.state;
         
         return React.createElement(
-          this.props.as,
+          this.props.as || "time",
           {
               dateTime: Moment.getDatetime(this.props),
               ...other
@@ -157,7 +157,6 @@ Moment.propTypes = {
 };
 
 Moment.defaultProps = {
-    as: "time",
     fromNow: false,
     toNow: false,
     calendar: false,
