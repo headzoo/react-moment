@@ -46,102 +46,70 @@ export default class Moment extends React.Component {
     }
   };
 
+  static pooledElements = [];
+  static pooledTimer = null;
+
   /**
-   * Constructor
+   * Starts the pooled timer
    *
-   * @param {*} props
+   * @param {number} interval
    */
-  constructor(props) {
-    super(props);
-    this.state = {
-      content: ''
-    };
-    this.timer = null;
+  static startPooledTimer(interval = 60000) {
+    Moment.clearPooledTimer();
+    Moment.pooledTimer = setInterval(() => {
+      Moment.pooledElements.forEach((element) => {
+        if (element.props.interval !== 0) {
+          element.update();
+        }
+      });
+    }, interval);
   }
 
   /**
-   * Invoked immediately before mounting occurs
+   * Stops the pooled timer
    */
-  componentWillMount() {
-    this.updateContent(this.props);
-  }
-
-  /**
-   * Invoked immediately after a component is mounted
-   */
-  componentDidMount() {
-    this.startTimer();
-  }
-
-  /**
-   * Invoked immediately before a component is unmounted and destroyed
-   */
-  componentWillUnmount() {
-    this.clearTimer();
-  }
-
-  /**
-   * Invoked before a mounted component receives new props
-   *
-   * @param {*} nextProps
-   */
-  componentWillReceiveProps(nextProps) {
-    this.updateContent(nextProps);
-  }
-
-  /**
-   * Invoked immediately after updating occurs
-   *
-   * @param {*} prevProps
-   */
-  componentDidUpdate(prevProps) {
-    if (prevProps.interval !== this.props.interval) {
-      this.startTimer();
+  static clearPooledTimer() {
+    if (Moment.pooledTimer) {
+      clearInterval(Moment.pooledTimer);
+      Moment.pooledTimer    = null;
+      Moment.pooledElements = [];
     }
   }
 
   /**
-   * Starts the interval timer.
+   * Adds a Moment instance to the pooled elements list
+   *
+   * @param {Moment|React.Component} element
    */
-  startTimer = () => {
-    const interval = this.props.interval;
-    this.clearTimer();
-    if (interval !== 0) {
-      this.timer = setInterval(() => {
-        this.updateContent(this.props);
-      }, interval);
+  static pushPooledElement(element) {
+    if (!(element instanceof Moment)) {
+      console.error('Element not an instance of Moment.');
+      return;
     }
-  };
-
-  /**
-   * Clears the interval timer.
-   */
-  clearTimer = () => {
-    if (this.timer) {
-      clearInterval(this.timer);
+    if (Moment.pooledElements.indexOf(element) === -1) {
+      Moment.pooledElements.push(element);
     }
-  };
+  }
 
   /**
    * Returns a Date based on the set props
    *
    * @param {*} props
-   * @returns {Date}
+   * @returns {*}
    */
   static getDatetime(props) {
     let {
-      date,
-      locale,
-      parse,
-      utc,
-      unix,
-      tz
-      } = props;
+          date,
+          locale,
+          parse,
+          utc,
+          unix,
+          tz
+          } = props;
     date = date || props.children;
+    locale = locale ? locale : moment.locale();
 
     let datetime = null;
-    locale       = locale ? locale : moment.locale();
-
     if (utc) {
       datetime = moment.utc(date, parse, locale);
     } else if (unix) {
@@ -160,11 +128,89 @@ export default class Moment extends React.Component {
   }
 
   /**
-   * Updates this.state.content
+   * Constructor
    *
    * @param {*} props
    */
-  updateContent(props) {
+  constructor(props) {
+    super(props);
+    this.state = {
+      content: ''
+    };
+    this.timer = null;
+  }
+
+  /**
+   * Invoked immediately before mounting occurs
+   */
+  componentWillMount() {
+    this.update();
+  }
+
+  /**
+   * Invoked immediately after a component is mounted
+   */
+  componentDidMount() {
+    this.setTimer();
+    if (Moment.pooledTimer) {
+      Moment.pushPooledElement(this);
+    }
+  }
+
+  /**
+   * Invoked immediately before a component is unmounted and destroyed
+   */
+  componentWillUnmount() {
+    this.clearTimer();
+  }
+
+  /**
+   * Invoked before a mounted component receives new props
+   *
+   * @param {*} nextProps
+   */
+  componentWillReceiveProps(nextProps) {
+    this.update(nextProps);
+  }
+
+  /**
+   * Invoked immediately after updating occurs
+   *
+   * @param {*} prevProps
+   */
+  componentDidUpdate(prevProps) {
+    if (prevProps.interval !== this.props.interval) {
+      this.setTimer();
+    }
+  }
+
+  /**
+   * Starts the interval timer.
+   */
+  setTimer = () => {
+    this.clearTimer();
+    const interval = this.props.interval;
+    if (!Moment.pooledTimer && interval !== 0) {
+      this.timer = setInterval(() => {
+        this.update();
+      }, interval);
+    }
+  };
+
+  /**
+   * Clears the interval timer.
+   */
+  clearTimer = () => {
+    if (!Moment.pooledTimer && this.timer) {
+      clearInterval(this.timer);
+      this.timer = null;
+    }
+  };
+
+  /**
+   * Updates this.state.content
+   */
+  update() {
     let {
       format,
       fromNow,
@@ -173,9 +219,9 @@ export default class Moment extends React.Component {
       to,
       calendar,
       ago
-      } = props;
+      } = this.props;
 
-    let datetime = Moment.getDatetime(props);
+    let datetime = Moment.getDatetime(this.props);
     let content  = '';
     if (format) {
       content = datetime.format(format);

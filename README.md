@@ -22,6 +22,7 @@ React component for the [moment](http://momentjs.com/) date library.
     * [As](#as)
     * [OnChange](#onchange)
     * [Other Props](#other-props)
+* [Pooled Timer](#pooled-timer)
 * [Usage with React Native](#usage-with-react-native)
 * [License](#license)
 * [Contributors](#contributors)
@@ -390,6 +391,35 @@ Outputs:
 ```html
 <time class="datetime" aria-hidden="true">Mon Apr 19 1976 12:59:00 GMT-0500</time>
 ```
+
+
+### Pooled Timer
+By default a timer is created for each mounted `<Moment />` instance to update the date value, which is fine when you only have a few instances on the page. However, performance can take a hit when you have many mounted instance. The problem is solved by using a pooled timer.
+
+When pooled timing is enabled, react-moment will only use a single timer to update all mounted `<Moment />` instances. Pooled timing is enabled by calling `startPooledTimer()` and stopped by calling `clearPooledTimer()`.
+
+Call the `startPooledTimer()` static method from your bootstrapping script (usually index.js) to initialize the timer.
+
+```jsx
+import React from 'react';
+import ReactDOM from 'react-dom';
+import Moment from 'react-moment';
+import App from './components/app';
+
+// Start the pooled timer which runs every 60 seconds
+// (60000 milliseconds) by default.
+Moment.startPooledTimer();
+
+// Or set the update interval. This will update the mounted
+// instances every 30 seconds.
+// Moment.startPooledTimer(30000);
+
+ReactDOM.render(<App />, document.getElementById('mount'));
+```
+
+Note: The `interval` prop set on each `<Moment />` instance is ignored when using pooled timing, except where `interval={0}` to disable updating.
+
+Note: The `startPooledTimer()` method must be called before any `<Moment />` instances are mounted.
 
 
 ### Usage with React Native
