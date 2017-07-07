@@ -18,7 +18,7 @@ export default class Moment extends React.Component {
     }
     
     componentDidMount() {
-        this.interval = global.setInterval(() => {
+        this.interval = setInterval(() => {
             this.generateContent(this.props);
         }, 60000);
     }
@@ -140,7 +140,6 @@ const parseTypes = [
 ];
 
 Moment.propTypes = {
-    as: PropTypes.string,
     date: PropTypes.oneOfType(dateTypes),
     parse: PropTypes.oneOfType(parseTypes),
     format: PropTypes.string,
