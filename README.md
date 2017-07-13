@@ -19,7 +19,7 @@ React component for the [moment](http://momentjs.com/) date library.
     * [Unix Timestamps](#unix-timestamps)
     * [Timezone](#timezone)
     * [Locale](#locale)
-    * [As](#as)
+    * [Element](#element)
     * [OnChange](#onchange)
     * [Other Props](#other-props)
 * [Pooled Timer](#pooled-timer)
@@ -121,7 +121,7 @@ import Moment from 'react-moment';
 
 exports default class MyComponent extends React.Component {
     render() {
-        <Moment as="span" interval={30000}>1976-04-19T12:59-0500</Moment>
+        <Moment interval={30000}>1976-04-19T12:59-0500</Moment>
     }
 }
 ```
@@ -133,7 +133,7 @@ import Moment from 'react-moment';
 
 exports default class MyComponent extends React.Component {
     render() {
-        <Moment as="span" interval={0}>1976-04-19T12:59-0500</Moment>
+        <Moment interval={0}>1976-04-19T12:59-0500</Moment>
     }
 }
 ```
@@ -340,10 +340,10 @@ In some cases the language file is not automatically loaded by moment, and it mu
 import 'moment/locale/fr';
 ```
 
-#### As
-_as={string|React.Component}_
+#### Element
+_element={string|React.Component}_
 
-An element type to render as (string or function).
+The element type to render as (string or function).
 
 ```jsx
 import React  from 'react';
@@ -351,7 +351,7 @@ import Moment from 'react-moment';
 
 exports default class MyComponent extends React.Component {
     render() {
-        <Moment as="span">1976-04-19T12:59-0500</Moment>
+        <Moment element="span">1976-04-19T12:59-0500</Moment>
     }
 }
 ```
@@ -436,7 +436,7 @@ Some prop values may be set globally so you don't have to set them on every reac
 * globalLocale
 * globalFormat
 * globalParse
-* globalAs
+* globalElement
 
 ```jsx
 import React  from 'react';
@@ -450,7 +450,7 @@ Moment.globalLocale = 'fr';
 Moment.globalFormat = 'D MMM YYYY';
 
 // Use a <span> tag for every react-moment instance.
-Moment.globalAs = 'span';
+Moment.globalElement = 'span';
 
 const App = () => (
     <Moment>1976-04-19T12:59-0500</Moment>
@@ -498,7 +498,7 @@ import { Text } from 'react-native';
 Then:
 
 ```html
-<Moment as={Text} >1976-04-19T12:59-0500</Moment>
+<Moment element={Text} >1976-04-19T12:59-0500</Moment>
 ```
 
 

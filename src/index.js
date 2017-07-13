@@ -18,7 +18,7 @@ const noop = function() {};
 
 export default class Moment extends React.Component {
   static propTypes = {
-    as:       PropTypes.any,
+    element:  PropTypes.any,
     date:     PropTypes.oneOfType(dateTypes),
     parse:    PropTypes.oneOfType(parseTypes),
     format:   PropTypes.string,
@@ -37,6 +37,7 @@ export default class Moment extends React.Component {
   };
 
   static defaultProps = {
+    element:  'time',
     fromNow:  false,
     toNow:    false,
     calendar: false,
@@ -50,7 +51,7 @@ export default class Moment extends React.Component {
   static globalLocale   = null;
   static globalFormat   = null;
   static globalParse    = null;
-  static globalAs       = null;
+  static globalElement  = null;
   static pooledElements = [];
   static pooledTimer    = null;
 
@@ -257,7 +258,7 @@ export default class Moment extends React.Component {
 
   render() {
     const {
-      as,
+      element,
       date,
       parse,
       format,
@@ -275,12 +276,7 @@ export default class Moment extends React.Component {
       ...other
       } = this.props;
 
-    let type = as;
-    if (Moment.globalAs) {
-      type = Moment.globalAs;
-    }
-
-    return React.createElement(type || 'time', {
+    return React.createElement(Moment.globalElement || element, {
         dateTime: Moment.getDatetime(this.props),
         ...other
       },
