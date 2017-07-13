@@ -333,6 +333,13 @@ exports default class MyComponent extends React.Component {
 }
 ```
 
+**Note**
+In some cases the language file is not automatically loaded by moment, and it must be manually loaded. For example, to use the French locale, add the following to your bootstrap (e.g. index.js) script.
+
+```js
+import 'moment/locale/fr';
+```
+
 #### As
 _as={string|React.Component}_
 
