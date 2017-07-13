@@ -14,40 +14,45 @@ const parseTypes = [
   PropTypes.array
 ];
 
+const noop = function() {};
+
 export default class Moment extends React.Component {
   static propTypes = {
-    as: PropTypes.any,
-    date: PropTypes.oneOfType(dateTypes),
-    parse: PropTypes.oneOfType(parseTypes),
-    format: PropTypes.string,
-    ago: PropTypes.bool,
-    fromNow: PropTypes.bool,
-    from: PropTypes.oneOfType(dateTypes),
-    toNow: PropTypes.bool,
-    to: PropTypes.oneOfType(dateTypes),
+    as:       PropTypes.any,
+    date:     PropTypes.oneOfType(dateTypes),
+    parse:    PropTypes.oneOfType(parseTypes),
+    format:   PropTypes.string,
+    ago:      PropTypes.bool,
+    fromNow:  PropTypes.bool,
+    from:     PropTypes.oneOfType(dateTypes),
+    toNow:    PropTypes.bool,
+    to:       PropTypes.oneOfType(dateTypes),
     calendar: PropTypes.bool,
-    unix: PropTypes.bool,
-    utc: PropTypes.bool,
-    tz: PropTypes.string,
-    locale: PropTypes.string,
+    unix:     PropTypes.bool,
+    utc:      PropTypes.bool,
+    tz:       PropTypes.string,
+    locale:   PropTypes.string,
     interval: PropTypes.number,
     onChange: PropTypes.func
   };
 
   static defaultProps = {
-    fromNow: false,
-    toNow: false,
+    fromNow:  false,
+    toNow:    false,
     calendar: false,
-    ago: false,
-    unix: false,
-    utc: false,
+    ago:      false,
+    unix:     false,
+    utc:      false,
     interval: 60000,
-    onChange: function () {
-    }
+    onChange: noop
   };
 
+  static globalLocale   = null;
+  static globalFormat   = null;
+  static globalParse    = null;
+  static globalAs       = null;
   static pooledElements = [];
-  static pooledTimer = null;
+  static pooledTimer    = null;
 
   /**
    * Starts the pooled timer
@@ -99,15 +104,20 @@ export default class Moment extends React.Component {
    */
   static getDatetime(props) {
     let {
-          date,
-          locale,
-          parse,
-          utc,
-          unix,
-          tz
-          } = props;
+      date,
+      locale,
+      parse,
+      utc,
+      unix,
+      tz
+      } = props;
     date = date || props.children;
-    locale = locale ? locale : moment.locale();
+    parse = parse || Moment.globalParse;
+    if (Moment.globalLocale) {
+      locale = Moment.globalLocale;
+    } else {
+      locale = locale ? locale : moment.locale();
+    }
 
     let datetime = null;
     if (utc) {
@@ -220,6 +230,7 @@ export default class Moment extends React.Component {
       calendar,
       ago
       } = this.props;
+    format = format || Moment.globalFormat;
 
     let datetime = Moment.getDatetime(this.props);
     let content  = '';
@@ -264,7 +275,12 @@ export default class Moment extends React.Component {
       ...other
       } = this.props;
 
-    return React.createElement(this.props.as || 'time', {
+    let type = as;
+    if (Moment.globalAs) {
+      type = Moment.globalAs;
+    }
+
+    return React.createElement(type || 'time', {
         dateTime: Moment.getDatetime(this.props),
         ...other
       },

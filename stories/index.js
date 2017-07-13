@@ -7,23 +7,23 @@ const dateToFormat = '1976-04-19T12:59-0500';
 
 storiesOf('Moment', module)
   .addDecorator(withKnobs)
-  .addWithJSX('standard', () => {
+  .addWithJSX('with default props', () => {
       return (
         <Moment date={text('date', dateToFormat)} />
       )
     }
   )
-  .addWithJSX('formatting', () => {
+  .addWithJSX('using the format prop', () => {
     return (
-      <Moment format="YYYY/MM/DD" date={text('date', dateToFormat)} />
+      <Moment format="D MMM YYYY" date={text('date', dateToFormat)} />
     )
   })
-  .addWithJSX('fromNow', () => {
+  .addWithJSX('using the fromNow prop', () => {
     return (
       <Moment fromNow date={text('date', dateToFormat)} />
     )
   })
-  .addWithJSX('unix', () => {
+  .addWithJSX('using the unix prop', () => {
     return (
       <Moment unix date={number('unix time', 198784740)} />
     )

@@ -23,6 +23,7 @@ React component for the [moment](http://momentjs.com/) date library.
     * [OnChange](#onchange)
     * [Other Props](#other-props)
 * [Pooled Timer](#pooled-timer)
+* [Global Config](#global-config)
 * [Usage with React Native](#usage-with-react-native)
 * [License](#license)
 * [Contributors](#contributors)
@@ -422,8 +423,64 @@ Note: The `interval` prop set on each `<Moment />` instance is ignored when usin
 Note: The `startPooledTimer()` method must be called before any `<Moment />` instances are mounted.
 
 
-### Usage with React Native
+### Global Config
+Some prop values may be set globally so you don't have to set them on every react-moment instance.
 
+* globalLocale
+* globalFormat
+* globalParse
+* globalAs
+
+```jsx
+import React  from 'react';
+import ReactDOM from 'react-dom';
+import Moment from 'react-moment';
+
+// Set the locale for every react-moment instance to French.
+Moment.globalLocale = 'fr';
+
+// Set the output format for every react-moment instance.
+Moment.globalFormat = 'D MMM YYYY';
+
+// Use a <span> tag for every react-moment instance.
+Moment.globalAs = 'span';
+
+const App = () => (
+    <Moment>1976-04-19T12:59-0500</Moment>
+);
+
+ReactDOM.render(<App />, document.getElementById('mount'));
+```
+
+You can override the global values on a per-instance basis using regular props.
+
+```jsx
+import React  from 'react';
+import ReactDOM from 'react-dom';
+import Moment from 'react-moment';
+
+// Set the locale for every react-moment instance to French.
+Moment.globalLocale = 'fr';
+
+const App = () => (
+    <div>
+        {/*
+            Renders using the 'fr' locale due to the global setting.
+        */}
+        <Moment>1976-04-19T12:59-0500</Moment>
+
+        {/*
+            Overrides the global locale and uses 'en' instead.
+        */}
+        <Moment locale="en">1976-04-19T12:59-0500</Moment>
+    </div>
+);
+
+ReactDOM.render(<App />, document.getElementById('mount'));
+```
+
+
+### Usage with React Native
 If you are using React Native then you'll have to pass in `Text`.
 
 ```javascript
