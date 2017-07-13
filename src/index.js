@@ -154,7 +154,7 @@ export default class Moment extends React.Component {
    * Invoked immediately before mounting occurs
    */
   componentWillMount() {
-    this.update();
+    this.update(this.props);
   }
 
   /**
@@ -202,7 +202,7 @@ export default class Moment extends React.Component {
     const interval = this.props.interval;
     if (!Moment.pooledTimer && interval !== 0) {
       this.timer = setInterval(() => {
-        this.update();
+        this.update(this.props);
       }, interval);
     }
   };
@@ -220,7 +220,7 @@ export default class Moment extends React.Component {
   /**
    * Updates this.state.content
    */
-  update() {
+  update(props) {
     let {
       format,
       fromNow,
@@ -229,10 +229,10 @@ export default class Moment extends React.Component {
       to,
       calendar,
       ago
-      } = this.props;
+      } = props;
     format = format || Moment.globalFormat;
 
-    let datetime = Moment.getDatetime(this.props);
+    let datetime = Moment.getDatetime(props);
     let content  = '';
     if (format) {
       content = datetime.format(format);
