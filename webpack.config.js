@@ -1,50 +1,36 @@
 'use strict';
 
+var path = require("path");
+
 module.exports = {
-    entry: './src/index.js',
+    entry: './src/index.jsx',
     output: {
-        path: './dist',
-        filename: 'index.js',
-        library: 'react-moment',
-        libraryTarget: 'umd'
+        path: path.resolve(__dirname),
+        publicPath: '/',
+        filename: 'demo.js'
     },
-    externals: [
-        {
-            'react': {
-                root: 'react',
-                commonjs2: 'react',
-                commonjs: 'react',
-                amd: 'react'
-            },
-            'moment': {
-                root: 'moment',
-                commonjs2: 'moment',
-                commonjs: 'moment',
-                amd: 'moment'
-            }
-        }
-    ],
+    devServer: {
+      port: 6601,
+      contentBase: path.resolve(__dirname),
+      publicPath: '/'
+    },
     module: {
-        loaders: [
-          {
-            include: /\.json$/,
-            loader: require.resolve('json-loader')
-          },
-          {
-            test: /\.js$/,
-            exclude: /(node_modules)/,
-            loader: require.resolve('babel-loader'),
-            query: {
-              presets: [
-                'babel-preset-es2015',
-                'babel-preset-stage-2',
-                'babel-preset-react'
-              ].map(require.resolve)
-            }
+      rules: [
+        {
+          test: /\.jsx?$/,
+          exclude: /(node_modules)/,
+          loader: require.resolve('babel-loader'),
+          query: {
+            presets: [
+              'babel-preset-es2015',
+              'babel-preset-stage-2',
+              'babel-preset-react'
+            ].map(require.resolve)
           }
-        ]
+        }
+      ]
     },
     resolve: {
-      extensions: ['', '.json', '.js', '.jsx']
+      extensions: ['.js', '.jsx']
     }
 };
