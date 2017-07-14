@@ -7,7 +7,6 @@ import React  from 'react';
 import Moment from 'react-moment';
 
 class App extends React.Component {
-
   constructor(props) {
     super(props);
     this.state = {
@@ -16,9 +15,11 @@ class App extends React.Component {
   }
   
   render() {
+    const { date } = this.state;
+    
     return (
-      <Moment format="YYYY/MM/DD">
-        {this.state.date}
+      <Moment format="MMMM Do YYYY">
+        {date}
       </Moment>
     )
   }
@@ -26,7 +27,7 @@ class App extends React.Component {
 `;
 
 const output = `
-<time>1976/04/19</time>
+<time>April 19th 1976</time>
 `;
 
 const UsageSection = () => (

@@ -57,6 +57,7 @@ body {
 
 .container {
     padding-top: 1rem;
+    padding-bottom: 1rem;
     margin-bottom: 1rem;
     max-width: 56rem;
     background-color: #FFF;
@@ -100,15 +101,22 @@ body {
     padding:0;
 }
 
+.demo-output {
+    margin-bottom: 1rem;
+}
+
 .demo-form {
     padding: 1rem 0.6rem;
     background-color: #333333;
     color: #FFF;
-    border-radius: .3rem;
 }
 
 .demo-form .text-muted {
     color: #79b179 !important;
+}
+
+.form-control {
+    margin-bottom: 0.5rem;
 }
 
 .text-muted {
@@ -135,7 +143,7 @@ p.form-text {
 }
 
 label {
-    margin-bottom: 0;
+    margin-bottom: 0.5rem;
 }
 
 .page-title {
@@ -180,20 +188,6 @@ textarea {
 pre code {
     height: 100%;
     font-family: monospace;
-}
-
-.form-group.col-xs-12,
-.form-group.col-xs-6 {
-    padding-right: 0;
-    padding-left: 0;
-}
-
-.form-group.pad-right {
-    padding-right: 15px;
-}
-
-.form-group.pad-left {
-    padding-left: 15px;
 }
 
 .pad-top {
