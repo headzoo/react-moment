@@ -15,6 +15,7 @@ export interface MomentProps {
     utc?: boolean;
     tz?: string;
     locale?: string;
+    interval?: number;
 
     children?: string;
 }
