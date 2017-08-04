@@ -1,7 +1,7 @@
 'use strict';
 
 module.exports = {
-    entry: './src/index.js',
+    entry: './src/index.jsx',
     output: {
         path: './dist',
         filename: 'index.js',
@@ -31,7 +31,7 @@ module.exports = {
             loader: require.resolve('json-loader')
           },
           {
-            test: /\.js$/,
+            test: /\.jsx?$/,
             exclude: /(node_modules)/,
             loader: require.resolve('babel-loader'),
             query: {

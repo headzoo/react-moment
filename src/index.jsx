@@ -1,6 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import moment from 'moment';
+import { objectKeyFilter } from './objects';
 
 const dateTypes = [
   PropTypes.string,
@@ -13,8 +14,6 @@ const parseTypes = [
   PropTypes.string,
   PropTypes.array
 ];
-
-const noop = function() {};
 
 export default class Moment extends React.Component {
   static propTypes = {
@@ -45,7 +44,7 @@ export default class Moment extends React.Component {
     unix:     false,
     utc:      false,
     interval: 60000,
-    onChange: noop
+    onChange: () => {}
   };
 
   static globalLocale   = null;
@@ -104,20 +103,15 @@ export default class Moment extends React.Component {
    * @returns {*}
    */
   static getDatetime(props) {
-    let {
-      date,
-      locale,
-      parse,
-      utc,
-      unix,
-      tz
-      } = props;
+    const { utc, unix, tz } = props;
+    let { date, locale, parse } = props;
+
     date = date || props.children;
     parse = parse || Moment.globalParse;
     if (Moment.globalLocale) {
       locale = Moment.globalLocale;
     } else {
-      locale = locale ? locale : moment.locale();
+      locale = locale || moment.locale();
     }
 
     let datetime = null;
@@ -135,7 +129,7 @@ export default class Moment extends React.Component {
       datetime = datetime.tz(tz);
     }
 
-    return datetime
+    return datetime;
   }
 
   /**
@@ -169,13 +163,6 @@ export default class Moment extends React.Component {
   }
 
   /**
-   * Invoked immediately before a component is unmounted and destroyed
-   */
-  componentWillUnmount() {
-    this.clearTimer();
-  }
-
-  /**
    * Invoked before a mounted component receives new props
    *
    * @param {*} nextProps
@@ -193,6 +180,13 @@ export default class Moment extends React.Component {
     if (prevProps.interval !== this.props.interval) {
       this.setTimer();
     }
+  }
+
+  /**
+   * Invoked immediately before a component is unmounted and destroyed
+   */
+  componentWillUnmount() {
+    this.clearTimer();
   }
 
   /**
@@ -222,18 +216,11 @@ export default class Moment extends React.Component {
    * Updates this.state.content
    */
   update(props) {
-    let {
-      format,
-      fromNow,
-      from,
-      toNow,
-      to,
-      calendar,
-      ago
-      } = props;
-    format = format || Moment.globalFormat;
+    const { fromNow, from, toNow, to, ago, calendar } = props;
+    let { format } = props;
 
-    let datetime = Moment.getDatetime(props);
+    format = format || Moment.globalFormat;
+    const datetime = Moment.getDatetime(props);
     let content  = '';
     if (format) {
       content = datetime.format(format);
@@ -251,35 +238,17 @@ export default class Moment extends React.Component {
       content = datetime.toString();
     }
 
-    this.setState({content}, () => {
+    this.setState({ content }, () => {
       this.props.onChange(content);
     });
   }
 
   render() {
-    const {
-      element,
-      date,
-      parse,
-      format,
-      fromNow,
-      from,
-      toNow,
-      to,
-      calendar,
-      ago,
-      utc,
-      unix,
-      tz,
-      locale,
-      interval,
-      ...other
-      } = this.props;
-
-    return React.createElement(Moment.globalElement || element, {
-        dateTime: Moment.getDatetime(this.props),
-        ...other
-      },
+    const props = objectKeyFilter(this.props, Moment.propTypes);
+    return React.createElement(Moment.globalElement || this.props.element, {
+      dateTime: Moment.getDatetime(this.props),
+      ...props
+    },
       this.state.content
     );
   }

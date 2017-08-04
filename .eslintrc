@@ -1,0 +1,106 @@
+{
+  "extends": ["eslint:recommended", "plugin:react/recommended", "airbnb"],
+  "env": {
+    "browser": true,
+    "mocha": true,
+    "node": true,
+    "jest": true,
+    "jasmine": true
+  },
+  "parser": "babel-eslint",
+  "rules": {
+    "max-len": [
+      1,
+      {
+        "code": 120,
+        "ignoreComments": true,
+        "ignoreUrls": true,
+        "ignorePattern": "^import\\s.+"
+      }
+    ],
+    "no-unreachable": 0,
+    "arrow-body-style": 0,
+    "no-trailing-spaces": 0,
+    "react/no-find-dom-node": 0,
+    "react/no-multi-comp": 0,
+    "react/forbid-prop-types": 0,
+    "react/require-default-props": 0,
+    "react/no-array-index-key": 0,
+    "jsx-a11y/href-no-hash": 0,
+    "jsx-quotes": [
+      2,
+      "prefer-double"
+    ],
+    "key-spacing": [
+      2,
+      {
+        "singleLine": {
+          "beforeColon": false,
+          "afterColon": true
+        },
+        "multiLine": {
+          "beforeColon": false,
+          "afterColon": true,
+          "align": "value"
+        }
+      }
+    ],
+    "no-multi-spaces": [
+      0,
+      {
+        "exceptions": {
+          "VariableDeclarator": true
+        }
+      }
+    ],
+    "react/prefer-stateless-function": 0,
+    "react/jsx-uses-react": 2,
+    "react/jsx-uses-vars": 2,
+    "react/react-in-jsx-scope": 2,
+    "no-var": 2,
+    "vars-on-top": 0,
+    "comma-dangle": 0,
+    "new-cap": 0,
+    "no-console": 0,
+    "no-plusplus": ["error", { "allowForLoopAfterthoughts": true }],
+    "indent": [
+      2,
+      2,
+      {
+        "SwitchCase": 1
+      }
+    ],
+    "valid-jsdoc": 0,
+    "import/no-extraneous-dependencies": ["off"],
+    "jsx-a11y/no-static-element-interactions": 0,
+    "import/prefer-default-export": "off",
+    "import/extensions": ["warn", "always", {
+      "js": "never", "jsx": "never"
+    }],
+    "react/no-unused-prop-types": [2, { "skipShapeProps": true }],
+    "class-methods-use-this": 0,
+    "jsx-a11y/tabindex-no-positive": 0,
+    "strict": 0,
+    "no-param-reassign": 0,
+    "no-mixed-operators": "off"
+  },
+  "plugins": [
+    "react",
+    "jsx-a11y"
+  ],
+  "settings": {
+    "import/resolver": {
+      "babel-module": {  }
+    },
+    "import/extensions": [".js", ".jsx"],
+    "react": {
+      "version": "15.3.2"
+      // React version, default to the latest React stable release
+    }
+  },
+  "parserOptions": {
+    "ecmaFeatures": {
+      "jsx": true
+    }
+  }
+}

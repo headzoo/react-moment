@@ -1,11 +1,9 @@
-'use strict';
-
 import React     from 'react';
 import ReactDOM  from 'react-dom';
 import TestUtils from 'react-dom/test-utils';
 import moment    from 'moment';
-import Moment    from '../src/index';
 import 'moment-timezone';
+import Moment    from '../src/index';
 
 const DATE_OUTPUT = 'Mon Apr 19 1976 12:59:00 GMT-0500';
 const DATE_STRING = '1976-04-19T12:59-0500';
@@ -194,4 +192,3 @@ describe('react-moment', () => {
         expect(ReactDOM.findDOMNode(date).innerHTML).toEqual(NEW_DATE_OUTPUT);
     });
 });
-

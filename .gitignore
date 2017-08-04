@@ -1,4 +1,6 @@
 .idea
+.cache
 node_modules
+stories/build
 *.log
 .DS_Store
