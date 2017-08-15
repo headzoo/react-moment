@@ -216,6 +216,7 @@ export default class Moment extends React.Component {
    * Updates this.state.content
    */
   update(props) {
+    props = props || this.props;
     const { fromNow, from, toNow, to, ago, calendar } = props;
     let { format } = props;
 
