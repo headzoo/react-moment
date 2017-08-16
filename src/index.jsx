@@ -97,6 +97,18 @@ export default class Moment extends React.Component {
   }
 
   /**
+   * Removes a Moment instance from the pooled elements list
+   *
+   * @param {Moment|React.Component} element
+   */
+  static removePooledElement(element) {
+    const index = Moment.pooledElements.indexOf(element);
+    if (index !== -1) {
+      Moment.pooledElements.splice(index, 1);
+    }
+  }
+
+  /**
    * Returns a Date based on the set props
    *
    * @param {*} props
@@ -209,6 +221,9 @@ export default class Moment extends React.Component {
     if (!Moment.pooledTimer && this.timer) {
       clearInterval(this.timer);
       this.timer = null;
+    }
+    if (Moment.pooledTimer && !this.timer) {
+      Moment.removePooledElement(this);
     }
   };
 
