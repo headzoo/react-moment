@@ -21,6 +21,15 @@ storiesOf('Moment', module)
       <Moment fromNow date={text('date', new Date())} />
     );
   })
+  .addWithJSX('using add and subtract props', () => {
+    return (
+      <div>
+        <Moment date={text('date', new Date())} add={{ days: 1 }} fromNow />
+        <br />
+        <Moment date={text('date', new Date())} subtract={{ days: 1 }} fromNow />
+      </div>
+    );
+  })
   .addWithJSX('using the unix prop', () => {
     return (
       <Moment unix date={number('unix time', 198784740)} />

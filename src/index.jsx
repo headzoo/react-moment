@@ -21,6 +21,8 @@ export default class Moment extends React.Component {
     date:     PropTypes.oneOfType(dateTypes),
     parse:    PropTypes.oneOfType(parseTypes),
     format:   PropTypes.string,
+    add:      PropTypes.object,
+    subtract: PropTypes.object,
     ago:      PropTypes.bool,
     fromNow:  PropTypes.bool,
     from:     PropTypes.oneOfType(dateTypes),
@@ -232,11 +234,18 @@ export default class Moment extends React.Component {
    */
   update(props) {
     props = props || this.props;
-    const { fromNow, from, toNow, to, ago, calendar } = props;
+    const { fromNow, from, add, subtract, toNow, to, ago, calendar } = props;
     let { format } = props;
 
     format = format || Moment.globalFormat;
     const datetime = Moment.getDatetime(props);
+    if (add) {
+      datetime.add(add);
+    }
+    if (subtract) {
+      datetime.subtract(subtract);
+    }
+
     let content  = '';
     if (format) {
       content = datetime.format(format);
@@ -253,7 +262,6 @@ export default class Moment extends React.Component {
     } else {
       content = datetime.toString();
     }
-
     this.setState({ content }, () => {
       this.props.onChange(content);
     });

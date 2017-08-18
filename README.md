@@ -13,6 +13,7 @@ React component for the [moment](http://momentjs.com/) date library.
     * [Interval](#interval)
     * [Formatting](#formatting)
     * [Parsing Dates](#parsing-dates)
+    * [Add and Subtract](#add-and-subtract)
     * [From Now](#from-now)
     * [From](#from)
     * [To Now](#to-now)
@@ -66,8 +67,10 @@ import Moment from 'react-moment';
 
 exports default class MyComponent extends React.Component {
     render() {
-        let dateToFormat = '1976-04-19T12:59-0500';
-        <Moment>{dateToFormat}</Moment>
+        return (
+            let dateToFormat = '1976-04-19T12:59-0500';
+            <Moment>{dateToFormat}</Moment>
+        );
     }
 }
 ```
@@ -86,8 +89,10 @@ import Moment from 'react-moment';
 
 exports default class MyComponent extends React.Component {
     render() {
-        let dateToFormat = '1976-04-19T12:59-0500';
-        <Moment date={dateToFormat} />
+        return (
+            let dateToFormat = '1976-04-19T12:59-0500';
+            <Moment date={dateToFormat} />
+        );
     }
 }
 ```
@@ -100,8 +105,10 @@ import Moment from 'react-moment';
 
 exports default class MyComponent extends React.Component {
     render() {
-        let dateToFormat = new Date('1976-04-19T12:59-0500');
-        <Moment date={dateToFormat} />
+        return (
+            let dateToFormat = new Date('1976-04-19T12:59-0500');
+            <Moment date={dateToFormat} />
+        );
     }
 }
 ```
@@ -122,7 +129,9 @@ import Moment from 'react-moment';
 
 exports default class MyComponent extends React.Component {
     render() {
-        <Moment interval={30000}>1976-04-19T12:59-0500</Moment>
+        return (
+            <Moment interval={30000}>1976-04-19T12:59-0500</Moment>
+        );
     }
 }
 ```
@@ -134,7 +143,9 @@ import Moment from 'react-moment';
 
 exports default class MyComponent extends React.Component {
     render() {
-        <Moment interval={0}>1976-04-19T12:59-0500</Moment>
+        return (
+            <Moment interval={0}>1976-04-19T12:59-0500</Moment>
+        );
     }
 }
 ```
@@ -151,7 +162,9 @@ import Moment from 'react-moment';
 
 exports default class MyComponent extends React.Component {
     render() {
-        <Moment format="YYYY/MM/DD">1976-04-19T12:59-0500</Moment>
+        return (
+            <Moment format="YYYY/MM/DD">1976-04-19T12:59-0500</Moment>
+        );
     }
 }
 ```
@@ -174,11 +187,39 @@ import Moment from 'react-moment';
 
 exports default class MyComponent extends React.Component {
     render() {
-        <Moment parse="YYYY-MM-DD HH:mm">1976-04-19 12:59</Moment>
+        return (
+            <Moment parse="YYYY-MM-DD HH:mm">1976-04-19 12:59</Moment>
+        );
     }
 }
 ```
 
+#### Add and Subtract
+_add={object}_
+
+_subtract={object}_
+
+Used to add and subtract periods of time from the given date, with the time periods expressed as object literals. See the [Moment docs on add and subtract](https://momentjs.com/docs/#/manipulating/add/) for more information.
+
+```jsx
+import React  from 'react';
+import Moment from 'react-moment';
+
+exports default class MyComponent extends React.Component {
+    render() {
+        const date = new Date();
+
+        return (
+            <div>
+                <Moment add={{ hours: 12 }}>{date}</Moment>
+                <Moment add={{ days: 1, hours: 12 }}>{date}</Moment>
+                <Moment subtract={{ hours: 12 }}>{date}</Moment>
+                <Moment subtract={{ days: 1, hours: 12 }}>{date}</Moment>
+            </div>
+        );
+    }
+}
+```
 
 #### From Now
 _fromNow={bool}_
@@ -191,7 +232,9 @@ import Moment from 'react-moment';
 
 exports default class MyComponent extends React.Component {
     render() {
-        <Moment fromNow>1976-04-19T12:59-0500</Moment>
+        return (
+            <Moment fromNow>1976-04-19T12:59-0500</Moment>
+        );
     }
 }
 ```
@@ -212,7 +255,9 @@ import Moment from 'react-moment';
 
 exports default class MyComponent extends React.Component {
     render() {
-        <Moment from="2015-04-19">1976-04-19T12:59-0500</Moment>
+        return (
+            <Moment from="2015-04-19">1976-04-19T12:59-0500</Moment>
+        );
     }
 }
 ```
@@ -235,7 +280,9 @@ import Moment from 'react-moment';
 
 exports default class MyComponent extends React.Component {
     render() {
-        <Moment toNow>1976-04-19T12:59-0500</Moment>
+        return (
+            <Moment toNow>1976-04-19T12:59-0500</Moment>
+        );
     }
 }
 ```
@@ -256,7 +303,9 @@ import Moment from 'react-moment';
 
 exports default class MyComponent extends React.Component {
     render() {
-        <Moment to="2015-04-19">1976-04-19T12:59-0500</Moment>
+        return (
+            <Moment to="2015-04-19">1976-04-19T12:59-0500</Moment>
+        );
     }
 }
 ```
@@ -279,8 +328,10 @@ import Moment from 'react-moment';
 
 exports default class MyComponent extends React.Component {
     render() {
-        let unixTimestamp = 198784740;
-        <Moment unix>{unixTimestamp}</Moment>
+        const unixTimestamp = 198784740;
+        return (
+            <Moment unix>{unixTimestamp}</Moment>
+        );
     }
 }
 ```
@@ -304,8 +355,12 @@ import 'moment-timezone';
 
 exports default class MyComponent extends React.Component {
     render() {
-        let unixTimestamp = 198784740;
-        <Moment unix tz="America/Los_Angeles">{unixTimestamp}</Moment>
+        const unixTimestamp = 198784740;
+        return (
+            <Moment unix tz="America/Los_Angeles">
+                {unixTimestamp}
+            </Moment>
+        );
     }
 }
 ```
@@ -328,8 +383,10 @@ import Moment from 'react-moment';
 
 exports default class MyComponent extends React.Component {
     render() {
-        let dateToFormat = '1976-04-19T12:59-0500';
-        <Moment locale="de">{dateToFormat}</Moment>
+        const dateToFormat = '1976-04-19T12:59-0500';
+        return (
+            <Moment locale="de">{dateToFormat}</Moment>
+        );
     }
 }
 ```
@@ -352,7 +409,9 @@ import Moment from 'react-moment';
 
 exports default class MyComponent extends React.Component {
     render() {
-        <Moment element="span">1976-04-19T12:59-0500</Moment>
+        return (
+            <Moment element="span">1976-04-19T12:59-0500</Moment>
+        );
     }
 }
 ```
@@ -375,7 +434,11 @@ import Moment from 'react-moment';
 
 exports default class MyComponent extends React.Component {
     render() {
-        <Moment onChange={(val) => { console.log(val); }}>1976-04-19T12:59-0500</Moment>
+        return (
+            <Moment onChange={(val) => { console.log(val); }}>
+                1976-04-19T12:59-0500
+            </Moment>
+        );
     }
 }
 ```
@@ -390,7 +453,11 @@ import Moment from 'react-moment';
 
 exports default class MyComponent extends React.Component {
     render() {
-        <Moment className="datetime" aria-hidden={true}>1976-04-19T12:59-0500</Moment>
+        return (
+            <Moment className="datetime" aria-hidden={true}>
+                1976-04-19T12:59-0500
+            </Moment>
+        );
     }
 }
 ```
