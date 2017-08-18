@@ -68,7 +68,7 @@ import Moment from 'react-moment';
 exports default class MyComponent extends React.Component {
     render() {
         return (
-            let dateToFormat = '1976-04-19T12:59-0500';
+            const dateToFormat = '1976-04-19T12:59-0500';
             <Moment>{dateToFormat}</Moment>
         );
     }
@@ -90,7 +90,7 @@ import Moment from 'react-moment';
 exports default class MyComponent extends React.Component {
     render() {
         return (
-            let dateToFormat = '1976-04-19T12:59-0500';
+            const dateToFormat = '1976-04-19T12:59-0500';
             <Moment date={dateToFormat} />
         );
     }
@@ -106,7 +106,7 @@ import Moment from 'react-moment';
 exports default class MyComponent extends React.Component {
     render() {
         return (
-            let dateToFormat = new Date('1976-04-19T12:59-0500');
+            const dateToFormat = new Date('1976-04-19T12:59-0500');
             <Moment date={dateToFormat} />
         );
     }
@@ -130,7 +130,9 @@ import Moment from 'react-moment';
 exports default class MyComponent extends React.Component {
     render() {
         return (
-            <Moment interval={30000}>1976-04-19T12:59-0500</Moment>
+            <Moment interval={30000}>
+                1976-04-19T12:59-0500
+            </Moment>
         );
     }
 }
@@ -144,7 +146,9 @@ import Moment from 'react-moment';
 exports default class MyComponent extends React.Component {
     render() {
         return (
-            <Moment interval={0}>1976-04-19T12:59-0500</Moment>
+            <Moment interval={0}>
+                1976-04-19T12:59-0500
+            </Moment>
         );
     }
 }
@@ -154,7 +158,7 @@ exports default class MyComponent extends React.Component {
 #### Formatting
 _format={string}_
 
-Formats the date according to the given format string.
+Formats the date according to the given format string. See the [Moment docs on formatting](https://momentjs.com/docs/#/parsing/string-format/) for more information.
 
 ```jsx
 import React  from 'react';
@@ -163,7 +167,9 @@ import Moment from 'react-moment';
 exports default class MyComponent extends React.Component {
     render() {
         return (
-            <Moment format="YYYY/MM/DD">1976-04-19T12:59-0500</Moment>
+            <Moment format="YYYY/MM/DD">
+                1976-04-19T12:59-0500
+            </Moment>
         );
     }
 }
@@ -179,7 +185,7 @@ Outputs:
 #### Parsing Dates
 _parse={string}_
 
-Moment can parse most standard date formats. Use the `parse` attribute to tell moment how to parse the given date when non-standard.
+Moment can parse most standard date formats. Use the `parse` attribute to tell moment how to parse the given date when non-standard. See the [Moment docs on parsing](https://momentjs.com/docs/#/parsing/string-format/) for more information.
 
 ```jsx
 import React  from 'react';
@@ -188,7 +194,9 @@ import Moment from 'react-moment';
 exports default class MyComponent extends React.Component {
     render() {
         return (
-            <Moment parse="YYYY-MM-DD HH:mm">1976-04-19 12:59</Moment>
+            <Moment parse="YYYY-MM-DD HH:mm">
+                1976-04-19 12:59
+            </Moment>
         );
     }
 }
