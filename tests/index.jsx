@@ -110,6 +110,36 @@ describe('react-moment', () => {
     expect(ReactDOM.findDOMNode(date).innerHTML).toEqual(expected);
   });
 
+  it('diff', () => {
+    let date = TestUtils.renderIntoDocument(
+      <Moment diff="2016-09-20T12:00">{DATE_STRING}</Moment>
+    );
+    let expected = moment(DATE_STRING).diff('2016-09-20T12:00').toString();
+    expect(ReactDOM.findDOMNode(date).innerHTML).toEqual(expected);
+
+    date = TestUtils.renderIntoDocument(
+      <Moment diff="2016-09-20T12:00" unit="days">{DATE_STRING}</Moment>
+    );
+    expected = moment(DATE_STRING).diff('2016-09-20T12:00', 'days');
+    expect(ReactDOM.findDOMNode(date).innerHTML).toEqual(expected.toString());
+
+    date = TestUtils.renderIntoDocument(
+      <Moment diff="2016-09-20T12:00" unit="years" decimal>
+        {DATE_STRING}
+      </Moment>
+    );
+    expected = moment(DATE_STRING).diff('2016-09-20T12:00', 'years', true);
+    expect(ReactDOM.findDOMNode(date).innerHTML).toEqual(expected.toString());
+
+    date = TestUtils.renderIntoDocument(
+      <Moment diff="2016-09-20T12:00" decimal>
+        {DATE_STRING}
+      </Moment>
+    );
+    expected = moment(DATE_STRING).diff('2016-09-20T12:00', null, true);
+    expect(ReactDOM.findDOMNode(date).innerHTML).toEqual(expected.toString());
+  });
+
   it('toNow', () => {
     let date = TestUtils.renderIntoDocument(
       <Moment toNow>{DATE_STRING}</Moment>

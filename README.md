@@ -18,6 +18,7 @@ React component for the [moment](http://momentjs.com/) date library.
     * [From](#from)
     * [To Now](#to-now)
     * [To](#to)
+    * [Difference](#difference)
     * [Unix Timestamps](#unix-timestamps)
     * [Timezone](#timezone)
     * [Locale](#locale)
@@ -322,6 +323,31 @@ Outputs:
 
 ```html
 <time>39 years</time>
+```
+
+
+#### Difference
+_diff={string}_
+
+_decimal={bool}_
+
+_unit={string}_
+
+```jsx
+import React  from 'react';
+import Moment from 'react-moment';
+
+exports default class MyComponent extends React.Component {
+    render() {
+        return (
+            <div>
+              <Moment diff="2015-04-19">1976-04-19T12:59-0500</Moment>
+              <Moment diff="2015-04-19" unit="days">1976-04-19T12:59-0500</Moment>
+              <Moment diff="2015-04-19" unit="years" decimal>1976-04-19T12:59-0500</Moment>
+            </div>
+        );
+    }
+}
 ```
 
 
