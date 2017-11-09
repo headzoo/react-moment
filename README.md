@@ -18,6 +18,7 @@ React component for the [moment](http://momentjs.com/) date library.
     * [From](#from)
     * [To Now](#to-now)
     * [To](#to)
+    * [Filter](#filter)
     * [Unix Timestamps](#unix-timestamps)
     * [Timezone](#timezone)
     * [Locale](#locale)
@@ -324,6 +325,35 @@ Outputs:
 <time>39 years</time>
 ```
 
+#### Filter
+_filter={function}_
+
+A function which modifies/transforms the date value prior to rendering.
+
+```jsx
+import React  from 'react';
+import Moment from 'react-moment';
+
+exports default class MyComponent extends React.Component {
+    render() {
+        const toUpperCaseFilter = (d) => {
+            return d.toUpperCase();
+        };
+
+        return (
+            const dateToFormat = '1976-04-19T12:59-0500';
+            <Moment filter={toUpperCaseFilter}>{dateToFormat}</Moment>
+        );
+    }
+}
+```
+
+Outputs:
+
+```html
+<time>MON APR 19 1976 12:59:00 GMT-0500</time>
+```
+
 
 #### Unix Timestamps
 _unix={bool}_
@@ -512,6 +542,7 @@ Some prop values may be set globally so you don't have to set them on every reac
 * globalLocale
 * globalFormat
 * globalParse
+* globalFilter
 * globalElement
 
 ```jsx
@@ -527,6 +558,11 @@ Moment.globalFormat = 'D MMM YYYY';
 
 // Use a <span> tag for every react-moment instance.
 Moment.globalElement = 'span';
+
+// Upper case all rendered dates.
+Moment.globalFilter = (d) => {
+    return d.toUpperCase();
+};
 
 const App = () => (
     <Moment>1976-04-19T12:59-0500</Moment>

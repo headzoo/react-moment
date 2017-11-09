@@ -61,6 +61,14 @@ describe('react-moment', () => {
     expect(ReactDOM.findDOMNode(date).innerHTML).toEqual(DATE_OUTPUT);
   });
 
+  it('filter', () => {
+    const filter = (d) => { return d.toUpperCase(); };
+    const date = TestUtils.renderIntoDocument(
+      <Moment parse="YYYY-MM-DD HH:mm" filter={filter}>1976-04-19 12:59</Moment>
+    );
+    expect(ReactDOM.findDOMNode(date).innerHTML).toEqual(DATE_OUTPUT.toUpperCase());
+  });
+
   it('format', () => {
     const date = TestUtils.renderIntoDocument(
       <Moment format="YYYY-MM-DD">{DATE_STRING}</Moment>

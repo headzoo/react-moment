@@ -10,6 +10,7 @@ export interface MomentProps {
     from?: string | number | Array<any> | object;
     toNow?: boolean;
     to?: string | number | Array<any> | object;
+    filter?: (d: string) => string,
     calendar?: boolean;
     unix?: boolean;
     utc?: boolean;

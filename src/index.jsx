@@ -34,6 +34,7 @@ export default class Moment extends React.Component {
     tz:       PropTypes.string,
     locale:   PropTypes.string,
     interval: PropTypes.number,
+    filter:   PropTypes.func,
     onChange: PropTypes.func
   };
 
@@ -46,12 +47,14 @@ export default class Moment extends React.Component {
     unix:     false,
     utc:      false,
     interval: 60000,
+    filter:   (d) => { return d; },
     onChange: () => {}
   };
 
   static globalLocale   = null;
   static globalFormat   = null;
   static globalParse    = null;
+  static globalFilter   = null;
   static globalElement  = null;
   static pooledElements = [];
   static pooledTimer    = null;
@@ -262,6 +265,10 @@ export default class Moment extends React.Component {
     } else {
       content = datetime.toString();
     }
+
+    const filter = Moment.globalFilter || this.props.filter;
+    content = filter(content);
+
     this.setState({ content }, () => {
       this.props.onChange(content);
     });
