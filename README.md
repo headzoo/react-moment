@@ -254,6 +254,26 @@ Outputs:
 <time>40 years ago</time>
 ```
 
+Including `ago` with `fromNow` will omit the suffix from the relative time.
+
+```jsx
+import React  from 'react';
+import Moment from 'react-moment';
+
+exports default class MyComponent extends React.Component {
+    render() {
+        return (
+            <Moment fromNow ago>1976-04-19T12:59-0500</Moment>
+        );
+    }
+}
+```
+
+Outputs:
+
+```html
+<time>40 years</time>
+```
 
 #### From
 _from={string}_
