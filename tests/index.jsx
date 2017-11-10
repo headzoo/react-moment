@@ -27,6 +27,11 @@ describe('react-moment', () => {
       <Moment>{DATE_DATE}</Moment>
     );
     expect(ReactDOM.findDOMNode(date).innerHTML).toEqual(DATE_OUTPUT);
+
+    date = TestUtils.renderIntoDocument(
+      <Moment unix>{DATE_UNIX}</Moment>
+    );
+    expect(ReactDOM.findDOMNode(date).innerHTML).toEqual(DATE_OUTPUT);
   });
 
   it('element', () => {
