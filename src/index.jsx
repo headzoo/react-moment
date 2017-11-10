@@ -51,6 +51,7 @@ export default class Moment extends React.Component {
     onChange: () => {}
   };
 
+  static globalMoment   = null;
   static globalLocale   = null;
   static globalFormat   = null;
   static globalParse    = null;
@@ -128,19 +129,19 @@ export default class Moment extends React.Component {
     if (Moment.globalLocale) {
       locale = Moment.globalLocale;
     } else {
-      locale = locale || moment.locale();
+      locale = locale || Moment.globalMoment.locale();
     }
 
     let datetime = null;
     if (utc) {
-      datetime = moment.utc(date, parse, locale);
+      datetime = Moment.globalMoment.utc(date, parse, locale);
     } else if (unix) {
       // moment#unix fails because of a deprecation,
       // but since moment#unix(s) is implemented as moment(s * 1000),
       // this works equivalently
-      datetime = moment(date * 1000, parse, locale);
+      datetime = Moment.globalMoment(date * 1000, parse, locale);
     } else {
-      datetime = moment(date, parse, locale);
+      datetime = Moment.globalMoment(date, parse, locale);
     }
     if (tz) {
       datetime = datetime.tz(tz);
@@ -156,6 +157,9 @@ export default class Moment extends React.Component {
    */
   constructor(props) {
     super(props);
+    if (!Moment.globalMoment) {
+      Moment.globalMoment = moment;
+    }
     this.state = {
       content: ''
     };

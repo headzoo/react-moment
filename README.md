@@ -559,6 +559,7 @@ Note: The `startPooledTimer()` method must be called before any `<Moment />` ins
 ### Global Config
 Some prop values may be set globally so you don't have to set them on every react-moment instance.
 
+* globalMoment
 * globalLocale
 * globalFormat
 * globalParse
@@ -568,7 +569,11 @@ Some prop values may be set globally so you don't have to set them on every reac
 ```jsx
 import React  from 'react';
 import ReactDOM from 'react-dom';
+import moment from 'moment/min/moment-with-locales';
 import Moment from 'react-moment';
+
+// Sets the moment instance to use.
+Moment.globalMoment = moment;
 
 // Set the locale for every react-moment instance to French.
 Moment.globalLocale = 'fr';
