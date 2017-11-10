@@ -649,3 +649,4 @@ This software is released under the MIT license. See LICENSE for more details.
 * [ali-master](https://github.com/ali-master)
 * [tujoworker](https://github.com/tujoworker)
 * [GaelGRIFFON](https://github.com/GaelGRIFFON)
+* [jamesjryan](https://github.com/jamesjryan)
