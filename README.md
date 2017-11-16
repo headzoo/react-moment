@@ -3,6 +3,7 @@ react-moment
 React component for the [moment](http://momentjs.com/) date library.
 
 [![Build Status](https://img.shields.io/travis/headzoo/react-moment/master.svg?style=flat-square)](https://travis-ci.org/headzoo/react-moment)
+[![Coverage Status](https://coveralls.io/repos/github/headzoo/react-moment/badge.svg?branch=master)](https://coveralls.io/github/headzoo/react-moment?branch=master)
 [![NPM Downloads](https://img.shields.io/npm/dm/react-moment.svg?style=flat-square)](https://www.npmjs.com/package/react-moment)
 [![MIT License](https://img.shields.io/badge/license-MIT-blue.svg?style=flat-square)](https://raw.githubusercontent.com/headzoo/react-moment/master/LICENSE)
 
