@@ -6,3 +6,5 @@ node_js:
 before_install:
   - export TZ=America/New_York
   - date
+script:
+  - npm run travis-test

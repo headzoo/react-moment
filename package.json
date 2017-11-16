@@ -20,6 +20,7 @@
     "babel-preset-env": "^1.6.1",
     "babel-preset-react": "^6.11.1",
     "babel-preset-stage-2": "^6.13.0",
+    "coveralls": "^3.0.0",
     "eslint": "^3.19.0",
     "eslint-config-airbnb": "^15.0.2",
     "eslint-import-resolver-babel-module": "^3.0.0",
@@ -65,7 +66,8 @@
   "scripts": {
     "build": "npm run clean && webpack -p",
     "clean": "rimraf ./dist/index.js",
-    "test": "export TZ=America/New_York; jest",
+    "test": "export TZ=America/New_York; jest --coverage",
+    "travis-test": "npm run test && cat ./coverage/lcov.info | ./node_modules/.bin/coveralls",
     "lint": "eslint ./src --cache --cache-location=.cache/eslint --ext .js,.jsx",
     "lint:fix": "npm run lint -- --fix",
     "storybook:dev": "start-storybook -p 6006",

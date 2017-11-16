@@ -2,5 +2,6 @@
 .cache
 node_modules
 stories/build
+coverage
 *.log
 .DS_Store
