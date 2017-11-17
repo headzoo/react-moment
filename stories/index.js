@@ -4,6 +4,8 @@ import { storiesOf } from '@storybook/react';
 import { withKnobs, text, number } from '@storybook/addon-knobs';
 import Moment from '../src/index';
 
+Moment.globalLocale = 'fr';
+
 storiesOf('Moment', module)
   .addDecorator(withKnobs)
   .addWithJSX('with default props', () => {

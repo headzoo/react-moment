@@ -212,4 +212,22 @@ describe('react-moment', () => {
     });
     expect(ReactDOM.findDOMNode(date).innerHTML).toEqual(NEW_DATE_OUTPUT);
   });
+
+  it('pooled timer', () => {
+    Moment.startPooledTimer(1);
+    const date = TestUtils.renderIntoDocument(
+      <Moment />
+    );
+    const expected = moment().toString();
+    expect(ReactDOM.findDOMNode(date).innerHTML).toEqual(expected);
+    date.componentWillUnmount();
+  });
+
+  it('globalLocale', () => {
+    Moment.globalLocale = 'fr';
+    const date = TestUtils.renderIntoDocument(
+      <Moment format="D MMM YYYY" date="1976-04-19T12:59-0500" />
+    );
+    expect(ReactDOM.findDOMNode(date).innerHTML).toEqual('19 avr. 1976');
+  });
 });
