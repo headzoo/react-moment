@@ -147,10 +147,16 @@ describe('react-moment', () => {
   });
 
   it('calendar', () => {
-    const date = TestUtils.renderIntoDocument(
+    let date = TestUtils.renderIntoDocument(
       <Moment calendar>{DATE_STRING}</Moment>
     );
-    const expected = moment(DATE_STRING).calendar();
+    let expected = moment(DATE_STRING).calendar();
+    expect(ReactDOM.findDOMNode(date).innerHTML).toEqual(expected);
+
+    date = TestUtils.renderIntoDocument(
+      <Moment calendar={{sameElse: "YYYY-MM-DD HH:mm"}}>{DATE_STRING}</Moment>
+    );
+    expected = moment(DATE_STRING).calendar(null, {sameElse: "YYYY-MM-DD HH:mm"});
     expect(ReactDOM.findDOMNode(date).innerHTML).toEqual(expected);
   });
 

@@ -15,6 +15,11 @@ const parseTypes = [
   PropTypes.array
 ];
 
+const calendarTypes = [
+  PropTypes.object,
+  PropTypes.bool
+]
+
 export default class Moment extends React.Component {
   static propTypes = {
     element:  PropTypes.any,
@@ -28,7 +33,7 @@ export default class Moment extends React.Component {
     from:     PropTypes.oneOfType(dateTypes),
     toNow:    PropTypes.bool,
     to:       PropTypes.oneOfType(dateTypes),
-    calendar: PropTypes.bool,
+    calendar: PropTypes.oneOfType(calendarTypes),
     unix:     PropTypes.bool,
     utc:      PropTypes.bool,
     tz:       PropTypes.string,
@@ -265,7 +270,7 @@ export default class Moment extends React.Component {
     } else if (toNow) {
       content = datetime.toNow(ago);
     } else if (calendar) {
-      content = datetime.calendar();
+      content = datetime.calendar(null, calendar);
     } else {
       content = datetime.toString();
     }
