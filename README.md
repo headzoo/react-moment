@@ -36,7 +36,7 @@ React component for the [moment](http://momentjs.com/) date library.
 
 
 ### Installing
-Use npm to install `react-moment` along with its peer dependency, `moment`.
+Node 6.4.0 or greater is required. Use npm to install `react-moment` along with its peer dependency, `moment`.
 
 ```sh
 npm install --save moment react-moment
