@@ -18,7 +18,7 @@ export interface MomentProps {
     locale?: string;
     interval?: number;
 
-    children?: string;
+    children?: string | number;
 }
 
 declare class Moment extends React.Component<MomentProps, any> {
