@@ -39,6 +39,9 @@ export default class Moment extends React.Component {
     tz:       PropTypes.string,
     locale:   PropTypes.string,
     interval: PropTypes.number,
+    diff:     PropTypes.oneOfType(dateTypes),
+    unit:     PropTypes.string,
+    decimal:  PropTypes.bool,
     filter:   PropTypes.func,
     onChange: PropTypes.func
   };
@@ -51,6 +54,8 @@ export default class Moment extends React.Component {
     ago:      false,
     unix:     false,
     utc:      false,
+    unit:     null,
+    decimal:  false,
     interval: 60000,
     filter:   (d) => { return d; },
     onChange: () => {}
@@ -246,7 +251,11 @@ export default class Moment extends React.Component {
    */
   update(props) {
     props = props || this.props;
-    const { fromNow, from, add, subtract, toNow, to, ago, calendar } = props;
+    const {
+      fromNow, from, add, subtract, toNow, to, ago,
+      calendar, diff, unit, decimal
+    } = props;
+
     let { format } = props;
 
     format = format || Moment.globalFormat;
@@ -271,6 +280,8 @@ export default class Moment extends React.Component {
       content = datetime.toNow(ago);
     } else if (calendar) {
       content = datetime.calendar(null, calendar);
+    } else if (diff) {
+      content = datetime.diff(diff, unit, decimal);
     } else {
       content = datetime.toString();
     }
