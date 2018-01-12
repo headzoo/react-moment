@@ -4,6 +4,8 @@ import { storiesOf } from '@storybook/react';
 import { withKnobs, text, number } from '@storybook/addon-knobs';
 import Moment from '../src/index';
 
+Moment.globalLocale = 'fr';
+
 storiesOf('Moment', module)
   .addDecorator(withKnobs)
   .addWithJSX('with default props', () => {
@@ -35,4 +37,15 @@ storiesOf('Moment', module)
       <Moment unix date={number('unix time', 198784740)} />
     );
   })
+  .addWithJSX('using filter prop', () => {
+    return (
+      <Moment
+        date={text('date', '1976-04-19T12:59-0500')}
+        filter={(d) => {
+          return d.toUpperCase();
+        }}
+      />
+    );
+  })
 ;
+

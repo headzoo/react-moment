@@ -27,6 +27,11 @@ describe('react-moment', () => {
       <Moment>{DATE_DATE}</Moment>
     );
     expect(ReactDOM.findDOMNode(date).innerHTML).toEqual(DATE_OUTPUT);
+
+    date = TestUtils.renderIntoDocument(
+      <Moment unix>{DATE_UNIX}</Moment>
+    );
+    expect(ReactDOM.findDOMNode(date).innerHTML).toEqual(DATE_OUTPUT);
   });
 
   it('element', () => {
@@ -59,6 +64,14 @@ describe('react-moment', () => {
       <Moment parse="YYYY-MM-DD HH:mm">1976-04-19 12:59</Moment>
     );
     expect(ReactDOM.findDOMNode(date).innerHTML).toEqual(DATE_OUTPUT);
+  });
+
+  it('filter', () => {
+    const filter = (d) => { return d.toUpperCase(); };
+    const date = TestUtils.renderIntoDocument(
+      <Moment parse="YYYY-MM-DD HH:mm" filter={filter}>1976-04-19 12:59</Moment>
+    );
+    expect(ReactDOM.findDOMNode(date).innerHTML).toEqual(DATE_OUTPUT.toUpperCase());
   });
 
   it('format', () => {
@@ -169,10 +182,16 @@ describe('react-moment', () => {
   });
 
   it('calendar', () => {
-    const date = TestUtils.renderIntoDocument(
+    let date = TestUtils.renderIntoDocument(
       <Moment calendar>{DATE_STRING}</Moment>
     );
-    const expected = moment(DATE_STRING).calendar();
+    let expected = moment(DATE_STRING).calendar();
+    expect(ReactDOM.findDOMNode(date).innerHTML).toEqual(expected);
+
+    date = TestUtils.renderIntoDocument(
+      <Moment calendar={{sameElse: "YYYY-MM-DD HH:mm"}}>{DATE_STRING}</Moment>
+    );
+    expected = moment(DATE_STRING).calendar(null, {sameElse: "YYYY-MM-DD HH:mm"});
     expect(ReactDOM.findDOMNode(date).innerHTML).toEqual(expected);
   });
 
@@ -233,5 +252,23 @@ describe('react-moment', () => {
       children: NEW_DATE_STRING
     });
     expect(ReactDOM.findDOMNode(date).innerHTML).toEqual(NEW_DATE_OUTPUT);
+  });
+
+  it('pooled timer', () => {
+    Moment.startPooledTimer(1);
+    const date = TestUtils.renderIntoDocument(
+      <Moment />
+    );
+    const expected = moment().toString();
+    expect(ReactDOM.findDOMNode(date).innerHTML).toEqual(expected);
+    date.componentWillUnmount();
+  });
+
+  it('globalLocale', () => {
+    Moment.globalLocale = 'fr';
+    const date = TestUtils.renderIntoDocument(
+      <Moment format="D MMM YYYY" date="1976-04-19T12:59-0500" />
+    );
+    expect(ReactDOM.findDOMNode(date).innerHTML).toEqual('19 avr. 1976');
   });
 });

@@ -3,6 +3,7 @@ react-moment
 React component for the [moment](http://momentjs.com/) date library.
 
 [![Build Status](https://img.shields.io/travis/headzoo/react-moment/master.svg?style=flat-square)](https://travis-ci.org/headzoo/react-moment)
+[![Coverage Status](https://img.shields.io/coveralls/github/headzoo/react-moment.svg?style=flat-square)](https://coveralls.io/github/headzoo/react-moment?branch=master)
 [![NPM Downloads](https://img.shields.io/npm/dm/react-moment.svg?style=flat-square)](https://www.npmjs.com/package/react-moment)
 [![MIT License](https://img.shields.io/badge/license-MIT-blue.svg?style=flat-square)](https://raw.githubusercontent.com/headzoo/react-moment/master/LICENSE)
 
@@ -19,8 +20,10 @@ React component for the [moment](http://momentjs.com/) date library.
     * [To Now](#to-now)
     * [To](#to)
     * [Difference](#difference)
+    * [Filter](#filter)
     * [Unix Timestamps](#unix-timestamps)
     * [Timezone](#timezone)
+    * [Calendar](#calendar)
     * [Locale](#locale)
     * [Element](#element)
     * [OnChange](#onchange)
@@ -254,6 +257,26 @@ Outputs:
 <time>40 years ago</time>
 ```
 
+Including `ago` with `fromNow` will omit the suffix from the relative time.
+
+```jsx
+import React  from 'react';
+import Moment from 'react-moment';
+
+exports default class MyComponent extends React.Component {
+    render() {
+        return (
+            <Moment fromNow ago>1976-04-19T12:59-0500</Moment>
+        );
+    }
+}
+```
+
+Outputs:
+
+```html
+<time>40 years</time>
+```
 
 #### From
 _from={string}_
@@ -323,6 +346,35 @@ Outputs:
 
 ```html
 <time>39 years</time>
+```
+
+#### Filter
+_filter={function}_
+
+A function which modifies/transforms the date value prior to rendering.
+
+```jsx
+import React  from 'react';
+import Moment from 'react-moment';
+
+exports default class MyComponent extends React.Component {
+    render() {
+        const toUpperCaseFilter = (d) => {
+            return d.toUpperCase();
+        };
+
+        return (
+            const dateToFormat = '1976-04-19T12:59-0500';
+            <Moment filter={toUpperCaseFilter}>{dateToFormat}</Moment>
+        );
+    }
+}
+```
+
+Outputs:
+
+```html
+<time>MON APR 19 1976 12:59:00 GMT-0500</time>
 ```
 
 
@@ -403,6 +455,35 @@ Outputs:
 
 ```html
 <time>Mon Apr 19 1976 09:59:00 GMT-0800</time>
+```
+
+#### Calendar
+_calendar={object|bool}_
+
+Customize the strings used for the calendar function.
+
+```jsx
+import React  from 'react';
+import Moment from 'react-moment';
+
+exports default class MyComponent extends React.Component {
+    render() {
+        const calendarStrings = {
+            lastDay : '[Yesterday at] LT',
+            sameDay : '[Today at] LT',
+            nextDay : '[Tomorrow at] LT',
+            lastWeek : '[last] dddd [at] LT',
+            nextWeek : 'dddd [at] LT',
+            sameElse : 'L'
+        };
+
+        return (
+            <Moment calendar={calendarStrings}>
+                '1976-04-19T12:59-0500'
+            </Moment>
+        );
+    }
+}
 ```
 
 
@@ -535,15 +616,21 @@ Note: The `startPooledTimer()` method must be called before any `<Moment />` ins
 ### Global Config
 Some prop values may be set globally so you don't have to set them on every react-moment instance.
 
+* globalMoment
 * globalLocale
 * globalFormat
 * globalParse
+* globalFilter
 * globalElement
 
 ```jsx
 import React  from 'react';
 import ReactDOM from 'react-dom';
+import moment from 'moment/min/moment-with-locales';
 import Moment from 'react-moment';
+
+// Sets the moment instance to use.
+Moment.globalMoment = moment;
 
 // Set the locale for every react-moment instance to French.
 Moment.globalLocale = 'fr';
@@ -553,6 +640,11 @@ Moment.globalFormat = 'D MMM YYYY';
 
 // Use a <span> tag for every react-moment instance.
 Moment.globalElement = 'span';
+
+// Upper case all rendered dates.
+Moment.globalFilter = (d) => {
+    return d.toUpperCase();
+};
 
 const App = () => (
     <Moment>1976-04-19T12:59-0500</Moment>
@@ -619,3 +711,5 @@ This software is released under the MIT license. See LICENSE for more details.
 * [ali-master](https://github.com/ali-master)
 * [tujoworker](https://github.com/tujoworker)
 * [GaelGRIFFON](https://github.com/GaelGRIFFON)
+* [jamesjryan](https://github.com/jamesjryan)
+* [brasskazoo](https://github.com/brasskazoo)
