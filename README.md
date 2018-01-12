@@ -22,6 +22,7 @@ React component for the [moment](http://momentjs.com/) date library.
     * [Filter](#filter)
     * [Unix Timestamps](#unix-timestamps)
     * [Timezone](#timezone)
+    * [Calendar](#calendar)
     * [Locale](#locale)
     * [Element](#element)
     * [OnChange](#onchange)
@@ -430,6 +431,35 @@ Outputs:
 <time>Mon Apr 19 1976 09:59:00 GMT-0800</time>
 ```
 
+#### Calendar
+_calendar={object|bool}_
+
+Customize the strings used for the calendar function.
+
+```jsx
+import React  from 'react';
+import Moment from 'react-moment';
+
+exports default class MyComponent extends React.Component {
+    render() {
+        const calendarStrings = {
+            lastDay : '[Yesterday at] LT',
+            sameDay : '[Today at] LT',
+            nextDay : '[Tomorrow at] LT',
+            lastWeek : '[last] dddd [at] LT',
+            nextWeek : 'dddd [at] LT',
+            sameElse : 'L'
+        };
+
+        return (
+            <Moment calendar={calendarStrings}>
+                '1976-04-19T12:59-0500'
+            </Moment>
+        );
+    }
+}
+```
+
 
 #### Locale
 _locale={string}_
@@ -656,3 +686,4 @@ This software is released under the MIT license. See LICENSE for more details.
 * [tujoworker](https://github.com/tujoworker)
 * [GaelGRIFFON](https://github.com/GaelGRIFFON)
 * [jamesjryan](https://github.com/jamesjryan)
+* [brasskazoo](https://github.com/brasskazoo)
