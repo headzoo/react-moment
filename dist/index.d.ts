@@ -11,7 +11,10 @@ export interface MomentProps {
     toNow?: boolean;
     to?: string | number | Array<any> | object;
     filter?: (d: string) => string,
-    calendar?: boolean;
+    calendar?: boolean | object;
+    diff?: string | number | Array<any> | object;
+    unit?: string;
+    decimal?: boolean;
     unix?: boolean;
     utc?: boolean;
     tz?: string;
