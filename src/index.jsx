@@ -18,7 +18,7 @@ const parseTypes = [
 const calendarTypes = [
   PropTypes.object,
   PropTypes.bool
-]
+];
 
 export default class Moment extends React.Component {
   static propTypes = {
