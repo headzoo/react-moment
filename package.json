@@ -6,7 +6,12 @@
     "name": "Sean Hickey",
     "web": "http://headzoo.io"
   },
-  "dependencies": {},
+  "dependencies": {
+    "istanbul": "^0.4.5",
+    "istanbul-api": "1.2.2",
+    "istanbul-reports": "1.1.4",
+    "jest": "^22.4.2"
+  },
   "devDependencies": {
     "@storybook/addon-actions": "^3.4.7",
     "@storybook/addon-knobs": "^3.4.7",
@@ -67,7 +72,7 @@
   "scripts": {
     "build": "npm run clean && webpack -p",
     "clean": "rimraf ./dist/index.js",
-    "test": "export TZ=America/New_York; jest",
+    "test": "export TZ=America/New_York; jest --coverage",
     "travis-test": "npm run test && cat ./coverage/lcov.info | ./node_modules/.bin/coveralls",
     "lint": "eslint ./src --cache --cache-location=.cache/eslint --ext .js,.jsx",
     "lint:fix": "npm run lint -- --fix",
