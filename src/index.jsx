@@ -22,28 +22,29 @@ const calendarTypes = [
 
 export default class Moment extends React.Component {
   static propTypes = {
-    element:  PropTypes.any,
-    date:     PropTypes.oneOfType(dateTypes),
-    parse:    PropTypes.oneOfType(parseTypes),
-    format:   PropTypes.string,
-    add:      PropTypes.object,
-    subtract: PropTypes.object,
-    ago:      PropTypes.bool,
-    fromNow:  PropTypes.bool,
-    from:     PropTypes.oneOfType(dateTypes),
-    toNow:    PropTypes.bool,
-    to:       PropTypes.oneOfType(dateTypes),
-    calendar: PropTypes.oneOfType(calendarTypes),
-    unix:     PropTypes.bool,
-    utc:      PropTypes.bool,
-    tz:       PropTypes.string,
-    locale:   PropTypes.string,
-    interval: PropTypes.number,
-    diff:     PropTypes.oneOfType(dateTypes),
-    unit:     PropTypes.string,
-    decimal:  PropTypes.bool,
-    filter:   PropTypes.func,
-    onChange: PropTypes.func
+    element:       PropTypes.any,
+    date:          PropTypes.oneOfType(dateTypes),
+    parse:         PropTypes.oneOfType(parseTypes),
+    format:        PropTypes.string,
+    add:           PropTypes.object,
+    subtract:      PropTypes.object,
+    ago:           PropTypes.bool,
+    fromNow:       PropTypes.bool,
+    fromNowDuring: PropTypes.number,
+    from:          PropTypes.oneOfType(dateTypes),
+    toNow:         PropTypes.bool,
+    to:            PropTypes.oneOfType(dateTypes),
+    calendar:      PropTypes.oneOfType(calendarTypes),
+    unix:          PropTypes.bool,
+    utc:           PropTypes.bool,
+    tz:            PropTypes.string,
+    locale:        PropTypes.string,
+    interval:      PropTypes.number,
+    diff:          PropTypes.oneOfType(dateTypes),
+    unit:          PropTypes.string,
+    decimal:       PropTypes.bool,
+    filter:        PropTypes.func,
+    onChange:      PropTypes.func
   };
 
   static defaultProps = {
@@ -254,7 +255,7 @@ export default class Moment extends React.Component {
   update(props) {
     props = props || this.props;
     const {
-      fromNow, from, add, subtract, toNow, to, ago,
+      fromNow, fromNowDuring, from, add, subtract, toNow, to, ago,
       calendar, diff, unit, decimal
     } = props;
 
@@ -269,12 +270,13 @@ export default class Moment extends React.Component {
       datetime.subtract(subtract);
     }
 
+    const fromNowPeriod = Boolean(fromNowDuring) && - datetime.diff(moment()) < fromNowDuring;
     let content  = '';
-    if (format) {
+    if (format && !fromNowPeriod ) {
       content = datetime.format(format);
     } else if (from) {
       content = datetime.from(from, ago);
-    } else if (fromNow) {
+    } else if (fromNow || fromNowPeriod) {
       content = datetime.fromNow(ago);
     } else if (to) {
       content = datetime.to(to, ago);

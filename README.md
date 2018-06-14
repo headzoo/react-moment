@@ -16,6 +16,7 @@ React component for the [moment](http://momentjs.com/) date library.
     * [Parsing Dates](#parsing-dates)
     * [Add and Subtract](#add-and-subtract)
     * [From Now](#from-now)
+    * [From Now During](#from-now-during)
     * [From](#from)
     * [To Now](#to-now)
     * [To](#to)
@@ -277,6 +278,12 @@ Outputs:
 ```html
 <time>40 years</time>
 ```
+
+#### From Now During
+
+_fromNowDuring={number}_
+
+Setting _fromNowDuring_ will display the relative time as with _fromNow_ but just during its value in milliseconds, after that _format_ will be used instead
 
 #### From
 _from={string}_
