@@ -283,7 +283,7 @@ Outputs:
 
 _fromNowDuring={number}_
 
-Setting _fromNowDuring_ will display the relative time as with _fromNow_ but just during its value in milliseconds, after that _format_ will be used instead
+Setting _fromNowDuring_ will display the relative time as with _fromNow_ but just during its value in milliseconds, after that _format_ will be used instead.
 
 #### From
 _from={string}_
