@@ -271,4 +271,12 @@ describe('react-moment', () => {
     );
     expect(ReactDOM.findDOMNode(date).innerHTML).toEqual('19 avr. 1976');
   });
+
+  it('globalTimezone', () => {
+    Moment.globalTimezone = 'America/Los_Angeles';
+    const date = TestUtils.renderIntoDocument(
+      <Moment format="YYYY-MM-DD HH" date="1976-04-19T12:59-0500" />
+    );
+    expect(ReactDOM.findDOMNode(date).innerHTML).toEqual('1976-04-19 09');
+  });
 });

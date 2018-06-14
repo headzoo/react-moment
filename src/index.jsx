@@ -67,6 +67,7 @@ export default class Moment extends React.Component {
   static globalParse    = null;
   static globalFilter   = null;
   static globalElement  = null;
+  static globalTimezone = null;
   static pooledElements = [];
   static pooledTimer    = null;
 
@@ -131,11 +132,12 @@ export default class Moment extends React.Component {
    * @returns {*}
    */
   static getDatetime(props) {
-    const { utc, unix, tz } = props;
-    let { date, locale, parse } = props;
+    const { utc, unix } = props;
+    let { date, locale, parse, tz } = props;
 
     date = date || props.children;
     parse = parse || Moment.globalParse;
+    tz = tz || Moment.globalTimezone;
     if (Moment.globalLocale) {
       locale = Moment.globalLocale;
     } else {
