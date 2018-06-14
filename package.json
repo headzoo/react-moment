@@ -67,7 +67,7 @@
   "scripts": {
     "build": "npm run clean && webpack -p",
     "clean": "rimraf ./dist/index.js",
-    "test": "export TZ=America/New_York; jest --coverage",
+    "test": "export TZ=America/New_York; jest",
     "travis-test": "npm run test && cat ./coverage/lcov.info | ./node_modules/.bin/coveralls",
     "lint": "eslint ./src --cache --cache-location=.cache/eslint --ext .js,.jsx",
     "lint:fix": "npm run lint -- --fix",
