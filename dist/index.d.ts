@@ -7,6 +7,7 @@ export interface MomentProps {
     format?: string;
     ago?: boolean;
     fromNow?: boolean;
+    fromNowDuring?: boolean;
     from?: string | number | Array<any> | object;
     toNow?: boolean;
     to?: string | number | Array<any> | object;
@@ -20,7 +21,28 @@ export interface MomentProps {
     tz?: string;
     locale?: string;
     interval?: number;
-
+    subtract?: {
+        years?: number
+        quarters?: number
+        months?: number
+        weeks?: number
+        days?: number
+        hours?: number
+        minutes?: number
+        seconds?: number
+        milliseconds?: number
+    }
+    add?: {
+        years?: number
+        quarters?: number
+        months?: number
+        weeks?: number
+        days?: number
+        hours?: number
+        minutes?: number
+        seconds?: number
+        milliseconds?: number
+    }
     children?: string | number;
 }
 
