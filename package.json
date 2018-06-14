@@ -6,12 +6,7 @@
     "name": "Sean Hickey",
     "web": "http://headzoo.io"
   },
-  "dependencies": {
-    "istanbul": "^0.4.5",
-    "istanbul-api": "1.2.2",
-    "istanbul-reports": "1.1.4",
-    "jest": "^22.4.2"
-  },
+  "dependencies": {},
   "devDependencies": {
     "@storybook/addon-actions": "^3.4.7",
     "@storybook/addon-knobs": "^3.4.7",
@@ -33,11 +28,14 @@
     "eslint-plugin-import": "^2.12.0",
     "eslint-plugin-jsx-a11y": "^5.1.1",
     "eslint-plugin-react": "^7.9.1",
-    "jest": "^22.4.4",
+    "jest": "^22.4.2",
     "json-loader": "^0.5.4",
     "moment": "^2.22.2",
     "moment-timezone": "^0.5.17",
     "prop-types": "^15.6.1",
+    "istanbul": "^0.4.5",
+    "istanbul-api": "1.2.2",
+    "istanbul-reports": "1.1.4",
     "react": "^15.6.0",
     "react-dom": "^15.6.0",
     "rimraf": "^2.5.4",
