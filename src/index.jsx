@@ -270,9 +270,9 @@ export default class Moment extends React.Component {
       datetime.subtract(subtract);
     }
 
-    const fromNowPeriod = Boolean(fromNowDuring) && - datetime.diff(moment()) < fromNowDuring;
+    const fromNowPeriod = Boolean(fromNowDuring) && -datetime.diff(moment()) < fromNowDuring;
     let content  = '';
-    if (format && !fromNowPeriod ) {
+    if (format && !fromNowPeriod) {
       content = datetime.format(format);
     } else if (from) {
       content = datetime.from(from, ago);
