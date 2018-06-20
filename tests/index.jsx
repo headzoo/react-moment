@@ -109,6 +109,24 @@ describe('react-moment', () => {
     expect(ReactDOM.findDOMNode(date).innerHTML).toEqual(expected);
   });
 
+  it('fromNowDuring', () => {
+    const twoHoursAgo = moment().add(-2, 'hours');
+    const hour = 1e3 * 60 * 60;
+    const TWO_HOURS_AGO_ISO = twoHoursAgo.format();
+
+    let date = TestUtils.renderIntoDocument(
+      <Moment format="YYYY-MM-DD HH:mm" fromNowDuring={3 * hour}>{TWO_HOURS_AGO_ISO}</Moment>
+    );
+    let expected = twoHoursAgo.fromNow();
+    expect(ReactDOM.findDOMNode(date).innerHTML).toEqual(expected);
+
+    date = TestUtils.renderIntoDocument(
+      <Moment format="YYYY-MM-DD HH:mm" fromNowDuring={1 * hour}>{TWO_HOURS_AGO_ISO}</Moment>
+    );
+    expected = twoHoursAgo.format('YYYY-MM-DD HH:mm');
+    expect(ReactDOM.findDOMNode(date).innerHTML).toEqual(expected);
+  });
+
   it('from', () => {
     let date = TestUtils.renderIntoDocument(
       <Moment from="2016-09-20T12:00">{DATE_STRING}</Moment>

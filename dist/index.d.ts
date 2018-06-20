@@ -7,7 +7,7 @@ export interface MomentProps {
     format?: string;
     ago?: boolean;
     fromNow?: boolean;
-    fromNowDuring?: boolean;
+    fromNowDuring?: number;
     from?: string | number | Array<any> | object;
     toNow?: boolean;
     to?: string | number | Array<any> | object;
