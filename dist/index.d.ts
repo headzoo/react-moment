@@ -1,53 +1,70 @@
 import * as React from 'react';
+import {ViewStyle} from 'react-native';
+
+type elementTypes = string | React.SFC<any> | React.ComponentClass<any>;
+type subtractOrAddTypes = {
+    years?: number,
+    y?: number,
+    quarters?: number,
+    Q?: number,
+    months?: number,
+    M?: number,
+    weeks?: number,
+    w?: number,
+    days?: number,
+    d?: number,
+    hours?: number,
+    h?: number,
+    minutes?: number,
+    m?: number,
+    seconds?: number,
+    s?: number,
+    milliseconds?: number,
+    ms?: number
+};
+type dateTypes = string|number|Array<string|number|object>|object;
+type calendarTypes = boolean|object;
 
 export interface MomentProps {
-    element?: string | React.SFC<any> | React.ComponentClass<any>;
-    date?: string | number | Array<any> | object;
-    parse?: string | Array<any>;
-    format?: string;
-    ago?: boolean;
-    fromNow?: boolean;
-    fromNowDuring?: number;
-    from?: string | number | Array<any> | object;
-    toNow?: boolean;
-    to?: string | number | Array<any> | object;
-    filter?: (d: string) => string,
-    calendar?: boolean | object;
-    diff?: string | number | Array<any> | object;
-    unit?: string;
-    decimal?: boolean;
-    unix?: boolean;
-    utc?: boolean;
-    tz?: string;
-    locale?: string;
-    interval?: number;
-    subtract?: {
-        years?: number
-        quarters?: number
-        months?: number
-        weeks?: number
-        days?: number
-        hours?: number
-        minutes?: number
-        seconds?: number
-        milliseconds?: number
-    }
-    add?: {
-        years?: number
-        quarters?: number
-        months?: number
-        weeks?: number
-        days?: number
-        hours?: number
-        minutes?: number
-        seconds?: number
-        milliseconds?: number
-    }
-    children?: string | number;
+    element?: elementTypes,
+    date?: dateTypes,
+    parse?: string | Array<any>,
+    format?: string,
+    ago?: boolean,
+    fromNow?: boolean,
+    fromNowDuring?: number,
+    from?: dateTypes,
+    toNow?: boolean,
+    to?: dateTypes,
+    calendar?: calendarTypes,
+    diff?: dateTypes,
+    unit?: string,
+    decimal?: boolean,
+    unix?: boolean,
+    utc?: boolean,
+    tz?: string,
+    locale?: string,
+    interval?: number,
+    subtract?: subtractOrAddTypes,
+    add?: subtractOrAddTypes,
+    children?: string | number,
+    style?: ViewStyle,
+    filter?: (date: string) => string,
+    onChange?: (content:any) => any
 }
 
 declare class Moment extends React.Component<MomentProps, any> {
-
+    constructor(props:MomentProps);
+    public static globalMoment: Function;
+    public static globalLocale: string;
+    public static globalFormat: string;
+    public static globalParse: string;
+    public static globalTimezone: string;
+    public static globalElement: any;
+    public static globalFilter: Function;
+    public static startPooledTimer(interval?: number): void;
+    public static clearPooledTimer(): void;
+    public static getDatetime(props: MomentProps): any;
 }
 
 export default Moment;
