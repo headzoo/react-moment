@@ -1,5 +1,5 @@
 import * as React from 'react';
-import {ViewStyle} from 'react-native';
+import { ViewStyle } from 'react-native';
 
 type elementTypes = string | React.SFC<any> | React.ComponentClass<any>;
 type subtractOrAddTypes = {
