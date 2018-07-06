@@ -1,7 +1,6 @@
-import * as React from 'react';
-import { ViewStyle } from 'react-native';
+import { Component, ComponentClass, SFC, CSSProperties } from 'react';
 
-type elementTypes = string | React.SFC<any> | React.ComponentClass<any>;
+type elementTypes = string | SFC<any> | ComponentClass<any>;
 type subtractOrAddTypes = {
     years?: number,
     y?: number,
@@ -48,12 +47,12 @@ export interface MomentProps {
     subtract?: subtractOrAddTypes,
     add?: subtractOrAddTypes,
     children?: string | number,
-    style?: ViewStyle,
+    style?: CSSProperties,
     filter?: (date: string) => string,
     onChange?: (content:any) => any
 }
 
-declare class Moment extends React.Component<MomentProps, any> {
+declare class Moment extends Component<MomentProps, any> {
     constructor(props:MomentProps);
     public static globalMoment: Function;
     public static globalLocale: string;
