@@ -727,3 +727,4 @@ This software is released under the MIT license. See LICENSE for more details.
 * [henvo](https://github.com/henvo)
 * [tadeo](https://github.com/tadeo)
 * [centrual](https://github.com/centrual)
+* [beniaminrychter](https://github.com/beniaminrychter)
