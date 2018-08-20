@@ -70,7 +70,7 @@ export default class App extends React.Component {
 import React  from 'react';
 import Moment from 'react-moment';
 
-exports default class MyComponent extends React.Component {
+export default class MyComponent extends React.Component {
     render() {
         return (
             const dateToFormat = '1976-04-19T12:59-0500';
@@ -92,7 +92,7 @@ The above example could also be written this way if you prefer to pass the date 
 import React  from 'react';
 import Moment from 'react-moment';
 
-exports default class MyComponent extends React.Component {
+export default class MyComponent extends React.Component {
     render() {
         return (
             const dateToFormat = '1976-04-19T12:59-0500';
@@ -108,7 +108,7 @@ The date value may be a string, object, array, or `Date` instance.
 import React  from 'react';
 import Moment from 'react-moment';
 
-exports default class MyComponent extends React.Component {
+export default class MyComponent extends React.Component {
     render() {
         return (
             const dateToFormat = new Date('1976-04-19T12:59-0500');
@@ -132,7 +132,7 @@ Updates the time every 30 seconds (30000 milliseconds).
 import React  from 'react';
 import Moment from 'react-moment';
 
-exports default class MyComponent extends React.Component {
+export default class MyComponent extends React.Component {
     render() {
         return (
             <Moment interval={30000}>
@@ -148,7 +148,7 @@ Disables updating.
 import React  from 'react';
 import Moment from 'react-moment';
 
-exports default class MyComponent extends React.Component {
+export default class MyComponent extends React.Component {
     render() {
         return (
             <Moment interval={0}>
@@ -169,7 +169,7 @@ Formats the date according to the given format string. See the [Moment docs on f
 import React  from 'react';
 import Moment from 'react-moment';
 
-exports default class MyComponent extends React.Component {
+export default class MyComponent extends React.Component {
     render() {
         return (
             <Moment format="YYYY/MM/DD">
@@ -196,7 +196,7 @@ Moment can parse most standard date formats. Use the `parse` attribute to tell m
 import React  from 'react';
 import Moment from 'react-moment';
 
-exports default class MyComponent extends React.Component {
+export default class MyComponent extends React.Component {
     render() {
         return (
             <Moment parse="YYYY-MM-DD HH:mm">
@@ -218,7 +218,7 @@ Used to add and subtract periods of time from the given date, with the time peri
 import React  from 'react';
 import Moment from 'react-moment';
 
-exports default class MyComponent extends React.Component {
+export default class MyComponent extends React.Component {
     render() {
         const date = new Date();
 
@@ -243,7 +243,7 @@ Sometimes called timeago or relative time, displays the date as the time _from n
 import React  from 'react';
 import Moment from 'react-moment';
 
-exports default class MyComponent extends React.Component {
+export default class MyComponent extends React.Component {
     render() {
         return (
             <Moment fromNow>1976-04-19T12:59-0500</Moment>
@@ -264,7 +264,7 @@ Including `ago` with `fromNow` will omit the suffix from the relative time.
 import React  from 'react';
 import Moment from 'react-moment';
 
-exports default class MyComponent extends React.Component {
+export default class MyComponent extends React.Component {
     render() {
         return (
             <Moment fromNow ago>1976-04-19T12:59-0500</Moment>
@@ -292,7 +292,7 @@ _from={string}_
 import React  from 'react';
 import Moment from 'react-moment';
 
-exports default class MyComponent extends React.Component {
+export default class MyComponent extends React.Component {
     render() {
         return (
             <Moment from="2015-04-19">1976-04-19T12:59-0500</Moment>
@@ -317,7 +317,7 @@ Similar to `fromNow`, but gives the opposite interval.
 import React  from 'react';
 import Moment from 'react-moment';
 
-exports default class MyComponent extends React.Component {
+export default class MyComponent extends React.Component {
     render() {
         return (
             <Moment toNow>1976-04-19T12:59-0500</Moment>
@@ -340,7 +340,7 @@ _to={string}_
 import React  from 'react';
 import Moment from 'react-moment';
 
-exports default class MyComponent extends React.Component {
+export default class MyComponent extends React.Component {
     render() {
         return (
             <Moment to="2015-04-19">1976-04-19T12:59-0500</Moment>
@@ -364,7 +364,7 @@ A function which modifies/transforms the date value prior to rendering.
 import React  from 'react';
 import Moment from 'react-moment';
 
-exports default class MyComponent extends React.Component {
+export default class MyComponent extends React.Component {
     render() {
         const toUpperCaseFilter = (d) => {
             return d.toUpperCase();
@@ -396,7 +396,7 @@ _unit={string}_
 import React  from 'react';
 import Moment from 'react-moment';
 
-exports default class MyComponent extends React.Component {
+export default class MyComponent extends React.Component {
     render() {
         return (
             <div>
@@ -419,7 +419,7 @@ Tells Moment to parse the given date value as a unix timestamp.
 import React  from 'react';
 import Moment from 'react-moment';
 
-exports default class MyComponent extends React.Component {
+export default class MyComponent extends React.Component {
     render() {
         const unixTimestamp = 198784740;
         return (
@@ -446,7 +446,7 @@ import React  from 'react';
 import Moment from 'react-moment';
 import 'moment-timezone';
 
-exports default class MyComponent extends React.Component {
+export default class MyComponent extends React.Component {
     render() {
         const unixTimestamp = 198784740;
         return (
@@ -473,7 +473,7 @@ Customize the strings used for the calendar function.
 import React  from 'react';
 import Moment from 'react-moment';
 
-exports default class MyComponent extends React.Component {
+export default class MyComponent extends React.Component {
     render() {
         const calendarStrings = {
             lastDay : '[Yesterday at] LT',
@@ -503,7 +503,7 @@ Sets the locale used to display the date.
 import React  from 'react';
 import Moment from 'react-moment';
 
-exports default class MyComponent extends React.Component {
+export default class MyComponent extends React.Component {
     render() {
         const dateToFormat = '1976-04-19T12:59-0500';
         return (
@@ -529,7 +529,7 @@ The element type to render as (string or function).
 import React  from 'react';
 import Moment from 'react-moment';
 
-exports default class MyComponent extends React.Component {
+export default class MyComponent extends React.Component {
     render() {
         return (
             <Moment element="span">1976-04-19T12:59-0500</Moment>
@@ -554,7 +554,7 @@ The `onChange` prop is called each time the date is updated, which by default is
 import React  from 'react';
 import Moment from 'react-moment';
 
-exports default class MyComponent extends React.Component {
+export default class MyComponent extends React.Component {
     render() {
         return (
             <Moment onChange={(val) => { console.log(val); }}>
@@ -573,7 +573,7 @@ Any other properties are passed to the `<time>` element.
 import React  from 'react';
 import Moment from 'react-moment';
 
-exports default class MyComponent extends React.Component {
+export default class MyComponent extends React.Component {
     render() {
         return (
             <Moment className="datetime" aria-hidden={true}>
