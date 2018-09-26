@@ -28,7 +28,7 @@
     "eslint-plugin-import": "^2.12.0",
     "eslint-plugin-jsx-a11y": "^5.1.1",
     "eslint-plugin-react": "^7.9.1",
-    "jest": "^22.4.2",
+    "jest": "^23.6.0",
     "json-loader": "^0.5.4",
     "moment": "^2.22.2",
     "moment-timezone": "^0.5.17",
