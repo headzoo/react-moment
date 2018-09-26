@@ -38,6 +38,8 @@ export default class Moment extends React.Component {
     unix:          PropTypes.bool,
     utc:           PropTypes.bool,
     tz:            PropTypes.string,
+    withTitle:     PropTypes.bool,
+    titleFormat:   PropTypes.string,
     locale:        PropTypes.string,
     interval:      PropTypes.number,
     diff:          PropTypes.oneOfType(dateTypes),
@@ -48,18 +50,20 @@ export default class Moment extends React.Component {
   };
 
   static defaultProps = {
-    element:  'time',
-    fromNow:  false,
-    toNow:    false,
-    calendar: false,
-    ago:      false,
-    unix:     false,
-    utc:      false,
-    unit:     null,
-    decimal:  false,
-    interval: 60000,
-    filter:   (d) => { return d; },
-    onChange: () => {}
+    element:     'time',
+    fromNow:     false,
+    toNow:       false,
+    calendar:    false,
+    ago:         false,
+    unix:        false,
+    utc:         false,
+    unit:        null,
+    withTitle:   false,
+    decimal:     false,
+    titleFormat: '',
+    interval:    60000,
+    filter:      (d) => { return d; },
+    onChange:    () => {}
   };
 
   static globalMoment   = null;
@@ -250,6 +254,18 @@ export default class Moment extends React.Component {
   };
 
   /**
+   * Returns the element title to use on hover
+   */
+  getTitle = () => {
+    const { titleFormat } = this.props;
+
+    const datetime = Moment.getDatetime(this.props);
+    const format = titleFormat || Moment.globalFormat;
+
+    return datetime.format(format);
+  };
+
+  /**
    * Updates this.state.content
    */
   update(props) {
@@ -298,8 +314,17 @@ export default class Moment extends React.Component {
     });
   }
 
+  /**
+   * @returns {*}
+   */
   render() {
-    const props = objectKeyFilter(this.props, Moment.propTypes);
+    const { withTitle, ...remaining } = this.props;
+
+    const props = objectKeyFilter(remaining, Moment.propTypes);
+    if (withTitle) {
+      props.title = this.getTitle();
+    }
+
     return React.createElement(Moment.globalElement || this.props.element, {
       dateTime: Moment.getDatetime(this.props),
       ...props

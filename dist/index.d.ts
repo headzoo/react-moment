@@ -44,6 +44,8 @@ export interface MomentProps {
     tz?: string,
     locale?: string,
     interval?: number,
+    withTitle?: boolean,
+    titleFormat?: string,
     subtract?: subtractOrAddTypes,
     add?: subtractOrAddTypes,
     children?: string | number,

@@ -22,6 +22,8 @@ React component for the [moment](http://momentjs.com/) date library.
     * [To](#to)
     * [Difference](#difference)
     * [Filter](#filter)
+    * [With Title](#with-title)
+    * [Title Format](#title-format)
     * [Unix Timestamps](#unix-timestamps)
     * [Timezone](#timezone)
     * [Calendar](#calendar)
@@ -382,6 +384,60 @@ Outputs:
 
 ```html
 <time>MON APR 19 1976 12:59:00 GMT-0500</time>
+```
+
+
+#### With Title
+_withTitle={bool}_
+
+Adds a `title` attribute to the element with the complete date.
+
+```jsx
+import React  from 'react';
+import Moment from 'react-moment';
+
+export default class MyComponent extends React.Component {
+    render() {
+        return (
+            <Moment format="D MMM YYYY" withTitle>
+                1976-04-19T12:59-0500
+            </Moment>
+        );
+    }
+}
+```
+
+Outputs:
+
+```html
+<time title="1976-04-19T12:59-0500">19 Apr 1976</time>
+```
+
+
+#### Title Format
+_titleFormat={string}_
+
+How the `title` date is formatted when using the `withTitle` attribute.
+
+```jsx
+import React  from 'react';
+import Moment from 'react-moment';
+
+export default class MyComponent extends React.Component {
+    render() {
+        return (
+            <Moment titleFormat="D MMM YYYY" withTitle>
+                1976-04-19T12:59-0500
+            </Moment>
+        );
+    }
+}
+```
+
+Outputs:
+
+```html
+<time title="19 Apr 1976">1976-04-19T12:59-0500</time>
 ```
 
 
