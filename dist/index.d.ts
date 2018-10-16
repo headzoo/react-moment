@@ -50,6 +50,7 @@ export interface MomentProps {
     add?: subtractOrAddTypes,
     children?: string | number,
     style?: CSSProperties,
+    className?: string,
     filter?: (date: string) => string,
     onChange?: (content:any) => any
 }
