@@ -1,7 +1,7 @@
 {
   "name": "react-moment",
   "description": "React component for the moment date library.",
-  "version": "0.8.1",
+  "version": "0.8.2",
   "author": {
     "name": "Sean Hickey",
     "web": "http://headzoo.io"
