@@ -784,3 +784,4 @@ This software is released under the MIT license. See LICENSE for more details.
 * [tadeo](https://github.com/tadeo)
 * [centrual](https://github.com/centrual)
 * [beniaminrychter](https://github.com/beniaminrychter)
+* [joefatora](https://github.com/joefatora)
