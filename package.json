@@ -6,9 +6,6 @@
     "name": "Sean Hickey",
     "web": "http://headzoo.io"
   },
-  "dependencies": {
-    "moment-duration-format": "^2.2.2"
-  },
   "devDependencies": {
     "@storybook/addon-actions": "^3.4.7",
     "@storybook/addon-knobs": "^3.4.7",
@@ -33,6 +30,7 @@
     "jest": "^23.6.0",
     "json-loader": "^0.5.4",
     "moment": "^2.22.2",
+    "moment-duration-format": "^2.2.2",
     "moment-timezone": "^0.5.17",
     "prop-types": "^15.6.1",
     "istanbul": "^0.4.5",

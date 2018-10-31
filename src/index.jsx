@@ -275,7 +275,7 @@ export default class Moment extends React.Component {
     props = props || this.props;
     const {
       fromNow, fromNowDuring, from, add, subtract, toNow, to, ago,
-      calendar, diff, duration, unit, decimal
+      calendar, diff, duration, durationFromNow, unit, decimal
     } = props;
 
     let { format } = props;
