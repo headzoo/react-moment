@@ -1,6 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import moment from 'moment';
+import 'moment-duration-format';
 import { objectKeyFilter } from './objects';
 
 const dateTypes = [
@@ -22,31 +23,33 @@ const calendarTypes = [
 
 export default class Moment extends React.Component {
   static propTypes = {
-    element:       PropTypes.any,
-    date:          PropTypes.oneOfType(dateTypes),
-    parse:         PropTypes.oneOfType(parseTypes),
-    format:        PropTypes.string,
-    add:           PropTypes.object,
-    subtract:      PropTypes.object,
-    ago:           PropTypes.bool,
-    fromNow:       PropTypes.bool,
-    fromNowDuring: PropTypes.number,
-    from:          PropTypes.oneOfType(dateTypes),
-    toNow:         PropTypes.bool,
-    to:            PropTypes.oneOfType(dateTypes),
-    calendar:      PropTypes.oneOfType(calendarTypes),
-    unix:          PropTypes.bool,
-    utc:           PropTypes.bool,
-    tz:            PropTypes.string,
-    withTitle:     PropTypes.bool,
-    titleFormat:   PropTypes.string,
-    locale:        PropTypes.string,
-    interval:      PropTypes.number,
-    diff:          PropTypes.oneOfType(dateTypes),
-    unit:          PropTypes.string,
-    decimal:       PropTypes.bool,
-    filter:        PropTypes.func,
-    onChange:      PropTypes.func
+    element:         PropTypes.any,
+    date:            PropTypes.oneOfType(dateTypes),
+    parse:           PropTypes.oneOfType(parseTypes),
+    format:          PropTypes.string,
+    add:             PropTypes.object,
+    subtract:        PropTypes.object,
+    ago:             PropTypes.bool,
+    fromNow:         PropTypes.bool,
+    fromNowDuring:   PropTypes.number,
+    from:            PropTypes.oneOfType(dateTypes),
+    toNow:           PropTypes.bool,
+    to:              PropTypes.oneOfType(dateTypes),
+    calendar:        PropTypes.oneOfType(calendarTypes),
+    unix:            PropTypes.bool,
+    utc:             PropTypes.bool,
+    tz:              PropTypes.string,
+    withTitle:       PropTypes.bool,
+    titleFormat:     PropTypes.string,
+    locale:          PropTypes.string,
+    interval:        PropTypes.number,
+    diff:            PropTypes.oneOfType(dateTypes),
+    duration:        PropTypes.oneOfType(dateTypes),
+    durationFromNow: PropTypes.bool,
+    unit:            PropTypes.string,
+    decimal:         PropTypes.bool,
+    filter:          PropTypes.func,
+    onChange:        PropTypes.func
   };
 
   static defaultProps = {
@@ -272,7 +275,7 @@ export default class Moment extends React.Component {
     props = props || this.props;
     const {
       fromNow, fromNowDuring, from, add, subtract, toNow, to, ago,
-      calendar, diff, unit, decimal
+      calendar, diff, duration, unit, decimal
     } = props;
 
     let { format } = props;
@@ -302,8 +305,17 @@ export default class Moment extends React.Component {
       content = datetime.calendar(null, calendar);
     } else if (diff) {
       content = datetime.diff(diff, unit, decimal);
+    } else if (duration) {
+      content = datetime.diff(duration);
+    } else if (durationFromNow) {
+      content = moment().diff(datetime);
     } else {
       content = datetime.toString();
+    }
+
+    if (duration || durationFromNow) {
+      content = moment.duration(content);
+      content = content.format(format);
     }
 
     const filter = Moment.globalFilter || this.props.filter;

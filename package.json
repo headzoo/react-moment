@@ -6,7 +6,9 @@
     "name": "Sean Hickey",
     "web": "http://headzoo.io"
   },
-  "dependencies": {},
+  "dependencies": {
+    "moment-duration-format": "^2.2.2"
+  },
   "devDependencies": {
     "@storybook/addon-actions": "^3.4.7",
     "@storybook/addon-knobs": "^3.4.7",
