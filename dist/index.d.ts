@@ -37,6 +37,8 @@ export interface MomentProps {
     to?: dateTypes,
     calendar?: calendarTypes,
     diff?: dateTypes,
+    duration?: dateTypes,
+    durationFromNow?: boolean,
     unit?: string,
     decimal?: boolean,
     unix?: boolean,

@@ -829,3 +829,4 @@ This software is released under the MIT license. See LICENSE for more details.
 * [centrual](https://github.com/centrual)
 * [beniaminrychter](https://github.com/beniaminrychter)
 * [joefatora](https://github.com/joefatora)
+* [etairi](https://github.com/etairi)
