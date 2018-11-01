@@ -7,35 +7,37 @@ React component for the [moment](http://momentjs.com/) date library.
 [![NPM Downloads](https://img.shields.io/npm/dm/react-moment.svg?style=flat-square)](https://www.npmjs.com/package/react-moment)
 [![MIT License](https://img.shields.io/badge/license-MIT-blue.svg?style=flat-square)](https://raw.githubusercontent.com/headzoo/react-moment/master/LICENSE)
 
-* [Installing](#installing)
-* [Timezone Support](#timezone-support)
-* [Quick Start](#quick-start)
-* [Props](#props)
-    * [Interval](#interval)
-    * [Formatting](#formatting)
-    * [Parsing Dates](#parsing-dates)
-    * [Add and Subtract](#add-and-subtract)
-    * [From Now](#from-now)
-    * [From Now During](#from-now-during)
-    * [From](#from)
-    * [To Now](#to-now)
-    * [To](#to)
-    * [Difference](#difference)
-    * [Filter](#filter)
-    * [With Title](#with-title)
-    * [Title Format](#title-format)
-    * [Unix Timestamps](#unix-timestamps)
-    * [Timezone](#timezone)
-    * [Calendar](#calendar)
-    * [Locale](#locale)
-    * [Element](#element)
-    * [OnChange](#onchange)
-    * [Other Props](#other-props)
-* [Pooled Timer](#pooled-timer)
-* [Global Config](#global-config)
-* [Usage with React Native](#usage-with-react-native)
-* [License](#license)
-* [Contributors](#contributors)
+- [Installing](#installing)
+- [Timezone Support](#timezone-support)
+- [Quick Start](#quick-start)
+- [Props](#props)
+    - [Interval](#interval)
+    - [Formatting](#formatting)
+    - [Parsing Dates](#parsing-dates)
+    - [Add and Subtract](#add-and-subtract)
+    - [From Now](#from-now)
+    - [From Now During](#from-now-during)
+    - [From](#from)
+    - [To Now](#to-now)
+    - [To](#to)
+    - [Filter](#filter)
+    - [With Title](#with-title)
+    - [Title Format](#title-format)
+    - [Difference](#difference)
+    - [Duration](#duration)
+    - [Duration From Now](#duration-from-now)
+    - [Unix Timestamps](#unix-timestamps)
+    - [Timezone](#timezone)
+    - [Calendar](#calendar)
+    - [Locale](#locale)
+    - [Element](#element)
+    - [OnChange](#onchange)
+    - [Other Props](#other-props)
+- [Pooled Timer](#pooled-timer)
+- [Global Config](#global-config)
+- [Usage with React Native](#usage-with-react-native)
+- [License](#license)
+- [Contributors](#contributors)
 
 
 ### Installing
@@ -465,6 +467,48 @@ export default class MyComponent extends React.Component {
 }
 ```
 
+#### Duration
+_duration={string}_
+
+_date={string}_
+
+Shows the duration (elapsed time) between two dates. `duration` property should be behind `date` property time-wise.
+
+```jsx
+import React  from 'react';
+import Moment from 'react-moment';
+
+export default class MyComponent extends React.Component {
+    render() {
+        return (
+            <Moment duration="2018-11-1T10:59-0500"
+                    date="2018-11-1T12:59-0500"
+            />
+        );
+    }
+}
+```
+
+#### Duration From Now
+
+_durationFromNow={bool}_
+
+Shows the duration (elapsed time) between now and the provided datetime.
+
+```jsx
+import React  from 'react';
+import Moment from 'react-moment';
+
+export default class MyComponent extends React.Component {
+    render() {
+        return (
+            <Moment date="2018-11-1T12:59-0500"
+                    durationFromNow
+            />
+        );
+    }
+}
+```
 
 #### Unix Timestamps
 _unix={bool}_
