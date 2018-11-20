@@ -53,7 +53,7 @@ export default class Moment extends React.Component {
   };
 
   static defaultProps = {
-    element:     'time',
+    element:     null,
     fromNow:     false,
     toNow:       false,
     calendar:    false,
@@ -74,7 +74,7 @@ export default class Moment extends React.Component {
   static globalFormat   = null;
   static globalParse    = null;
   static globalFilter   = null;
-  static globalElement  = null;
+  static globalElement  = 'time';
   static globalTimezone = null;
   static pooledElements = [];
   static pooledTimer    = null;
@@ -337,7 +337,7 @@ export default class Moment extends React.Component {
       props.title = this.getTitle();
     }
 
-    return React.createElement(Moment.globalElement || this.props.element, {
+    return React.createElement(this.props.element || Moment.globalElement, {
       dateTime: Moment.getDatetime(this.props),
       ...props
     },
