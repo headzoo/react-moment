@@ -297,4 +297,20 @@ describe('react-moment', () => {
     );
     expect(ReactDOM.findDOMNode(date).innerHTML).toEqual('1976-04-19 09');
   });
+
+  it('globalElement', () => {
+    Moment.globalElement = 'span';
+    const date = TestUtils.renderIntoDocument(
+      <Moment parse="YYYY-MM-DD HH:mm">1976-04-19 12:59</Moment>
+    );
+    expect(ReactDOM.findDOMNode(date).tagName).toEqual('SPAN');
+  });
+
+  it('globalElement overwrite', () => {
+    Moment.globalElement = 'span';
+    const date = TestUtils.renderIntoDocument(
+      <Moment element="div" parse="YYYY-MM-DD HH:mm">1976-04-19 12:59</Moment>
+    );
+    expect(ReactDOM.findDOMNode(date).tagName).toEqual('DIV');
+  });
 });
