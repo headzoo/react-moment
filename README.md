@@ -830,3 +830,4 @@ This software is released under the MIT license. See LICENSE for more details.
 * [beniaminrychter](https://github.com/beniaminrychter)
 * [joefatora](https://github.com/joefatora)
 * [etairi](https://github.com/etairi)
+* [tulak](https://github.com/tulak)
