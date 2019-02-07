@@ -43,6 +43,7 @@ export interface MomentProps {
     decimal?: boolean,
     unix?: boolean,
     utc?: boolean,
+    local?: boolean,
     tz?: string,
     locale?: string,
     interval?: number,
