@@ -227,6 +227,14 @@ describe('react-moment', () => {
     expect(ReactDOM.findDOMNode(date).innerHTML).toEqual('Mon Apr 19 1976 12:59:00 GMT+0000');
   });
 
+  it('local', () => {
+    const date = TestUtils.renderIntoDocument(
+      <Moment utc local>{DATE_STRING}</Moment>
+    );
+    const expected = moment(DATE_STRING).local().toString();
+    expect(ReactDOM.findDOMNode(date).innerHTML).toEqual(expected);
+  });
+
   it('tz', () => {
     const date = TestUtils.renderIntoDocument(
       <Moment unix tz="America/Los_Angeles">{DATE_UNIX}</Moment>

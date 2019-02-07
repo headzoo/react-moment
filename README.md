@@ -27,6 +27,7 @@ React component for the [moment](http://momentjs.com/) date library.
     - [Duration](#duration)
     - [Duration From Now](#duration-from-now)
     - [Unix Timestamps](#unix-timestamps)
+    - [Local](#local)
     - [Timezone](#timezone)
     - [Calendar](#calendar)
     - [Locale](#locale)
@@ -533,6 +534,32 @@ Outputs:
 
 ```html
 <time>Mon Apr 19 1976 12:59:00 GMT-0500</time>
+```
+
+#### Local
+_local={bool}_
+
+Outputs the result in local time.
+
+```jsx
+import React  from 'react';
+import Moment from 'react-moment';
+
+export default class MyComponent extends React.Component {
+    render() {
+        return (
+            <Moment local>
+                2018-11-01T12:59-0500
+            </Moment>
+        );
+    }
+}
+```
+
+Outputs:
+
+```html
+<time>Thu Nov 01 2018 18:59:00 GMT+0100</time>
 ```
 
 
