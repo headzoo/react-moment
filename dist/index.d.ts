@@ -62,6 +62,7 @@ declare class Moment extends Component<MomentProps, any> {
     constructor(props:MomentProps);
     public static globalMoment: Function;
     public static globalLocale: string;
+    public static globalLocal: boolean;
     public static globalFormat: string;
     public static globalParse: string;
     public static globalTimezone: string;

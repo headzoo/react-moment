@@ -757,6 +757,7 @@ Some prop values may be set globally so you don't have to set them on every reac
 * globalFilter
 * globalElement
 * globalTimezone
+* globalLocal
 
 ```jsx
 import React  from 'react';
@@ -775,6 +776,9 @@ Moment.globalFormat = 'D MMM YYYY';
 
 // Set the timezone for every instance.
 Moment.globalTimezone = 'America/Los_Angeles';
+
+// Set the output timezone for local for every instance.
+Moment.globalLocal = true;
 
 // Use a <span> tag for every react-moment instance.
 Moment.globalElement = 'span';
