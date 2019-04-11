@@ -11,7 +11,6 @@ const DATE_DATE   = new Date(DATE_STRING);
 const DATE_UNIX   = DATE_DATE.getTime() / 1000;
 
 describe('react-moment', () => {
-
   beforeEach(() => {
     Moment.globalMoment   = null;
     Moment.globalLocale   = null;
@@ -221,9 +220,9 @@ describe('react-moment', () => {
     expect(ReactDOM.findDOMNode(date).innerHTML).toEqual(expected);
 
     date = TestUtils.renderIntoDocument(
-      <Moment calendar={{sameElse: "YYYY-MM-DD HH:mm"}}>{DATE_STRING}</Moment>
+      <Moment calendar={{ sameElse: 'YYYY-MM-DD HH:mm' }}>{DATE_STRING}</Moment>
     );
-    expected = moment(DATE_STRING).calendar(null, {sameElse: "YYYY-MM-DD HH:mm"});
+    expected = moment(DATE_STRING).calendar(null, { sameElse: 'YYYY-MM-DD HH:mm' });
     expect(ReactDOM.findDOMNode(date).innerHTML).toEqual(expected);
   });
 

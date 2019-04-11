@@ -1,9 +1,9 @@
-'use strict';
+const path = require('path');
 
 module.exports = {
     entry: './src/index.jsx',
     output: {
-        path: './dist',
+        path: path.resolve(__dirname, 'dist'),
         filename: 'index.js',
         library: 'react-moment',
         libraryTarget: 'umd'
@@ -25,7 +25,7 @@ module.exports = {
         }
     ],
     module: {
-        loaders: [
+      rules: [
           {
             include: /\.json$/,
             loader: require.resolve('json-loader')
@@ -34,17 +34,10 @@ module.exports = {
             test: /\.jsx?$/,
             exclude: /(node_modules)/,
             loader: require.resolve('babel-loader'),
-            query: {
-              presets: [
-                'babel-preset-es2015',
-                'babel-preset-stage-2',
-                'babel-preset-react'
-              ].map(require.resolve)
-            }
           }
         ]
     },
     resolve: {
-      extensions: ['', '.json', '.js', '.jsx']
+      extensions: ['.json', '.js', '.jsx']
     }
 };

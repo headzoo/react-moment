@@ -72,14 +72,23 @@ export default class Moment extends React.Component {
   };
 
   static globalMoment   = null;
+
   static globalLocale   = null;
+
   static globalLocal    = null;
+
   static globalFormat   = null;
+
   static globalParse    = null;
+
   static globalFilter   = null;
+
   static globalElement  = 'time';
+
   static globalTimezone = null;
+
   static pooledElements = [];
+
   static pooledTimer    = null;
 
   /**
@@ -224,7 +233,9 @@ export default class Moment extends React.Component {
    * @param {*} prevProps
    */
   componentDidUpdate(prevProps) {
-    if (prevProps.interval !== this.props.interval) {
+    const { interval } = this.props;
+
+    if (prevProps.interval !== interval) {
       this.setTimer();
     }
   }
@@ -240,8 +251,9 @@ export default class Moment extends React.Component {
    * Starts the interval timer.
    */
   setTimer = () => {
+    const { interval } = this.props;
+
     this.clearTimer();
-    const interval = this.props.interval;
     if (!Moment.pooledTimer && interval !== 0) {
       this.timer = setInterval(() => {
         this.update(this.props);
@@ -281,7 +293,7 @@ export default class Moment extends React.Component {
     props = props || this.props;
     const {
       fromNow, fromNowDuring, from, add, subtract, toNow, to, ago,
-      calendar, diff, duration, durationFromNow, unit, decimal
+      calendar, diff, duration, durationFromNow, unit, decimal, onChange
     } = props;
 
     let { format } = props;
@@ -328,7 +340,7 @@ export default class Moment extends React.Component {
     content = filter(content);
 
     this.setState({ content }, () => {
-      this.props.onChange(content);
+      onChange(content);
     });
   }
 
@@ -336,18 +348,21 @@ export default class Moment extends React.Component {
    * @returns {*}
    */
   render() {
-    const { withTitle, ...remaining } = this.props;
+    const { withTitle, element, ...remaining } = this.props;
+    const { content } = this.state;
 
     const props = objectKeyFilter(remaining, Moment.propTypes);
     if (withTitle) {
       props.title = this.getTitle();
     }
 
-    return React.createElement(this.props.element || Moment.globalElement, {
-      dateTime: Moment.getDatetime(this.props),
-      ...props
-    },
-      this.state.content
+    return React.createElement(
+      element || Moment.globalElement,
+      {
+        dateTime: Moment.getDatetime(this.props),
+        ...props
+      },
+      content
     );
   }
 }

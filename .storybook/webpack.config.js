@@ -11,7 +11,7 @@ module.exports = {
     // your custom plugins
   ],
   module: {
-    loaders: [
+    rules: [
       // add your custom loaders.
     ]
   }
