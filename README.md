@@ -862,3 +862,4 @@ This software is released under the MIT license. See LICENSE for more details.
 * [joefatora](https://github.com/joefatora)
 * [etairi](https://github.com/etairi)
 * [tulak](https://github.com/tulak)
+* [pesimeao](https://github.com/pesimeao)
