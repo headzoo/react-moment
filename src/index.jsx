@@ -38,6 +38,7 @@ export default class Moment extends React.Component {
     calendar:        PropTypes.oneOfType(calendarTypes),
     unix:            PropTypes.bool,
     utc:             PropTypes.bool,
+    local:           PropTypes.bool,
     tz:              PropTypes.string,
     withTitle:       PropTypes.bool,
     titleFormat:     PropTypes.string,
@@ -60,6 +61,7 @@ export default class Moment extends React.Component {
     ago:         false,
     unix:        false,
     utc:         false,
+    local:       false,
     unit:        null,
     withTitle:   false,
     decimal:     false,
@@ -71,6 +73,7 @@ export default class Moment extends React.Component {
 
   static globalMoment   = null;
   static globalLocale   = null;
+  static globalLocal    = null;
   static globalFormat   = null;
   static globalParse    = null;
   static globalFilter   = null;
@@ -141,10 +144,11 @@ export default class Moment extends React.Component {
    */
   static getDatetime(props) {
     const { utc, unix } = props;
-    let { date, locale, parse, tz } = props;
+    let { date, locale, parse, tz, local } = props;
 
     date = date || props.children;
     parse = parse || Moment.globalParse;
+    local = local || Moment.globalLocal;
     tz = tz || Moment.globalTimezone;
     if (Moment.globalLocale) {
       locale = Moment.globalLocale;
@@ -165,6 +169,8 @@ export default class Moment extends React.Component {
     }
     if (tz) {
       datetime = datetime.tz(tz);
+    } else if (local) {
+      datetime = datetime.local();
     }
 
     return datetime;

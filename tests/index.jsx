@@ -11,6 +11,20 @@ const DATE_DATE   = new Date(DATE_STRING);
 const DATE_UNIX   = DATE_DATE.getTime() / 1000;
 
 describe('react-moment', () => {
+
+  beforeEach(() => {
+    Moment.globalMoment   = null;
+    Moment.globalLocale   = null;
+    Moment.globalLocal    = null;
+    Moment.globalFormat   = null;
+    Moment.globalParse    = null;
+    Moment.globalFilter   = null;
+    Moment.globalElement  = 'time';
+    Moment.globalTimezone = null;
+    Moment.pooledElements = [];
+    Moment.pooledTimer    = null;
+  });
+
   it('children', () => {
     let date = TestUtils.renderIntoDocument(
       <Moment />
@@ -227,6 +241,22 @@ describe('react-moment', () => {
     expect(ReactDOM.findDOMNode(date).innerHTML).toEqual('Mon Apr 19 1976 12:59:00 GMT+0000');
   });
 
+  it('local', () => {
+    const date = TestUtils.renderIntoDocument(
+      <Moment local>{DATE_STRING}</Moment>
+    );
+    const expected = moment(DATE_STRING).local().toString();
+    expect(ReactDOM.findDOMNode(date).innerHTML).toEqual(expected);
+  });
+
+  it('utc and local', () => {
+    const date = TestUtils.renderIntoDocument(
+      <Moment utc local>{DATE_STRING}</Moment>
+    );
+    const expected = moment.utc(DATE_STRING).local().toString();
+    expect(ReactDOM.findDOMNode(date).innerHTML).toEqual(expected);
+  });
+
   it('tz', () => {
     const date = TestUtils.renderIntoDocument(
       <Moment unix tz="America/Los_Angeles">{DATE_UNIX}</Moment>
@@ -296,6 +326,15 @@ describe('react-moment', () => {
       <Moment format="YYYY-MM-DD HH" date="1976-04-19T12:59-0500" />
     );
     expect(ReactDOM.findDOMNode(date).innerHTML).toEqual('1976-04-19 09');
+  });
+
+  it('globalLocal', () => {
+    Moment.globalLocal = true;
+    const date = TestUtils.renderIntoDocument(
+      <Moment>{DATE_STRING}</Moment>
+    );
+    const expected = moment(DATE_STRING).local().toString();
+    expect(ReactDOM.findDOMNode(date).innerHTML).toEqual(expected);
   });
 
   it('globalElement', () => {
