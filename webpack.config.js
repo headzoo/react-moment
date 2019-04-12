@@ -6,7 +6,8 @@ module.exports = {
         path: path.resolve(__dirname, 'dist'),
         filename: 'index.js',
         library: 'react-moment',
-        libraryTarget: 'umd'
+        libraryTarget: 'umd',
+        globalObject: 'this'
     },
     externals: [
         {
