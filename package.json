@@ -50,6 +50,9 @@
     "moduleFileExtensions": [
       "js",
       "jsx"
+    ],
+    "modulePathIgnorePatterns": [
+      "/tests/ssr"
     ]
   },
   "keywords": [
