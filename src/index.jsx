@@ -204,7 +204,7 @@ export default class Moment extends React.Component {
   /**
    * Invoked immediately before mounting occurs
    */
-  componentWillMount() {
+  UNSAFE_componentWillMount() {
     this.update(this.props);
   }
 
@@ -223,7 +223,7 @@ export default class Moment extends React.Component {
    *
    * @param {*} nextProps
    */
-  componentWillReceiveProps(nextProps) {
+  UNSAFE_componentWillReceiveProps(nextProps) {
     this.update(nextProps);
   }
 
