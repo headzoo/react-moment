@@ -185,6 +185,12 @@ export default class Moment extends React.Component {
     return datetime;
   }
 
+  /** 
+   * Returns computed content from sent props
+   * @param {*} props
+   * @returns {*}
+   * 
+  */
   static getContent(props) {
     const {
       fromNow, fromNowDuring, from, add, subtract, toNow, to, ago,
@@ -284,9 +290,11 @@ export default class Moment extends React.Component {
   }
 
   /**
-   * Invoked before a mounted component receives new props
+   * Invoked as a mounted component receives new props
+   * What it returns will become state.
    *
    * @param {*} nextProps
+   * @returns {*} (new state)
    */
   static getDerivedStateFromProps(nextProps) {
     const content = Moment.getContent(nextProps);
@@ -319,11 +327,6 @@ export default class Moment extends React.Component {
     return datetime.format(format);
   };
 
-  /**
-   * 
-   * @param {*} props 
-   */
-
 
   /**
    * Clears the interval timer.
@@ -338,8 +341,10 @@ export default class Moment extends React.Component {
     }
   };
 
+  
   /**
    * Updates this.state.content
+   * @param {*} props
    */
   update(props) {
     const { onChange } = props;
