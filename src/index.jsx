@@ -196,17 +196,17 @@ export default class Moment extends React.Component {
       Moment.globalMoment = moment;
     }
     this.state = {
-      content: ''
+      content: this.update(props)
     };
     this.timer = null;
   }
 
-  /**
-   * Invoked immediately before mounting occurs
-   */
-  componentWillMount() {
-    this.update(this.props);
-  }
+//   /**
+//    * Invoked immediately before mounting occurs
+//    */
+//   componentWillMount() {
+//     this.update(this.props);
+//   }
 
   /**
    * Invoked immediately after a component is mounted
@@ -223,7 +223,7 @@ export default class Moment extends React.Component {
    *
    * @param {*} nextProps
    */
-  componentWillReceiveProps(nextProps) {
+  getDerivedStateFromProps(nextProps) {
     this.update(nextProps);
   }
 
