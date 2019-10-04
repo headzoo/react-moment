@@ -863,3 +863,4 @@ This software is released under the MIT license. See LICENSE for more details.
 * [etairi](https://github.com/etairi)
 * [tulak](https://github.com/tulak)
 * [pesimeao](https://github.com/pesimeao)
+* [DoctorHowser](https://github.com/DoctorHowser)
