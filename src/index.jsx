@@ -185,115 +185,16 @@ export default class Moment extends React.Component {
     return datetime;
   }
 
-  /**
-   * Constructor
-   *
+  /** 
+   * Returns computed content from sent props
    * @param {*} props
-   */
-  constructor(props) {
-    super(props);
-    if (!Moment.globalMoment) {
-      Moment.globalMoment = moment;
-    }
-    this.state = {
-      content: ''
-    };
-    this.timer = null;
-  }
-
-  /**
-   * Invoked immediately before mounting occurs
-   */
-  componentWillMount() {
-    this.update(this.props);
-  }
-
-  /**
-   * Invoked immediately after a component is mounted
-   */
-  componentDidMount() {
-    this.setTimer();
-    if (Moment.pooledTimer) {
-      Moment.pushPooledElement(this);
-    }
-  }
-
-  /**
-   * Invoked before a mounted component receives new props
-   *
-   * @param {*} nextProps
-   */
-  componentWillReceiveProps(nextProps) {
-    this.update(nextProps);
-  }
-
-  /**
-   * Invoked immediately after updating occurs
-   *
-   * @param {*} prevProps
-   */
-  componentDidUpdate(prevProps) {
-    const { interval } = this.props;
-
-    if (prevProps.interval !== interval) {
-      this.setTimer();
-    }
-  }
-
-  /**
-   * Invoked immediately before a component is unmounted and destroyed
-   */
-  componentWillUnmount() {
-    this.clearTimer();
-  }
-
-  /**
-   * Starts the interval timer.
-   */
-  setTimer = () => {
-    const { interval } = this.props;
-
-    this.clearTimer();
-    if (!Moment.pooledTimer && interval !== 0) {
-      this.timer = setInterval(() => {
-        this.update(this.props);
-      }, interval);
-    }
-  };
-
-  /**
-   * Clears the interval timer.
-   */
-  clearTimer = () => {
-    if (!Moment.pooledTimer && this.timer) {
-      clearInterval(this.timer);
-      this.timer = null;
-    }
-    if (Moment.pooledTimer && !this.timer) {
-      Moment.removePooledElement(this);
-    }
-  };
-
-  /**
-   * Returns the element title to use on hover
-   */
-  getTitle = () => {
-    const { titleFormat } = this.props;
-
-    const datetime = Moment.getDatetime(this.props);
-    const format = titleFormat || Moment.globalFormat;
-
-    return datetime.format(format);
-  };
-
-  /**
-   * Updates this.state.content
-   */
-  update(props) {
-    props = props || this.props;
+   * @returns {*}
+   * 
+  */
+  static getContent(props) {
     const {
       fromNow, fromNowDuring, from, add, subtract, toNow, to, ago,
-      calendar, diff, duration, durationFromNow, unit, decimal, onChange
+      calendar, diff, duration, durationFromNow, unit, decimal,
     } = props;
 
     let { format } = props;
@@ -336,9 +237,118 @@ export default class Moment extends React.Component {
       content = content.format(format);
     }
 
-    const filter = Moment.globalFilter || this.props.filter;
+    const filter = Moment.globalFilter || props.filter;
     content = filter(content);
 
+    return content;
+  }
+
+  /**
+   * Constructor
+   *
+   * @param {*} props
+   */
+  constructor(props) {
+    super(props);
+    if (!Moment.globalMoment) {
+      Moment.globalMoment = moment;
+    }
+    this.state = {
+      content: ''
+    };
+    this.timer = null;
+  }
+
+  /**
+   * Invoked immediately after a component is mounted
+   */
+  componentDidMount() {
+    this.setTimer();
+    if (Moment.pooledTimer) {
+      Moment.pushPooledElement(this);
+    }
+  }
+
+  /**
+   * Invoked immediately after updating occurs
+   *
+   * @param {*} prevProps
+   */
+  componentDidUpdate(prevProps) {
+    const { interval } = this.props;
+
+    if (prevProps.interval !== interval) {
+      this.setTimer();
+    }
+  }
+
+  /**
+   * Invoked immediately before a component is unmounted and destroyed
+   */
+  componentWillUnmount() {
+    this.clearTimer();
+  }
+
+  /**
+   * Invoked as a mounted component receives new props
+   * What it returns will become state.
+   *
+   * @param {*} nextProps
+   * @returns {*} (new state)
+   */
+  static getDerivedStateFromProps(nextProps) {
+    const content = Moment.getContent(nextProps);
+    return { content };
+  }
+
+  /**
+   * Starts the interval timer.
+   */
+  setTimer = () => {
+    const { interval } = this.props;
+
+    this.clearTimer();
+    if (!Moment.pooledTimer && interval !== 0) {
+      this.timer = setInterval(() => {
+        this.update(this.props);
+      }, interval);
+    }
+  };
+
+  /**
+   * Returns the element title to use on hover
+   */
+  getTitle = () => {
+    const { titleFormat } = this.props;
+
+    const datetime = Moment.getDatetime(this.props);
+    const format = titleFormat || Moment.globalFormat;
+
+    return datetime.format(format);
+  };
+
+
+  /**
+   * Clears the interval timer.
+   */
+  clearTimer = () => {
+    if (!Moment.pooledTimer && this.timer) {
+      clearInterval(this.timer);
+      this.timer = null;
+    }
+    if (Moment.pooledTimer && !this.timer) {
+      Moment.removePooledElement(this);
+    }
+  };
+
+  
+  /**
+   * Updates this.state.content
+   * @param {*} props
+   */
+  update(props) {
+    const { onChange } = props;
+    const content = Moment.getContent(props);
     this.setState({ content }, () => {
       onChange(content);
     });
