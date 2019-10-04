@@ -185,11 +185,11 @@ export default class Moment extends React.Component {
     return datetime;
   }
 
-  /** 
+  /**
    * Returns computed content from sent props
    * @param {*} props
    * @returns {*}
-   * 
+   *
   */
   static getContent(props) {
     const {
@@ -250,6 +250,7 @@ export default class Moment extends React.Component {
    */
   constructor(props) {
     super(props);
+
     if (!Moment.globalMoment) {
       Moment.globalMoment = moment;
     }
@@ -341,13 +342,14 @@ export default class Moment extends React.Component {
     }
   };
 
-  
+
   /**
    * Updates this.state.content
    * @param {*} props
    */
   update(props) {
-    const { onChange } = props;
+    const { onChange } = (props || this.props);
+
     const content = Moment.getContent(props);
     this.setState({ content }, () => {
       onChange(content);
