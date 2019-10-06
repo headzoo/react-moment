@@ -348,9 +348,10 @@ export default class Moment extends React.Component {
    * @param {*} props
    */
   update(props) {
-    const { onChange } = (props || this.props);
+    const elementProps = (props || this.props);
+    const { onChange } = elementProps;
 
-    const content = Moment.getContent(props);
+    const content = Moment.getContent(elementProps);
     this.setState({ content }, () => {
       onChange(content);
     });
