@@ -1,3 +1,4 @@
+import moment from 'moment';
 import { Component, ComponentClass, SFC, CSSProperties } from 'react';
 
 type elementTypes = string | SFC<any> | ComponentClass<any>;
@@ -51,7 +52,7 @@ export interface MomentProps {
     titleFormat?: string,
     subtract?: subtractOrAddTypes,
     add?: subtractOrAddTypes,
-    children?: string | number,
+    children?: string | number | Date | moment.Moment,
     style?: CSSProperties,
     className?: string,
     filter?: (date: string) => string,
