@@ -864,3 +864,4 @@ This software is released under the MIT license. See LICENSE for more details.
 * [tulak](https://github.com/tulak)
 * [pesimeao](https://github.com/pesimeao)
 * [DoctorHowser](https://github.com/DoctorHowser)
+* [trevorr](https://github.com/trevorr)
