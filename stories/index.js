@@ -2,6 +2,8 @@
 import React from 'react';
 import { storiesOf } from '@storybook/react';
 import { withKnobs, text, number } from '@storybook/addon-knobs';
+import moment from 'moment';
+
 import Moment from '../src/index';
 
 Moment.globalLocale = 'fr';
@@ -35,6 +37,12 @@ storiesOf('Moment', module)
   .addWithJSX('using the unix prop', () => {
     return (
       <Moment unix date={number('unix time', 198784740)} />
+    );
+  })
+  .addWithJSX('using duration from now with format', () => {
+    const start = moment().add(-4, 'm');
+    return (
+      <Moment date={start} format="hh:mm:ss" trim durationFromNow />
     );
   })
   .addWithJSX('using filter prop', () => {
