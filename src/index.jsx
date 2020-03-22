@@ -194,7 +194,7 @@ export default class Moment extends React.Component {
   static getContent(props) {
     const {
       fromNow, fromNowDuring, from, add, subtract, toNow, to, ago,
-      calendar, diff, duration, durationFromNow, unit, decimal,
+      calendar, diff, duration, durationFromNow, unit, decimal, trim
     } = props;
 
     let { format } = props;
@@ -210,7 +210,7 @@ export default class Moment extends React.Component {
 
     const fromNowPeriod = Boolean(fromNowDuring) && -datetime.diff(moment()) < fromNowDuring;
     let content  = '';
-    if (format && !fromNowPeriod) {
+    if (format && !fromNowPeriod && !(durationFromNow || duration)) {
       content = datetime.format(format);
     } else if (from) {
       content = datetime.from(from, ago);
@@ -234,7 +234,7 @@ export default class Moment extends React.Component {
 
     if (duration || durationFromNow) {
       content = moment.duration(content);
-      content = content.format(format);
+      content = content.format(format, { trim });
     }
 
     const filter = Moment.globalFilter || props.filter;
