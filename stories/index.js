@@ -54,6 +54,4 @@ storiesOf('Moment', module)
         }}
       />
     );
-  })
-;
-
+  });
