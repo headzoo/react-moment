@@ -191,6 +191,54 @@ Outputs:
 <time>1976/04/19</time>
 ```
 
+For Duration and DurationFromNow formatting, the formatting is done using a separate library. See the [Moment-Duration-Format docs on formatting](https://github.com/jsmreese/moment-duration-format#template) for more information.
+
+```jsx
+import React  from 'react';
+import Moment from 'react-moment';
+import moment from 'moment';
+
+export default class MyComponent extends React.Component {
+    const start = moment().add(-4, 'm');
+    render() {
+        return (
+        <Moment date={start} format="hh:mm:ss" durationFromNow />
+        );
+    }
+}
+```
+
+Outputs:
+
+```html
+<time>00:04:00</time>
+```
+
+#### Trim
+_trim={bool}_
+
+When formatting duration time, the largest-magnitude tokens are automatically trimmed when they have no value. See the [Moment-Duration-Format docs on trim](https://github.com/jsmreese/moment-duration-format#trim) for more information.
+
+```jsx
+import React  from 'react';
+import Moment from 'react-moment';
+import moment from 'moment';
+
+export default class MyComponent extends React.Component {
+    const start = moment().add(-4, 'm');
+    render() {
+        return (
+        <Moment date={start} format="hh:mm:ss" trim durationFromNow />
+        );
+    }
+}
+```
+
+Outputs:
+
+```html
+<time>04:00</time>
+```
 
 #### Parsing Dates
 _parse={string}_
