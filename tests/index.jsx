@@ -140,6 +140,40 @@ describe('react-moment', () => {
     expect(ReactDOM.findDOMNode(date).innerHTML).toEqual(expected);
   });
 
+  it('duration', () => {
+    const duration_start = moment();
+    const duration_end = moment().add(-2, 'hours');
+
+    let date = TestUtils.renderIntoDocument(
+      <Moment duration={duration_end.format()} date={duration_start.format()} />
+    );
+    let expected = moment.duration(duration_start.diff(duration_end)).format();
+    expect(ReactDOM.findDOMNode(date).innerHTML).toEqual(expected);
+  });
+
+  it('trim', () => {
+    const duration_start = moment();
+    const duration_end = moment().add(-2, 'hour').add(-5, 'minute');
+
+    let date = TestUtils.renderIntoDocument(
+      <Moment duration={duration_end.format()} date={duration_start.format()} trim="small" />
+    );
+    let expected = moment.duration(duration_start.diff(duration_end)).format("H:mm");
+    expect(ReactDOM.findDOMNode(date).innerHTML).toEqual(expected);
+
+    date = TestUtils.renderIntoDocument(
+      <Moment duration={duration_end.format()} date={duration_start.format()} trim="large" />
+    );
+    expected = moment.duration(duration_start.diff(duration_end)).format("H:mm:ss");
+    expect(ReactDOM.findDOMNode(date).innerHTML).toEqual(expected);
+
+    date = TestUtils.renderIntoDocument(
+      <Moment duration={duration_end.format()} date={duration_start.format()} trim/>
+    );
+    expected = moment.duration(duration_start.diff(duration_end)).format("H:mm:ss");
+    expect(ReactDOM.findDOMNode(date).innerHTML).toEqual(expected);
+  });
+
   it('from', () => {
     let date = TestUtils.renderIntoDocument(
       <Moment from="2016-09-20T12:00">{DATE_STRING}</Moment>

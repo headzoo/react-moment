@@ -24,6 +24,7 @@ type subtractOrAddTypes = {
 };
 type dateTypes = string|number|Array<string|number|object>|object;
 type calendarTypes = boolean|object;
+type trimTypes = boolean|string;
 
 export interface MomentProps {
     element?: elementTypes,
@@ -40,6 +41,7 @@ export interface MomentProps {
     diff?: dateTypes,
     duration?: dateTypes,
     durationFromNow?: boolean,
+    trim?: trimTypes,
     unit?: string,
     decimal?: boolean,
     unix?: boolean,

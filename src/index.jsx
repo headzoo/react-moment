@@ -21,6 +21,11 @@ const calendarTypes = [
   PropTypes.bool
 ];
 
+const trimTypes = [
+  PropTypes.string,
+  PropTypes.bool
+];
+
 export default class Moment extends React.Component {
   static propTypes = {
     element:         PropTypes.any,
@@ -47,6 +52,7 @@ export default class Moment extends React.Component {
     diff:            PropTypes.oneOfType(dateTypes),
     duration:        PropTypes.oneOfType(dateTypes),
     durationFromNow: PropTypes.bool,
+    trim:            PropTypes.oneOfType(trimTypes),
     unit:            PropTypes.string,
     decimal:         PropTypes.bool,
     filter:          PropTypes.func,
@@ -64,6 +70,7 @@ export default class Moment extends React.Component {
     local:       false,
     unit:        null,
     withTitle:   false,
+    trim:        false,
     decimal:     false,
     titleFormat: '',
     interval:    60000,
