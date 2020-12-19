@@ -215,7 +215,7 @@ Outputs:
 ```
 
 #### Trim
-_trim={bool}_
+_trim={string|bool}_
 
 When formatting duration time, the largest-magnitude tokens are automatically trimmed when they have no value. See the [Moment-Duration-Format docs on trim](https://github.com/jsmreese/moment-duration-format#trim) for more information.
 
