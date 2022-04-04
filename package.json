@@ -64,7 +64,7 @@
   "peerDependencies": {
     "moment": "^2.29.0",
     "prop-types": "^15.7.0",
-    "react": "^16.0 || ^17.0.0"
+    "react": "^16.0 || ^17.0.0 || ^18.0.0"
   },
   "repository": {
     "type": "git",
