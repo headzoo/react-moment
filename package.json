@@ -17,7 +17,7 @@
     "@storybook/addon-knobs": "^5.0.6",
     "@storybook/addon-options": "^5.0.6",
     "@storybook/addons": "^5.0.6",
-    "@storybook/react": "^5.0.6",
+    "@storybook/react": "^6.5.15",
     "babel-eslint": "^10.0.1",
     "babel-jest": "^24.7.1",
     "babel-loader": "^8.0.5",
@@ -39,8 +39,8 @@
     "react-dom": "^16.0.0",
     "rimraf": "^2.6.3",
     "storybook-addon-jsx": "^7.1.0",
-    "webpack": "^4.29.6",
-    "webpack-cli": "^3.3.0"
+    "webpack": "^5.75.0",
+    "webpack-cli": "^5.0.1"
   },
   "jest": {
     "testRegex": "/tests/.*",
