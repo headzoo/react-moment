@@ -4,7 +4,7 @@
   "version": "1.1.2",
   "author": {
     "name": "Sean Hickey",
-    "web": "http://headzoo.io"
+    "web": "https://headzoo.io"
   },
   "devDependencies": {
     "@babel/core": "^7.4.3",
