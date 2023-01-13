@@ -1,7 +1,7 @@
 import moment from 'moment';
-import { Component, ComponentClass, SFC, CSSProperties } from 'react';
+import { Component, ComponentClass, FunctionComponent, CSSProperties } from 'react';
 
-type elementTypes = string | SFC<any> | ComponentClass<any>;
+type elementTypes = string | FunctionComponent<any> | ComponentClass<any>;
 type subtractOrAddTypes = {
     years?: number,
     y?: number,
@@ -22,9 +22,9 @@ type subtractOrAddTypes = {
     milliseconds?: number,
     ms?: number
 };
-type dateTypes = string|number|Array<string|number|object>|object;
-type calendarTypes = boolean|object;
-type trimTypes = boolean|string;
+type dateTypes = string | number | Array<string | number | object> | object;
+type calendarTypes = boolean | object;
+type trimTypes = boolean | string;
 
 export interface MomentProps {
     element?: elementTypes,
@@ -58,11 +58,11 @@ export interface MomentProps {
     style?: CSSProperties,
     className?: string,
     filter?: (date: string) => string,
-    onChange?: (content:any) => any
+    onChange?: (content: any) => any
 }
 
 declare class Moment extends Component<MomentProps, any> {
-    constructor(props:MomentProps);
+    constructor(props: MomentProps);
     public static globalMoment: Function;
     public static globalLocale: string;
     public static globalLocal: boolean;
