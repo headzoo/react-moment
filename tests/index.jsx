@@ -122,6 +122,45 @@ describe('react-moment', () => {
     expect(ReactDOM.findDOMNode(date).innerHTML).toEqual(expected);
   });
 
+  it('fromNowShort', () => {
+    const oneHourAgo = moment().add(-1, 'hour');
+    const oneDayAgo = moment().add(-1, 'day');
+    const twoWeeksAgo = moment().add(-2, 'weeks');
+    const threeMonthsAgo = moment().add(-3, 'months');
+    const twoYearsAgo = moment().add(-2, 'years');
+
+    let date = TestUtils.renderIntoDocument(
+      <Moment fromNowShort>{oneHourAgo.format()}</Moment>
+    );
+    expect(ReactDOM.findDOMNode(date).innerHTML).toEqual('1h');
+
+    date = TestUtils.renderIntoDocument(
+      <Moment fromNowShort>{oneDayAgo.format()}</Moment>
+    );
+    expect(ReactDOM.findDOMNode(date).innerHTML).toEqual('1d');
+
+    date = TestUtils.renderIntoDocument(
+      <Moment fromNowShort>{twoWeeksAgo.format()}</Moment>
+    );
+    expect(ReactDOM.findDOMNode(date).innerHTML).toEqual('14d');
+
+    date = TestUtils.renderIntoDocument(
+      <Moment fromNowShort>{threeMonthsAgo.format()}</Moment>
+    );
+    expect(ReactDOM.findDOMNode(date).innerHTML).toEqual('3mo');
+
+    date = TestUtils.renderIntoDocument(
+      <Moment fromNowShort>{twoYearsAgo.format()}</Moment>
+    );
+    expect(ReactDOM.findDOMNode(date).innerHTML).toEqual('2y');
+
+    // Test with ago prop
+    date = TestUtils.renderIntoDocument(
+      <Moment fromNowShort ago>{oneHourAgo.format()}</Moment>
+    );
+    expect(ReactDOM.findDOMNode(date).innerHTML).toEqual('1h');
+  });
+
   it('fromNowDuring', () => {
     const twoHoursAgo = moment().add(-2, 'hours');
     const hour = 1e3 * 60 * 60;
