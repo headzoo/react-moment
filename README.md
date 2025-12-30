@@ -16,6 +16,7 @@ React component for the [moment](http://momentjs.com/) date library.
     - [Parsing Dates](#parsing-dates)
     - [Add and Subtract](#add-and-subtract)
     - [From Now](#from-now)
+    - [From Now Short](#from-now-short)
     - [From Now During](#from-now-during)
     - [From](#from)
     - [To Now](#to-now)
@@ -330,6 +331,48 @@ Outputs:
 
 ```html
 <time>40 years</time>
+```
+
+#### From Now Short
+_fromNowShort={bool}_
+
+Displays the relative time in a short format using abbreviated units (e.g., "1h", "2d", "3mo", "1y" instead of "1 hour ago", "2 days ago", etc.).
+
+```jsx
+import React  from 'react';
+import Moment from 'react-moment';
+
+export default class MyComponent extends React.Component {
+    render() {
+        const date = new Date();
+        return (
+            <div>
+                <Moment fromNowShort>{date}</Moment>
+                {/* Output examples: "1h", "2d", "3mo", "1y" */}
+            </div>
+        );
+    }
+}
+```
+
+Examples of short format output:
+- "1s" - 1 second ago
+- "30s" - 30 seconds ago
+- "1m" - 1 minute ago
+- "45m" - 45 minutes ago
+- "1h" - 1 hour ago
+- "5h" - 5 hours ago
+- "1d" - 1 day ago
+- "7d" - 7 days ago
+- "1mo" - 1 month ago
+- "3mo" - 3 months ago
+- "1y" - 1 year ago
+- "2y" - 2 years ago
+
+You can also use the `ago` prop to customize the output:
+
+```jsx
+<Moment fromNowShort ago>2023-01-15T10:30:00</Moment>
 ```
 
 #### From Now During

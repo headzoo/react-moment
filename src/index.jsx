@@ -36,6 +36,7 @@ export default class Moment extends React.Component {
     subtract:        PropTypes.object,
     ago:             PropTypes.bool,
     fromNow:         PropTypes.bool,
+    fromNowShort:    PropTypes.bool,
     fromNowDuring:   PropTypes.number,
     from:            PropTypes.oneOfType(dateTypes),
     toNow:           PropTypes.bool,
@@ -60,22 +61,23 @@ export default class Moment extends React.Component {
   };
 
   static defaultProps = {
-    element:     null,
-    fromNow:     false,
-    toNow:       false,
-    calendar:    false,
-    ago:         false,
-    unix:        false,
-    utc:         false,
-    local:       false,
-    unit:        null,
-    withTitle:   false,
-    trim:        false,
-    decimal:     false,
-    titleFormat: '',
-    interval:    60000,
-    filter:      (d) => { return d; },
-    onChange:    () => {}
+    element:      null,
+    fromNow:      false,
+    fromNowShort: false,
+    toNow:        false,
+    calendar:     false,
+    ago:          false,
+    unix:         false,
+    utc:          false,
+    local:        false,
+    unit:         null,
+    withTitle:    false,
+    trim:         false,
+    decimal:      false,
+    titleFormat:  '',
+    interval:     60000,
+    filter:       (d) => { return d; },
+    onChange:     () => {}
   };
 
   static globalMoment   = null;
@@ -200,7 +202,7 @@ export default class Moment extends React.Component {
   */
   static getContent(props) {
     const {
-      fromNow, fromNowDuring, from, add, subtract, toNow, to, ago,
+      fromNow, fromNowShort, fromNowDuring, from, add, subtract, toNow, to, ago,
       calendar, diff, duration, durationFromNow, unit, decimal, trim
     } = props;
 
@@ -221,6 +223,38 @@ export default class Moment extends React.Component {
       content = datetime.format(format);
     } else if (from) {
       content = datetime.from(from, ago);
+    } else if (fromNowShort) {
+      // Store current locale configuration
+      const currentLocale = datetime.locale();
+      const localeData = moment.localeData(currentLocale);
+      const originalRelativeTime = localeData._config.relativeTime;
+      
+      // Temporarily update locale with short format
+      moment.updateLocale(currentLocale, {
+        relativeTime: {
+          future: '%s',
+          past: '%s',
+          s: '1s',
+          ss: '%ds',
+          m: '1m',
+          mm: '%dm',
+          h: '1h',
+          hh: '%dh',
+          d: '1d',
+          dd: '%dd',
+          M: '1mo',
+          MM: '%dmo',
+          y: '1y',
+          yy: '%dy'
+        }
+      });
+      
+      content = datetime.fromNow(ago);
+      
+      // Restore original locale configuration
+      moment.updateLocale(currentLocale, {
+        relativeTime: originalRelativeTime
+      });
     } else if (fromNow || fromNowPeriod) {
       content = datetime.fromNow(ago);
     } else if (to) {
