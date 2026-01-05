@@ -392,6 +392,22 @@ describe('react-moment', () => {
     expect(ReactDOM.findDOMNode(date).innerHTML).toEqual('19 avr. 1976');
   });
 
+  it('locale prop overrides globalLocale', () => {
+    // Set global locale to French
+    Moment.globalLocale = 'fr';
+    
+    // Component with explicit English locale should override global French
+    const date = TestUtils.renderIntoDocument(
+      <Moment format="D MMM YYYY" locale="en" date="1976-04-19T12:59-0500" />
+    );
+    
+    // Should display in English, not French
+    expect(ReactDOM.findDOMNode(date).innerHTML).toEqual('19 Apr 1976');
+    
+    // Reset global locale
+    Moment.globalLocale = null;
+  });
+
   it('globalTimezone', () => {
     Moment.globalTimezone = 'America/Los_Angeles';
     const date = TestUtils.renderIntoDocument(
