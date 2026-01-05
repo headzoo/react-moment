@@ -168,11 +168,7 @@ export default class Moment extends React.Component {
     parse = parse || Moment.globalParse;
     local = local || Moment.globalLocal;
     tz = tz || Moment.globalTimezone;
-    if (Moment.globalLocale) {
-      locale = Moment.globalLocale;
-    } else {
-      locale = locale || Moment.globalMoment.locale();
-    }
+    locale = locale || Moment.globalLocale || Moment.globalMoment.locale();
 
     let datetime = null;
     if (utc) {
