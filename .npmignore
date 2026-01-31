@@ -4,3 +4,5 @@
 .storybook
 stories
 webpack.config.js
+.cache
+.idea
