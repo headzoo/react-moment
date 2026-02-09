@@ -33,6 +33,7 @@ export interface MomentProps {
     format?: string,
     ago?: boolean,
     fromNow?: boolean,
+    fromNowShort?: boolean,
     fromNowDuring?: number,
     from?: dateTypes,
     toNow?: boolean,
