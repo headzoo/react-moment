@@ -2,6 +2,8 @@
 
 ## Unreleased
 
+- feat: refactor Moment component to utilize type imports and add getShortRelativeTime method. (`976dcc5`)
+
 ## [1.2.2] - 2026-02-09
 
 ### Added

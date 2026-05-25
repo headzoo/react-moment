@@ -159,6 +159,8 @@ describe('react-moment', () => {
       <Moment fromNowShort ago>{oneHourAgo.format()}</Moment>
     );
     expect(ReactDOM.findDOMNode(date).innerHTML).toEqual('1h');
+
+    expect(oneHourAgo.fromNow()).toEqual('an hour ago');
   });
 
   it('fromNowDuring', () => {

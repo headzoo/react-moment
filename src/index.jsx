@@ -3,28 +3,7 @@ import PropTypes from 'prop-types';
 import moment from 'moment';
 import 'moment-duration-format';
 import { objectKeyFilter } from './objects';
-
-const dateTypes = [
-  PropTypes.string,
-  PropTypes.number,
-  PropTypes.array,
-  PropTypes.object
-];
-
-const parseTypes = [
-  PropTypes.string,
-  PropTypes.array
-];
-
-const calendarTypes = [
-  PropTypes.object,
-  PropTypes.bool
-];
-
-const trimTypes = [
-  PropTypes.string,
-  PropTypes.bool
-];
+import { dateTypes, parseTypes, calendarTypes, trimTypes, momentPropKeys } from './types';
 
 export default class Moment extends React.Component {
   static propTypes = {
@@ -191,6 +170,78 @@ export default class Moment extends React.Component {
   }
 
   /**
+   * Returns a compact relative time string without mutating locale settings
+   *
+   * @param {*} datetime
+   * @returns {string}
+   */
+  static getShortRelativeTime(datetime) {
+    const momentRef = Moment.globalMoment || moment;
+    const round = momentRef.relativeTimeRounding();
+    const duration = momentRef.duration(momentRef().diff(datetime)).abs();
+    const thresholds = {
+      ss: momentRef.relativeTimeThreshold('ss'),
+      s:  momentRef.relativeTimeThreshold('s'),
+      m:  momentRef.relativeTimeThreshold('m'),
+      h:  momentRef.relativeTimeThreshold('h'),
+      d:  momentRef.relativeTimeThreshold('d'),
+      w:  momentRef.relativeTimeThreshold('w'),
+      M:  momentRef.relativeTimeThreshold('M')
+    };
+
+    const seconds = round(duration.as('s'));
+    const minutes = round(duration.as('m'));
+    const hours = round(duration.as('h'));
+    const days = round(duration.as('d'));
+    const weeks = round(duration.as('w'));
+    const months = round(duration.as('M'));
+    const years = round(duration.as('y'));
+
+    if (seconds <= thresholds.ss) {
+      return '1s';
+    }
+    if (seconds < thresholds.s) {
+      return `${seconds}s`;
+    }
+    if (minutes <= 1) {
+      return '1m';
+    }
+    if (minutes < thresholds.m) {
+      return `${minutes}m`;
+    }
+    if (hours <= 1) {
+      return '1h';
+    }
+    if (hours < thresholds.h) {
+      return `${hours}h`;
+    }
+    if (days <= 1) {
+      return '1d';
+    }
+    if (days < thresholds.d) {
+      return `${days}d`;
+    }
+    if (thresholds.w !== null) {
+      if (weeks <= 1) {
+        return '1w';
+      }
+      if (weeks < thresholds.w) {
+        return `${weeks}w`;
+      }
+    }
+    if (months <= 1) {
+      return '1mo';
+    }
+    if (months < thresholds.M) {
+      return `${months}mo`;
+    }
+    if (years <= 1) {
+      return '1y';
+    }
+    return `${years}y`;
+  }
+
+  /**
    * Returns computed content from sent props
    * @param {*} props
    * @returns {*}
@@ -220,37 +271,7 @@ export default class Moment extends React.Component {
     } else if (from) {
       content = datetime.from(from, ago);
     } else if (fromNowShort) {
-      // Store current locale configuration
-      const currentLocale = datetime.locale();
-      const localeData = moment.localeData(currentLocale);
-      const originalRelativeTime = localeData._config.relativeTime;
-      
-      // Temporarily update locale with short format
-      moment.updateLocale(currentLocale, {
-        relativeTime: {
-          future: '%s',
-          past: '%s',
-          s: '1s',
-          ss: '%ds',
-          m: '1m',
-          mm: '%dm',
-          h: '1h',
-          hh: '%dh',
-          d: '1d',
-          dd: '%dd',
-          M: '1mo',
-          MM: '%dmo',
-          y: '1y',
-          yy: '%dy'
-        }
-      });
-      
-      content = datetime.fromNow(ago);
-      
-      // Restore original locale configuration
-      moment.updateLocale(currentLocale, {
-        relativeTime: originalRelativeTime
-      });
+      content = Moment.getShortRelativeTime(datetime);
     } else if (fromNow || fromNowPeriod) {
       content = datetime.fromNow(ago);
     } else if (to) {
@@ -401,7 +422,7 @@ export default class Moment extends React.Component {
     const { withTitle, element, ...remaining } = this.props;
     const { content } = this.state;
 
-    const props = objectKeyFilter(remaining, Moment.propTypes);
+    const props = objectKeyFilter(remaining, momentPropKeys);
     if (withTitle) {
       props.title = this.getTitle();
     }
