@@ -1,6 +1,7 @@
 import moment from 'moment';
 import 'moment-duration-format';
 import Moment from '../index';
+import type { Filter } from '../types';
 import { getContent } from './getContent';
 
 const DATE_STRING = '1976-04-19T12:59-0500';
@@ -15,6 +16,8 @@ describe('getContent', () => {
       format: null,
       parse: null,
       filter: null,
+      filters: null,
+      renderers: null,
       element: 'time',
       timezone: null
     };
@@ -52,11 +55,55 @@ describe('getContent', () => {
   });
 
   it('applies the content filter after rendering', () => {
-    const filter = (value: unknown) => (value as string).toUpperCase();
+    const filter: Filter = (value) => (typeof value === 'string' ? value.toUpperCase() : value);
     expect(getContent({
       format: 'YYYY-MM-DD',
       filter,
       children: DATE_STRING
     })).toEqual('1976-04-19'.toUpperCase());
+  });
+
+  it('uses custom renderers before built-in renderers', () => {
+    expect(getContent({
+      format: 'YYYY-MM-DD',
+      children: DATE_STRING,
+      renderers: [() => 'custom output']
+    })).toEqual('custom output');
+  });
+
+  it('falls through custom renderers that return undefined', () => {
+    expect(getContent({
+      format: 'YYYY-MM-DD',
+      children: DATE_STRING,
+      renderers: [() => undefined]
+    })).toEqual('1976-04-19');
+  });
+
+  it('uses globals.renderers when props.renderers is omitted', () => {
+    Moment.globals.renderers = [() => 'global output'];
+    expect(getContent({ children: DATE_STRING })).toEqual('global output');
+  });
+
+  it('prefers props.renderers over globals.renderers', () => {
+    Moment.globals.renderers = [() => 'global output'];
+    expect(getContent({
+      children: DATE_STRING,
+      renderers: [() => 'prop output']
+    })).toEqual('prop output');
+  });
+
+  it('chains filters through getContent', () => {
+    const appendSuffix: Filter = (value) => (
+      typeof value === 'string' ? `${value}!` : value
+    );
+    const filter: Filter = (value) => (
+      typeof value === 'string' ? value.toUpperCase() : value
+    );
+    expect(getContent({
+      format: 'YYYY-MM-DD',
+      filters: [appendSuffix],
+      filter,
+      children: DATE_STRING
+    })).toEqual('1976-04-19!'.toUpperCase());
   });
 });

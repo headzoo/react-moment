@@ -32,6 +32,8 @@ describe('react-moment', () => {
       format: null,
       parse: null,
       filter: null,
+      filters: null,
+      renderers: null,
       element: 'time',
       timezone: null
     };

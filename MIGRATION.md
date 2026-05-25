@@ -149,8 +149,8 @@ Notable differences:
 | `parse` | `string \| Array<any>` | `moment.MomentFormatSpecification` |
 | `calendar` | `boolean \| object` | `boolean \| moment.CalendarSpec` |
 | `unit` | `string` | `moment.unitOfTime.Diff` |
-| `filter` | `(date: string) => string` | `(content: unknown) => unknown` |
-| `onChange` | `(content: any) => any` | `(content: unknown) => void` |
+| `filter` | `(date: string) => string` | `Filter` — `(content: MomentContent) => MomentContent` |
+| `onChange` | `(content: any) => any` | `(content: MomentContent) => void` |
 | `element` | `string \| FunctionComponent \| ComponentClass` | `ElementType \| null` |
 | Passthrough DOM props | Explicit optional props (`className`, `style`, …) | Index signature `[key: string]: unknown` |
 

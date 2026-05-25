@@ -22,6 +22,8 @@ React component for the [moment](http://momentjs.com/) date library.
     - [To Now](#to-now)
     - [To](#to)
     - [Filter](#filter)
+    - [Custom Filters](#custom-filters)
+    - [Custom Renderers](#custom-renderers)
     - [With Title](#with-title)
     - [Title Format](#title-format)
     - [Difference](#difference)
@@ -452,9 +454,9 @@ Outputs:
 ```
 
 #### Filter
-_filter={function}_
+_filter={Filter}_
 
-A function which modifies/transforms the date value prior to rendering.
+A function which modifies/transforms the rendered content prior to display. The `Filter` type is `(content: MomentContent) => MomentContent`, where `MomentContent` is `string | number` (formatted text or numeric diff/duration values).
 
 ```jsx
 import React  from 'react';
@@ -463,7 +465,7 @@ import Moment from 'react-moment';
 export default class MyComponent extends React.Component {
     render() {
         const toUpperCaseFilter = (d) => {
-            return d.toUpperCase();
+            return typeof d === 'string' ? d.toUpperCase() : d;
         };
 
         return (
@@ -479,6 +481,93 @@ Outputs:
 ```html
 <time>MON APR 19 1976 12:59:00 GMT-0500</time>
 ```
+
+
+#### Custom Filters
+_filters={Filter[]}_
+
+An array of custom filter functions applied **in order** before the singular `filter` prop (or `Moment.globals.filter`). Each filter receives and returns `MomentContent` (`string | number`).
+
+When both `filters` and `filter` are set, the array runs first and the singular filter runs last. `Moment.globals.filter` still takes precedence over `props.filter`, matching the existing behavior.
+
+```jsx
+import React from 'react';
+import Moment from 'react-moment';
+
+const trimFilter = (content) => (
+    typeof content === 'string' ? content.trim() : content
+);
+
+const upperCaseFilter = (content) => (
+    typeof content === 'string' ? content.toUpperCase() : content
+);
+
+export default class MyComponent extends React.Component {
+    render() {
+        return (
+            <Moment filters={[trimFilter, upperCaseFilter]}>
+                1976-04-19T12:59-0500
+            </Moment>
+        );
+    }
+}
+```
+
+Custom filters can also be registered globally via `Moment.globals.filters` (see [Global Config](#global-config)).
+
+
+#### Custom Renderers
+_renderers={ContentRenderer[]}_
+
+An array of custom content renderer functions invoked **before** the built-in renderers. The first renderer (custom or built-in) to return a non-`undefined` value wins. Return `undefined` from a custom renderer to fall through to the next renderer in the chain.
+
+Each renderer receives a `ContentContext` object:
+
+```ts
+type MomentContent = string | number;
+
+interface ContentContext {
+  props: MomentProps;
+  datetime: moment.Moment;
+  format: string | undefined;
+  fromNowPeriod: boolean;
+}
+
+type ContentRenderer = (ctx: ContentContext) => MomentContent | undefined;
+```
+
+Because custom renderers run first, they can override any built-in output mode (including `format`, `fromNow`, `calendar`, etc.).
+
+```jsx
+import React from 'react';
+import Moment from 'react-moment';
+
+const fiscalYearRenderer = ({ props, datetime }) => {
+  if (props.fiscalYear) {
+    const year = datetime.month() >= 3 ? datetime.year() + 1 : datetime.year();
+    return `FY${year}`;
+  }
+  return undefined;
+};
+
+export default class MyComponent extends React.Component {
+  render() {
+    return (
+      <Moment fiscalYear renderers={[fiscalYearRenderer]}>
+        1976-04-19T12:59-0500
+      </Moment>
+    );
+  }
+}
+```
+
+Outputs:
+
+```html
+<time>FY1976</time>
+```
+
+Custom renderers can also be registered globally via `Moment.globals.renderers` (see [Global Config](#global-config)).
 
 
 #### With Title
@@ -846,6 +935,8 @@ Some prop values may be set globally so you don't have to set them on every reac
 * format
 * parse
 * filter
+* filters
+* renderers
 * element
 * timezone
 * local
@@ -876,8 +967,16 @@ Moment.globals.element = 'span';
 
 // Upper case all rendered dates.
 Moment.globals.filter = (d) => {
-    return d.toUpperCase();
+    return typeof d === 'string' ? d.toUpperCase() : d;
 };
+
+// Custom filters applied to every instance unless overridden per component.
+Moment.globals.filters = [
+    (content) => (typeof content === 'string' ? content.trim() : content)
+];
+
+// Custom renderers applied to every instance unless overridden per component.
+Moment.globals.renderers = [({ datetime }) => `Y${datetime.year()}`];
 
 const App = () => (
     <Moment>1976-04-19T12:59-0500</Moment>

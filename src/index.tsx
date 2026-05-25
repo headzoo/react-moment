@@ -115,6 +115,10 @@ Moment.globals = {
   parse: null,
   // Default content transformer used when a component does not receive a filter prop.
   filter: null,
+  // Default custom filters used when a component does not receive a filters prop.
+  filters: null,
+  // Default custom renderers used when a component does not receive a renderers prop.
+  renderers: null,
   // Default HTML element used when a component does not receive an element prop.
   element: 'time',
   // Default timezone applied when a component does not receive a tz prop.

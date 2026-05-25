@@ -1,5 +1,5 @@
 import type momentLib from 'moment';
-import type { MomentProps } from '../types';
+import type { MomentContent, MomentProps } from '../types';
 
 /**
  * Context passed to each content renderer during getContent.
@@ -14,4 +14,4 @@ export interface ContentContext {
 /**
  * A content renderer returns undefined when its mode does not apply.
  */
-export type ContentRenderer = (ctx: ContentContext) => unknown | undefined;
+export type ContentRenderer = (ctx: ContentContext) => MomentContent | undefined;

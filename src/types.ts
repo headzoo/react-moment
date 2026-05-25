@@ -1,5 +1,6 @@
 import type { ElementType, ReactNode } from 'react';
 import type moment from 'moment';
+import type { ContentRenderer } from './renderers/types';
 
 /**
  * Any value moment.js accepts as a date (string, number, Date, moment instance, etc.).
@@ -22,14 +23,19 @@ export type CalendarInput = boolean | moment.CalendarSpec;
 export type TrimInput = boolean | string;
 
 /**
- * Transforms the rendered date content before it is displayed.
+ * Values produced by built-in/custom renderers and accepted by filters.
  */
-export type FilterFn = (content: unknown) => unknown;
+export type MomentContent = string | number;
+
+/**
+ * Transforms rendered content before it is displayed.
+ */
+export type Filter = (content: MomentContent) => MomentContent;
 
 /**
  * Called whenever the displayed content changes (including on interval updates).
  */
-export type OnChangeFn = (content: unknown) => void;
+export type OnChangeFn = (content: MomentContent) => void;
 
 /**
  * Shared content-formatting props used across multiple output modes.
@@ -43,12 +49,35 @@ export interface ContentBaseProps {
   /**
    * Per-instance filter applied to content after formatting (overridden by global filter).
    */
-  filter?: FilterFn;
+  filter?: Filter;
 
   /**
    * With relative-time props, omits the "ago" / "in" suffix from the output.
    */
   ago?: boolean;
+}
+
+/**
+ * Props for custom content renderers.
+ */
+export interface CustomRenderersProps {
+  /**
+   * Array of custom ContentRenderer functions invoked before the built-in
+   * renderers. The first renderer (custom or built-in) to return a
+   * non-undefined value wins. Falls back to Moment.globals.renderers.
+   */
+  renderers?: ContentRenderer[];
+}
+
+/**
+ * Props for custom content filters.
+ */
+export interface CustomFiltersProps {
+  /**
+   * Custom filters applied in order before the singular filter prop.
+   * Falls back to Moment.globals.filters.
+   */
+  filters?: Filter[];
 }
 
 /**
@@ -254,6 +283,8 @@ export interface MomentProps
     CalendarContentProps,
     DiffContentProps,
     DurationContentProps,
+    CustomRenderersProps,
+    CustomFiltersProps,
     DateInputProps,
     RenderProps {}
 
@@ -304,7 +335,17 @@ export interface MomentGlobals {
   /**
    * Default filter applied to all instances unless overridden per component.
    */
-  filter: FilterFn | null;
+  filter: Filter | null;
+
+  /**
+   * Default custom filters applied when a component omits the `filters` prop.
+   */
+  filters: Filter[] | null;
+
+  /**
+   * Default custom renderers applied when a component omits the `renderers` prop.
+   */
+  renderers: ContentRenderer[] | null;
 
   /**
    * Default element type rendered when a component omits the `element` prop.
@@ -390,5 +431,7 @@ export const momentPropKeys: Record<string, true> = {
   unit: true,
   decimal: true,
   filter: true,
+  filters: true,
+  renderers: true,
   onChange: true
 };

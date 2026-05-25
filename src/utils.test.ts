@@ -1,6 +1,7 @@
 import moment from 'moment';
 import 'moment-timezone';
 import Moment from './index';
+import type { Filter } from './types';
 import {
   getMomentRef,
   getDatetime,
@@ -23,6 +24,8 @@ describe('utils', () => {
       format: null,
       parse: null,
       filter: null,
+      filters: null,
+      renderers: null,
       element: 'time',
       timezone: null
     };
@@ -290,7 +293,7 @@ describe('utils', () => {
     });
 
     it('applies prop and globals filters', () => {
-      const filter = (value: unknown) => (value as string).toUpperCase();
+      const filter: Filter = (value) => (typeof value === 'string' ? value.toUpperCase() : value);
       expect(getContent({
         parse: 'YYYY-MM-DD HH:mm',
         filter,
