@@ -25,7 +25,7 @@ const html = (node: HTMLElement): string => node.innerHTML ?? '';
 
 describe('react-moment', () => {
   beforeEach(() => {
-    Moment.globals = {
+    Moment.settings = {
       moment: null,
       locale: null,
       local: null,
@@ -153,16 +153,16 @@ describe('react-moment', () => {
     ReactDOM.unmountComponentAtNode(container);
   });
 
-  it('globals.locale', () => {
-    Moment.globals.locale = 'fr';
+  it('settings.locale', () => {
+    Moment.settings.locale = 'fr';
     const date = render(
       <Moment format="D MMM YYYY" date="1976-04-19T12:59-0500" />
     );
     expect(html(date)).toEqual('19 avr. 1976');
   });
 
-  it('locale prop overrides globals.locale', () => {
-    Moment.globals.locale = 'fr';
+  it('locale prop overrides settings.locale', () => {
+    Moment.settings.locale = 'fr';
 
     const date = render(
       <Moment format="D MMM YYYY" locale="en" date="1976-04-19T12:59-0500" />
@@ -170,34 +170,34 @@ describe('react-moment', () => {
 
     expect(html(date)).toEqual('19 Apr 1976');
 
-    Moment.globals.locale = null;
+    Moment.settings.locale = null;
   });
 
-  it('globals.timezone', () => {
-    Moment.globals.timezone = 'America/Los_Angeles';
+  it('settings.timezone', () => {
+    Moment.settings.timezone = 'America/Los_Angeles';
     const date = render(
       <Moment format="YYYY-MM-DD HH" date="1976-04-19T12:59-0500" />
     );
     expect(html(date)).toEqual('1976-04-19 09');
   });
 
-  it('globals.local', () => {
-    Moment.globals.local = true;
+  it('settings.local', () => {
+    Moment.settings.local = true;
     const date = render(<Moment>{DATE_STRING}</Moment>);
     const expected = moment(DATE_STRING).local().toString();
     expect(html(date)).toEqual(expected);
   });
 
-  it('globals.element', () => {
-    Moment.globals.element = 'span';
+  it('settings.element', () => {
+    Moment.settings.element = 'span';
     const date = render(
       <Moment parse="YYYY-MM-DD HH:mm">1976-04-19 12:59</Moment>
     );
     expect(domOf(date).tagName).toEqual('SPAN');
   });
 
-  it('globals.element overwrite', () => {
-    Moment.globals.element = 'span';
+  it('settings.element overwrite', () => {
+    Moment.settings.element = 'span';
     const date = render(
       <Moment element="div" parse="YYYY-MM-DD HH:mm">1976-04-19 12:59</Moment>
     );

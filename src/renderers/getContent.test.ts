@@ -9,7 +9,7 @@ const DATE_OUTPUT = 'Mon Apr 19 1976 12:59:00 GMT-0500';
 
 describe('getContent', () => {
   beforeEach(() => {
-    Moment.globals = {
+    Moment.settings = {
       moment: null,
       locale: null,
       local: null,
@@ -79,13 +79,13 @@ describe('getContent', () => {
     })).toEqual('1976-04-19');
   });
 
-  it('uses globals.renderers when props.renderers is omitted', () => {
-    Moment.globals.renderers = [() => 'global output'];
+  it('uses settings.renderers when props.renderers is omitted', () => {
+    Moment.settings.renderers = [() => 'global output'];
     expect(getContent({ children: DATE_STRING })).toEqual('global output');
   });
 
-  it('prefers props.renderers over globals.renderers', () => {
-    Moment.globals.renderers = [() => 'global output'];
+  it('prefers props.renderers over settings.renderers', () => {
+    Moment.settings.renderers = [() => 'global output'];
     expect(getContent({
       children: DATE_STRING,
       renderers: [() => 'prop output']

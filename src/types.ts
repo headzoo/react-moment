@@ -47,7 +47,7 @@ export interface ContentBaseProps {
   format?: string;
 
   /**
-   * Per-instance filter applied to content after formatting (overridden by global filter).
+   * Per-instance filter applied to content after formatting (overridden by settings.filter).
    */
   filter?: Filter;
 
@@ -64,7 +64,7 @@ export interface CustomRenderersProps {
   /**
    * Array of custom ContentRenderer functions invoked before the built-in
    * renderers. The first renderer (custom or built-in) to return a
-   * non-undefined value wins. Falls back to Moment.globals.renderers.
+   * non-undefined value wins. Falls back to Moment.settings.renderers.
    */
   renderers?: ContentRenderer[];
 }
@@ -75,7 +75,7 @@ export interface CustomRenderersProps {
 export interface CustomFiltersProps {
   /**
    * Custom filters applied in order before the singular filter prop.
-   * Falls back to Moment.globals.filters.
+   * Falls back to Moment.settings.filters.
    */
   filters?: Filter[];
 }
@@ -241,7 +241,7 @@ export interface DateInputProps {
  */
 export interface RenderProps {
   /**
-   * HTML element type to render (defaults to the global element, usually `'time'`).
+   * HTML element type to render (defaults to the settings element, usually `'time'`).
    */
   element?: ElementType | null;
 
@@ -304,9 +304,9 @@ export interface PoolEntry {
 }
 
 /**
- * Global defaults shared by all `<Moment>` instances unless a prop overrides them.
+ * Default settings shared by all `<Moment>` instances unless a prop overrides them.
  */
-export interface MomentGlobals {
+export interface MomentSettings {
   /**
    * Custom moment module instance; lazily defaults to the bundled `moment`.
    */
@@ -363,9 +363,9 @@ export interface MomentGlobals {
  */
 export interface MomentStatics {
   /**
-   * Global defaults shared by all `<Moment>` instances.
+   * Default settings shared by all `<Moment>` instances.
    */
-  globals: MomentGlobals;
+  settings: MomentSettings;
 
   /**
    * Mounted instances driven by `startPooledTimer`.

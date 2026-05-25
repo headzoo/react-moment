@@ -8,12 +8,12 @@ export function applyContentFilter(
   props: MomentProps,
   content: MomentContent
 ): MomentContent {
-  const customFilters = props.filters ?? Moment.globals.filters ?? [];
+  const customFilters = props.filters ?? Moment.settings.filters ?? [];
   let result = content;
   for (const customFilter of customFilters) {
     result = customFilter(result);
   }
 
-  const filter = Moment.globals.filter || props.filter || ((value: MomentContent) => value);
+  const filter = Moment.settings.filter || props.filter || ((value: MomentContent) => value);
   return filter(result);
 }

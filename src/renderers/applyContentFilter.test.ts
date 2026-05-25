@@ -8,7 +8,7 @@ const toUpperCaseFilter: Filter = (value: MomentContent) => (
 
 describe('applyContentFilter', () => {
   beforeEach(() => {
-    Moment.globals = {
+    Moment.settings = {
       moment: null,
       locale: null,
       local: null,
@@ -30,13 +30,13 @@ describe('applyContentFilter', () => {
     expect(applyContentFilter({ filter: toUpperCaseFilter }, 'hello')).toEqual('HELLO');
   });
 
-  it('applies globals.filter when props.filter is omitted', () => {
-    Moment.globals.filter = toUpperCaseFilter;
+  it('applies settings.filter when props.filter is omitted', () => {
+    Moment.settings.filter = toUpperCaseFilter;
     expect(applyContentFilter({}, 'hello')).toEqual('HELLO');
   });
 
-  it('prefers globals.filter over props.filter', () => {
-    Moment.globals.filter = toUpperCaseFilter;
+  it('prefers settings.filter over props.filter', () => {
+    Moment.settings.filter = toUpperCaseFilter;
     const filter: Filter = (value) => (typeof value === 'string' ? value.toLowerCase() : value);
     expect(applyContentFilter({ filter }, 'Hello')).toEqual('HELLO');
   });
@@ -60,26 +60,26 @@ describe('applyContentFilter', () => {
     }, 'hello')).toEqual('HELLO!');
   });
 
-  it('applies filters before globals.filter', () => {
+  it('applies filters before settings.filter', () => {
     const appendSuffix: Filter = (value) => (
       typeof value === 'string' ? `${value}!` : value
     );
-    Moment.globals.filter = toUpperCaseFilter;
+    Moment.settings.filter = toUpperCaseFilter;
     expect(applyContentFilter({
       filters: [appendSuffix]
     }, 'hello')).toEqual('HELLO!');
   });
 
-  it('uses globals.filters when props.filters is omitted', () => {
+  it('uses settings.filters when props.filters is omitted', () => {
     const appendSuffix: Filter = (value) => (
       typeof value === 'string' ? `${value}!` : value
     );
-    Moment.globals.filters = [appendSuffix, toUpperCaseFilter];
+    Moment.settings.filters = [appendSuffix, toUpperCaseFilter];
     expect(applyContentFilter({}, 'hello')).toEqual('HELLO!');
   });
 
-  it('prefers props.filters over globals.filters', () => {
-    Moment.globals.filters = [() => 'global'];
+  it('prefers props.filters over settings.filters', () => {
+    Moment.settings.filters = [() => 'global'];
     expect(applyContentFilter({
       filters: [() => 'prop']
     }, 'hello')).toEqual('prop');

@@ -16,13 +16,13 @@ export function getContent(props: MomentProps): MomentContent {
   const datetime = getDatetime(props);
   applyDateAdjustments(props, datetime);
 
-  const format = props.format || Moment.globals.format || undefined;
+  const format = props.format || Moment.settings.format || undefined;
   const fromNowPeriod = Boolean(props.fromNowDuring)
     && -datetime.diff(momentLib()) < (props.fromNowDuring as number);
 
   const ctx: ContentContext = { props, datetime, format, fromNowPeriod };
 
-  const customRenderers = props.renderers ?? Moment.globals.renderers ?? [];
+  const customRenderers = props.renderers ?? Moment.settings.renderers ?? [];
   const allRenderers = [...customRenderers, ...contentRenderers];
 
   let content: MomentContent | undefined;

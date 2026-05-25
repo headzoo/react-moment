@@ -486,9 +486,9 @@ Outputs:
 #### Custom Filters
 _filters={Filter[]}_
 
-An array of custom filter functions applied **in order** before the singular `filter` prop (or `Moment.globals.filter`). Each filter receives and returns `MomentContent` (`string | number`).
+An array of custom filter functions applied **in order** before the singular `filter` prop (or `Moment.settings.filter`). Each filter receives and returns `MomentContent` (`string | number`).
 
-When both `filters` and `filter` are set, the array runs first and the singular filter runs last. `Moment.globals.filter` still takes precedence over `props.filter`, matching the existing behavior.
+When both `filters` and `filter` are set, the array runs first and the singular filter runs last. `Moment.settings.filter` still takes precedence over `props.filter`, matching the existing behavior.
 
 ```jsx
 import React from 'react';
@@ -513,7 +513,7 @@ export default class MyComponent extends React.Component {
 }
 ```
 
-Custom filters can also be registered globally via `Moment.globals.filters` (see [Global Config](#global-config)).
+Custom filters can also be registered globally via `Moment.settings.filters` (see [Global Config](#global-config)).
 
 
 #### Custom Renderers
@@ -567,7 +567,7 @@ Outputs:
 <time>FY1976</time>
 ```
 
-Custom renderers can also be registered globally via `Moment.globals.renderers` (see [Global Config](#global-config)).
+Custom renderers can also be registered globally via `Moment.settings.renderers` (see [Global Config](#global-config)).
 
 
 #### With Title
@@ -948,35 +948,35 @@ import moment from 'moment/min/moment-with-locales';
 import Moment from 'react-moment';
 
 // Sets the moment instance to use.
-Moment.globals.moment = moment;
+Moment.settings.moment = moment;
 
 // Set the locale for every react-moment instance to French.
-Moment.globals.locale = 'fr';
+Moment.settings.locale = 'fr';
 
 // Set the output format for every react-moment instance.
-Moment.globals.format = 'D MMM YYYY';
+Moment.settings.format = 'D MMM YYYY';
 
 // Set the timezone for every instance.
-Moment.globals.timezone = 'America/Los_Angeles';
+Moment.settings.timezone = 'America/Los_Angeles';
 
 // Set the output timezone for local for every instance.
-Moment.globals.local = true;
+Moment.settings.local = true;
 
 // Use a <span> tag for every react-moment instance.
-Moment.globals.element = 'span';
+Moment.settings.element = 'span';
 
 // Upper case all rendered dates.
-Moment.globals.filter = (d) => {
+Moment.settings.filter = (d) => {
     return typeof d === 'string' ? d.toUpperCase() : d;
 };
 
 // Custom filters applied to every instance unless overridden per component.
-Moment.globals.filters = [
+Moment.settings.filters = [
     (content) => (typeof content === 'string' ? content.trim() : content)
 ];
 
 // Custom renderers applied to every instance unless overridden per component.
-Moment.globals.renderers = [({ datetime }) => `Y${datetime.year()}`];
+Moment.settings.renderers = [({ datetime }) => `Y${datetime.year()}`];
 
 const App = () => (
     <Moment>1976-04-19T12:59-0500</Moment>
@@ -993,7 +993,7 @@ import ReactDOM from 'react-dom';
 import Moment from 'react-moment';
 
 // Set the locale for every react-moment instance to French.
-Moment.globals.locale = 'fr';
+Moment.settings.locale = 'fr';
 
 const App = () => (
     <div>

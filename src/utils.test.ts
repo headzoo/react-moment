@@ -17,7 +17,7 @@ const DATE_UNIX = DATE_DATE.getTime() / 1000;
 
 describe('utils', () => {
   beforeEach(() => {
-    Moment.globals = {
+    Moment.settings = {
       moment: null,
       locale: null,
       local: null,
@@ -32,16 +32,16 @@ describe('utils', () => {
   });
 
   describe('getMomentRef', () => {
-    it('lazily initializes globals.moment', () => {
-      expect(Moment.globals.moment).toBeNull();
+    it('lazily initializes settings.moment', () => {
+      expect(Moment.settings.moment).toBeNull();
       const ref = getMomentRef();
       expect(ref).toBe(moment);
-      expect(Moment.globals.moment).toBe(moment);
+      expect(Moment.settings.moment).toBe(moment);
     });
 
-    it('returns a custom globals.moment when set', () => {
+    it('returns a custom settings.moment when set', () => {
       const customMoment = moment;
-      Moment.globals.moment = customMoment;
+      Moment.settings.moment = customMoment;
       expect(getMomentRef()).toBe(customMoment);
     });
   });
@@ -97,32 +97,32 @@ describe('utils', () => {
       expect(datetime.toString()).toEqual(moment(DATE_STRING).local().toString());
     });
 
-    it('respects globals.parse', () => {
-      Moment.globals.parse = 'YYYY-MM-DD HH:mm';
+    it('respects settings.parse', () => {
+      Moment.settings.parse = 'YYYY-MM-DD HH:mm';
       const datetime = getDatetime({ children: '1976-04-19 12:59' });
       expect(datetime.toString()).toEqual(DATE_OUTPUT);
     });
 
-    it('respects globals.timezone', () => {
-      Moment.globals.timezone = 'America/Los_Angeles';
+    it('respects settings.timezone', () => {
+      Moment.settings.timezone = 'America/Los_Angeles';
       const datetime = getDatetime({ children: DATE_STRING });
       expect(datetime.format('YYYY-MM-DD HH')).toEqual('1976-04-19 09');
     });
 
-    it('respects globals.local', () => {
-      Moment.globals.local = true;
+    it('respects settings.local', () => {
+      Moment.settings.local = true;
       const datetime = getDatetime({ children: DATE_STRING });
       expect(datetime.toString()).toEqual(moment(DATE_STRING).local().toString());
     });
 
-    it('respects globals.locale', () => {
-      Moment.globals.locale = 'fr';
+    it('respects settings.locale', () => {
+      Moment.settings.locale = 'fr';
       const datetime = getDatetime({ children: '1976-04-19T12:59-0500' });
       expect(datetime.format('D MMM YYYY')).toEqual('19 avr. 1976');
     });
 
-    it('locale prop overrides globals.locale', () => {
-      Moment.globals.locale = 'fr';
+    it('locale prop overrides settings.locale', () => {
+      Moment.settings.locale = 'fr';
       const datetime = getDatetime({
         locale: 'en',
         children: '1976-04-19T12:59-0500'
@@ -158,8 +158,8 @@ describe('utils', () => {
         .toEqual('1976-04-19');
     });
 
-    it('uses globals.format when format is omitted', () => {
-      Moment.globals.format = 'YYYY-MM-DD';
+    it('uses settings.format when format is omitted', () => {
+      Moment.settings.format = 'YYYY-MM-DD';
       expect(getContent({ children: DATE_STRING })).toEqual('1976-04-19');
     });
 
@@ -292,7 +292,7 @@ describe('utils', () => {
       })).toEqual(expected);
     });
 
-    it('applies prop and globals filters', () => {
+    it('applies prop and settings filters', () => {
       const filter: Filter = (value) => (typeof value === 'string' ? value.toUpperCase() : value);
       expect(getContent({
         parse: 'YYYY-MM-DD HH:mm',
@@ -300,7 +300,7 @@ describe('utils', () => {
         children: '1976-04-19 12:59'
       })).toEqual(DATE_OUTPUT.toUpperCase());
 
-      Moment.globals.filter = filter;
+      Moment.settings.filter = filter;
       expect(getContent({
         parse: 'YYYY-MM-DD HH:mm',
         children: '1976-04-19 12:59'
@@ -316,8 +316,8 @@ describe('utils', () => {
       })).toEqual('1976-04-19');
     });
 
-    it('falls back to globals.format', () => {
-      Moment.globals.format = 'YYYY-MM-DD';
+    it('falls back to settings.format', () => {
+      Moment.settings.format = 'YYYY-MM-DD';
       expect(getTitle({ children: DATE_STRING })).toEqual('1976-04-19');
     });
 

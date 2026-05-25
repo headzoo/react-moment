@@ -2,6 +2,7 @@
 
 ## Unreleased
 
+- refactor: migrate global configuration to settings in Moment component. (`be2f893`)
 - refactor: enhance Moment component with custom filters and renderers. (`8d956f1`)
 - refactor: update Jest configuration and enhance TypeScript definitions. (`6ce0da2`)
 - refactor: restructure Moment component props and enhance type definitions. (`87653f5`)

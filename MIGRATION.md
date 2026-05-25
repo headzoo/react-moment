@@ -2,7 +2,7 @@
 
 This guide covers breaking changes when upgrading from **1.2.3** to **2.0.0**, which migrates the library to TypeScript and replaces the class-based `Moment` component with a functional component.
 
-If your usage is limited to rendering `<Moment />` with documented props, global configuration (`Moment.globals.format`, etc.), and the pooled timer API (`Moment.startPooledTimer()` / `Moment.clearPooledTimer()`), you may not need to change anything. The sections below call out cases that **do** require updates.
+If your usage is limited to rendering `<Moment />` with documented props, global configuration (`Moment.settings.format`, etc.), and the pooled timer API (`Moment.startPooledTimer()` / `Moment.clearPooledTimer()`), you may not need to change anything. The sections below call out cases that **do** require updates.
 
 ## Summary
 
@@ -68,7 +68,7 @@ TestUtils.findRenderedComponentWithType(container, Moment);
 
 Documented static APIs are unchanged in behavior:
 
-- Global configuration: `Moment.globals.moment`, `Moment.globals.locale`, `Moment.globals.local`, `Moment.globals.format`, `Moment.globals.parse`, `Moment.globals.filter`, `Moment.globals.element`, `Moment.globals.timezone`
+- Global configuration: `Moment.settings.moment`, `Moment.settings.locale`, `Moment.settings.local`, `Moment.settings.format`, `Moment.settings.parse`, `Moment.settings.filter`, `Moment.settings.element`, `Moment.settings.timezone`
 - Pooled timer: `Moment.startPooledTimer(interval?)`, `Moment.clearPooledTimer()`
 - Utilities: named exports `getDatetime(props)`, `getContent(props)`, and `getShortRelativeTime(datetime)` from `react-moment`
 
@@ -203,11 +203,11 @@ The supported public API remains the built artifact: `dist/index.js` with types 
 The following continue to work without changes:
 
 - All documented JSX props (`fromNow`, `format`, `unix`, `tz`, `fromNowShort`, etc.)
-- Global configuration object (`Moment.globals.format = '...'`, etc.)
+- Global configuration object (`Moment.settings.format = '...'`, etc.)
 - Pooled timer bootstrap (`Moment.startPooledTimer()` in your app entry file)
 - UMD / CommonJS / AMD consumption via `require('react-moment')` or `import Moment from 'react-moment'`
 - SSR via the published `dist/index.js` bundle
-- Default render output (still a `<time>` element unless overridden with `element` or `Moment.globals.element`)
+- Default render output (still a `<time>` element unless overridden with `element` or `Moment.settings.element`)
 
 ---
 

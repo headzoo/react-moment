@@ -20,7 +20,7 @@ import {
 } from './utils';
 
 /**
- * React function component merged with static globals and pooled-timer API.
+ * React function component merged with static settings and pooled-timer API.
  */
 type MomentComponent = React.FC<MomentProps> & MomentStatics;
 
@@ -93,7 +93,7 @@ const Moment: MomentComponent = ((props: MomentProps) => {
   }
 
   return React.createElement(
-    (element || Moment.globals.element) as ElementType,
+    (element || Moment.settings.element) as ElementType,
     {
       dateTime: getDatetime(props) as unknown as string,
       ...passProps
@@ -102,7 +102,7 @@ const Moment: MomentComponent = ((props: MomentProps) => {
   );
 }) as MomentComponent;
 
-Moment.globals = {
+Moment.settings = {
   // Optional replacement for the imported moment module, useful for custom moment instances.
   moment: null,
   // Default locale applied when a component does not receive a locale prop.
