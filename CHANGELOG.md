@@ -2,6 +2,7 @@
 
 ## Unreleased
 
+- chore: update README with new instructions and examples. (`2825c4f`)
 - Updates the readme. (`3b4cbf5`)
 - chore: add beta release workflow on master for GitHub Actions discovery. (`3a5c4e1`)
 

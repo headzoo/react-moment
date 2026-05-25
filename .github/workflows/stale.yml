@@ -1,0 +1,36 @@
+# .github/workflows/stale.yml
+
+name: Close stale issues
+
+on:
+  schedule:
+    - cron: "0 5 * * *" # daily at 5:00 UTC
+  workflow_dispatch: # lets you run it manually from the Actions tab
+
+permissions:
+  issues: write
+  pull-requests: write
+
+jobs:
+  stale:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/stale@v10
+        with:
+          days-before-issue-stale: 60
+          days-before-issue-close: 14
+
+          stale-issue-label: stale
+          stale-issue-message: >
+            This issue has been marked as stale because it has had no activity
+            for 60 days. It will be closed in 14 days if there is no further activity.
+
+          close-issue-message: >
+            Closing this issue because it has been stale for 14 days with no activity.
+
+          exempt-issue-labels: bug,security,keep-open,pinned
+
+          # Optional: do not touch PRs
+          days-before-pr-stale: -1
+          days-before-pr-close: -1
