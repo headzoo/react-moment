@@ -1,7 +1,7 @@
 const path = require('path');
 
 module.exports = {
-    entry: './src/index.jsx',
+    entry: './src/index.tsx',
     output: {
         path: path.resolve(__dirname, 'dist'),
         filename: 'index.js',
@@ -28,17 +28,13 @@ module.exports = {
     module: {
       rules: [
           {
-            include: /\.json$/,
-            loader: require.resolve('json-loader')
-          },
-          {
-            test: /\.jsx?$/,
+            test: /\.tsx?$/,
             exclude: /(node_modules)/,
-            loader: require.resolve('babel-loader'),
+            loader: require.resolve('ts-loader')
           }
         ]
     },
     resolve: {
-      extensions: ['.json', '.js', '.jsx']
+      extensions: ['.ts', '.tsx', '.js', '.jsx', '.json']
     }
 };

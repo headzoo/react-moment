@@ -18,8 +18,12 @@
     "@storybook/addon-options": "^5.0.6",
     "@storybook/addons": "^5.0.6",
     "@storybook/react": "^5.0.6",
+    "@types/jest": "^29.5.14",
+    "@types/react": "^18.3.29",
+    "@types/react-dom": "^18.3.7",
+    "@typescript-eslint/eslint-plugin": "^5.62.0",
+    "@typescript-eslint/parser": "^5.62.0",
     "babel-eslint": "^10.0.1",
-    "babel-jest": "^24.7.1",
     "babel-loader": "^8.0.5",
     "coveralls": "^3.0.3",
     "eslint": "^10.4.0",
@@ -29,28 +33,42 @@
     "eslint-plugin-jsx-a11y": "^6.2.1",
     "eslint-plugin-react": "^7.12.4",
     "express": "^4.16.4",
-    "jest": "^24.7.1",
+    "jest": "^29.7.0",
+    "jest-environment-jsdom": "^29.7.0",
     "json-loader": "^0.5.4",
     "moment": "^2.29.0",
     "moment-duration-format": "^2.2.2",
     "moment-timezone": "^0.5.23",
-    "prop-types": "^15.7.0",
     "react": "^16.0.0",
     "react-dom": "^16.0.0",
     "rimraf": "^2.6.3",
     "storybook-addon-jsx": "^7.1.0",
+    "ts-jest": "^29.4.11",
+    "ts-loader": "^8.4.0",
+    "typescript": "^5.9.3",
     "webpack": "^4.29.6",
     "webpack-cli": "^3.3.0"
   },
   "jest": {
-    "testRegex": "/tests/.*",
+    "testEnvironment": "jsdom",
+    "testRegex": "/tests/.*\\.(ts|tsx|js|jsx)$",
     "moduleFileExtensions": [
+      "ts",
+      "tsx",
       "js",
       "jsx"
     ],
     "modulePathIgnorePatterns": [
       "/tests/ssr"
-    ]
+    ],
+    "transform": {
+      "^.+\\.(ts|tsx)$": [
+        "ts-jest",
+        {
+          "tsconfig": "tsconfig.test.json"
+        }
+      ]
+    }
   },
   "keywords": [
     "date",
@@ -63,7 +81,6 @@
   "main": "dist/index.js",
   "peerDependencies": {
     "moment": "^2.29.0",
-    "prop-types": "^15.7.0",
     "react": "^16.0 || ^17.0.0 || ^18.0.0"
   },
   "repository": {
@@ -71,8 +88,8 @@
     "url": "git+https://github.com/headzoo/react-moment.git"
   },
   "scripts": {
-    "build": "npm run clean && webpack -p",
-    "clean": "rimraf ./dist/index.js",
+    "build": "npm run clean && webpack -p && tsc --emitDeclarationOnly -p tsconfig.json",
+    "clean": "rimraf ./dist",
     "prepare": "git config --local core.hooksPath .githooks 2>/dev/null || true",
     "release": "gh workflow run Release --ref master -f release_type=patch",
     "release:patch": "gh workflow run Release --ref master -f release_type=patch",
@@ -80,7 +97,7 @@
     "release:major": "gh workflow run Release --ref master -f release_type=major",
     "test": "export TZ=America/New_York; jest --coverage",
     "travis-test": "npm run test && cat ./coverage/lcov.info | ./node_modules/.bin/coveralls",
-    "lint": "eslint ./src --cache --cache-location=.cache/eslint --ext .js,.jsx",
+    "lint": "eslint ./src --cache --cache-location=.cache/eslint --ext .ts,.tsx",
     "lint:fix": "npm run lint -- --fix",
     "storybook:dev": "start-storybook -p 6006",
     "storybook:build": "build-storybook -o stories/build"

@@ -1,16 +1,14 @@
-import PropTypes from 'prop-types';
 import * as objects from '../src/objects';
 
 test('objectKeyFilter', () => {
-  const propTypes = {
-    className: PropTypes.string
+  const propKeys = {
+    className: true
   };
   const props = {
     className: 'dp-item',
     title:     'foo'
   };
-  const result = objects.objectKeyFilter(props, propTypes);
+  const result = objects.objectKeyFilter(props, propKeys);
   expect(result.className).toBe(undefined);
   expect(result.title).not.toBe(undefined);
 });
-

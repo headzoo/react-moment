@@ -1,5 +1,10 @@
 {
-  "extends": ["eslint:recommended", "plugin:react/recommended", "airbnb"],
+  "extends": [
+    "eslint:recommended",
+    "plugin:react/recommended",
+    "airbnb",
+    "plugin:@typescript-eslint/recommended"
+  ],
   "env": {
     "browser": true,
     "mocha": true,
@@ -7,7 +12,7 @@
     "jest": true,
     "jasmine": true
   },
-  "parser": "babel-eslint",
+  "parser": "@typescript-eslint/parser",
   "rules": {
     "max-len": [
       1,
@@ -76,32 +81,38 @@
     "jsx-a11y/no-static-element-interactions": 0,
     "import/prefer-default-export": "off",
     "import/extensions": ["warn", "always", {
-      "js": "never", "jsx": "never"
+      "js": "never", "jsx": "never", "ts": "never", "tsx": "never"
     }],
     "react/no-unused-prop-types": [2, { "skipShapeProps": true }],
     "class-methods-use-this": 0,
     "jsx-a11y/tabindex-no-positive": 0,
     "strict": 0,
     "no-param-reassign": 0,
-    "no-mixed-operators": "off"
+    "no-mixed-operators": "off",
+    "no-unused-vars": "off",
+    "@typescript-eslint/no-unused-vars": ["error", { "argsIgnorePattern": "^_" }],
+    "@typescript-eslint/no-explicit-any": "off"
   },
   "plugins": [
     "react",
-    "jsx-a11y"
+    "jsx-a11y",
+    "@typescript-eslint"
   ],
   "settings": {
     "import/resolver": {
-      "babel-module": {  }
+      "node": {
+        "extensions": [".ts", ".tsx", ".js", ".jsx"]
+      }
     },
-    "import/extensions": [".js", ".jsx"],
+    "import/extensions": [".ts", ".tsx", ".js", ".jsx"],
     "react": {
-      "version": "15.3.2"
-      // React version, default to the latest React stable release
+      "version": "detect"
     }
   },
   "parserOptions": {
     "ecmaFeatures": {
       "jsx": true
-    }
+    },
+    "sourceType": "module"
   }
 }
