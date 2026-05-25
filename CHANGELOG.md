@@ -2,6 +2,7 @@
 
 ## Unreleased
 
+- chore: update beta release workflow and clarify branch usage in documentation. (`5fd9f74`)
 - chore: enhance release workflows and add beta publishing support. (`c59dd12`)
 - Migrate to TypeScript and update ESLint configuration for improved type checking. (`1f09a32`)
 

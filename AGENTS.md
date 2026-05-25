@@ -43,7 +43,8 @@ pre-releases can coexist.
 
 ### 2.x beta
 
-- Branch: `2.0.0-beta`
+- Branch: `2.0.0-beta` (source code); workflow file lives on `master` (GitHub
+  requires `workflow_dispatch` workflows on the default branch)
 - Trigger: `npm run release:beta`
 - Workflow: [`.github/workflows/release-beta.yml`](.github/workflows/release-beta.yml)
 - npm dist-tag: `beta` — consumers install with `react-moment@beta`
