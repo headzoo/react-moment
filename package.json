@@ -78,6 +78,7 @@
     "release:patch": "gh workflow run Release --ref master -f release_type=patch",
     "release:minor": "gh workflow run Release --ref master -f release_type=minor",
     "release:major": "gh workflow run Release --ref master -f release_type=major",
+    "release:beta": "gh workflow run release-beta.yml --ref master",
     "test": "export TZ=America/New_York; jest --coverage",
     "travis-test": "npm run test && cat ./coverage/lcov.info | ./node_modules/.bin/coveralls",
     "lint": "eslint ./src --cache --cache-location=.cache/eslint --ext .js,.jsx",

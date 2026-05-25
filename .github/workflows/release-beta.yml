@@ -1,0 +1,97 @@
+name: Release Beta
+
+on:
+  workflow_dispatch:
+
+permissions:
+  contents: write
+  id-token: write
+
+jobs:
+  release:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout 2.0.0-beta
+        uses: actions/checkout@v4
+        with:
+          ref: 2.0.0-beta
+          fetch-depth: 0
+          token: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: 16
+          cache: npm
+          registry-url: "https://registry.npmjs.org"
+
+      - name: Update npm
+        run: npm install -g npm@9
+
+      - name: Install dependencies
+        run: npm ci --legacy-peer-deps
+
+      - name: Bump version
+        run: |
+          set -euo pipefail
+          CURRENT=$(node -p "require('./package.json').version")
+          if [[ "$CURRENT" =~ ^2\.0\.0-beta\. ]]; then
+            VERSION=$(npm version prerelease --preid=beta --no-git-tag-version | tail -n1 | sed 's/^v//')
+          else
+            VERSION=$(npm version 2.0.0-beta.1 --no-git-tag-version | tail -n1 | sed 's/^v//')
+          fi
+          echo "VERSION=$VERSION" >> "$GITHUB_ENV"
+          echo "Bumped to $VERSION"
+
+      - name: Update CHANGELOG.md for release
+        if: env.VERSION != ''
+        run: |
+          set -euo pipefail
+          python3 - "$VERSION" "$(date -u +%Y-%m-%d)" <<'PY'
+          import pathlib
+          import re
+          import sys
+
+          version, date_iso = sys.argv[1], sys.argv[2]
+          path = pathlib.Path("CHANGELOG.md")
+          if not path.exists():
+              print("::warning::CHANGELOG.md not found; skipping changelog rename.")
+              sys.exit(0)
+
+          text = path.read_text()
+          match = re.search(r"^## Unreleased\s*\n(.*?)(?=^## |\Z)", text, flags=re.S | re.M)
+          if not match or not match.group(1).strip():
+              print("::warning::No Unreleased content; skipping changelog rename.")
+              sys.exit(0)
+
+          body = match.group(1).strip("\n")
+          replacement = f"## Unreleased\n\n## {version} - {date_iso}\n\n{body}\n"
+          new_text = re.sub(
+              r"^## Unreleased\s*\n.*?(?=^## |\Z)",
+              replacement + "\n",
+              text,
+              count=1,
+              flags=re.S | re.M,
+          )
+          path.write_text(new_text)
+          PY
+
+      - name: Commit, tag, and push
+        run: |
+          set -euo pipefail
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add package.json package-lock.json CHANGELOG.md
+          git commit -m "chore(changelog): release v${VERSION} [skip ci]"
+          git tag -a "v${VERSION}" -m "Release v${VERSION}"
+          git push origin HEAD:2.0.0-beta --follow-tags
+
+      - name: Publish to npm
+        env:
+          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
+        run: npm publish --access public --provenance --tag beta
+
+      - name: Create GitHub release
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: gh release create "v${VERSION}" --generate-notes --title "v${VERSION}" --prerelease

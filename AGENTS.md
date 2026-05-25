@@ -28,3 +28,36 @@ What this means for you:
   triggers a release.
 - Don't run version-bump commands locally (`npm version`); use the release
   workflow instead so the changelog and tags stay in sync.
+
+## Publishing
+
+Two release workflows publish to npm with different dist-tags so 1.x and 2.x
+pre-releases can coexist.
+
+### 1.x (now)
+
+- Branch: `master`
+- Trigger: `npm run release:patch` (or `:minor`, `:major`)
+- Workflow: [`.github/workflows/release.yml`](.github/workflows/release.yml)
+- npm dist-tag: `latest` (default)
+
+### 2.x beta
+
+- Branch: `2.0.0-beta` (source code); workflow file lives on `master` (GitHub
+  requires `workflow_dispatch` workflows on the default branch)
+- Trigger: `npm run release:beta`
+- Workflow: [`.github/workflows/release-beta.yml`](.github/workflows/release-beta.yml)
+- npm dist-tag: `beta` — consumers install with `react-moment@beta`
+- First run bumps to `2.0.0-beta.1`; subsequent runs increment the prerelease
+  segment (`2.0.0-beta.2`, etc.)
+
+### After 2.0.0 stable
+
+1. Cut a long-lived `1.x` branch from `v1.2.3` for maintenance fixes.
+2. Merge `2.0.0-beta` into `master` and release `2.0.0` via the Release
+   workflow (`latest`).
+3. Future 1.x patches: Release workflow with `branch=1.x` and `dist_tag=v1`
+   so `latest` stays on 2.x.
+
+Each branch owns its own `## Unreleased` section in `CHANGELOG.md`. Backport
+fixes to both lines when needed.
