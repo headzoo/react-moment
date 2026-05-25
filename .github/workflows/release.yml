@@ -12,6 +12,16 @@ on:
           - patch
           - minor
           - major
+      branch:
+        description: "branch to release from"
+        required: true
+        default: master
+        type: string
+      dist_tag:
+        description: "npm dist-tag"
+        required: true
+        default: latest
+        type: string
 
 permissions:
   contents: write
@@ -21,9 +31,10 @@ jobs:
   release:
     runs-on: ubuntu-latest
     steps:
-      - name: Checkout master
+      - name: Checkout branch
         uses: actions/checkout@v4
         with:
+          ref: ${{ inputs.branch }}
           fetch-depth: 0
           token: ${{ secrets.GITHUB_TOKEN }}
 
@@ -88,12 +99,12 @@ jobs:
           git add package.json package-lock.json CHANGELOG.md
           git commit -m "chore(changelog): release v${VERSION} [skip ci]"
           git tag -a "v${VERSION}" -m "Release v${VERSION}"
-          git push origin HEAD:master --follow-tags
+          git push origin HEAD:${{ inputs.branch }} --follow-tags
 
       - name: Publish to npm
         env:
           NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
-        run: npm publish --access public --provenance
+        run: npm publish --access public --provenance --tag ${{ inputs.dist_tag }}
 
       - name: Create GitHub release
         env:
