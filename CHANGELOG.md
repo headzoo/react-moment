@@ -2,6 +2,8 @@
 
 ## Unreleased
 
+## 2.0.0-beta.2 - 2026-05-25
+
 - refactor: update Moment component and dependencies for improved functionality. (`05fee45`)
 - chore: update package dependencies and enhance TypeScript support. (`49f7db6`)
 - refactor: migrate global configuration to settings in Moment component. (`be2f893`)
