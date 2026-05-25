@@ -32,29 +32,29 @@ export type FilterFn = (content: unknown) => unknown;
 export type OnChangeFn = (content: unknown) => void;
 
 /**
- * Props accepted by the `<Moment>` component.
+ * Shared content-formatting props used across multiple output modes.
  */
-export interface MomentProps {
-  /**
-   * HTML element type to render (defaults to the global element, usually `'time'`).
-   */
-  element?: ElementType | null;
-
-  /**
-   * Date to display; falls back to `children` when omitted.
-   */
-  date?: DateInput;
-
-  /**
-   * How to parse the date input when it is not in a standard format.
-   */
-  parse?: ParseInput;
-
+export interface ContentBaseProps {
   /**
    * moment.js format string for the displayed output.
    */
   format?: string;
 
+  /**
+   * Per-instance filter applied to content after formatting (overridden by global filter).
+   */
+  filter?: FilterFn;
+
+  /**
+   * With relative-time props, omits the "ago" / "in" suffix from the output.
+   */
+  ago?: boolean;
+}
+
+/**
+ * Props that adjust the parsed date before content rendering.
+ */
+export interface DateAdjustmentProps {
   /**
    * Duration to add to the date before formatting (e.g. `{ hours: 12 }`).
    */
@@ -64,12 +64,12 @@ export interface MomentProps {
    * Duration to subtract from the date before formatting.
    */
   subtract?: moment.DurationInputObject;
+}
 
-  /**
-   * With relative-time props, omits the "ago" / "in" suffix from the output.
-   */
-  ago?: boolean;
-
+/**
+ * Props for relative-to-now content output.
+ */
+export interface FromNowContentProps {
   /**
    * Displays the date relative to now (e.g. "5 minutes ago").
    */
@@ -84,12 +84,22 @@ export interface MomentProps {
    * Shows relative time only while within this many milliseconds; then uses `format`.
    */
   fromNowDuring?: number;
+}
 
+/**
+ * Props for interval-from content output.
+ */
+export interface FromContentProps {
   /**
    * Displays the interval from this date to the component's date.
    */
   from?: DateInput;
+}
 
+/**
+ * Props for interval-to content output.
+ */
+export interface ToContentProps {
   /**
    * Displays the interval from the component's date to now.
    */
@@ -99,11 +109,71 @@ export interface MomentProps {
    * Displays the interval from the component's date to this date.
    */
   to?: DateInput;
+}
 
+/**
+ * Props for calendar-style content output.
+ */
+export interface CalendarContentProps {
   /**
    * Renders a calendar-style string (e.g. "Yesterday at 3:00 PM").
    */
   calendar?: CalendarInput;
+}
+
+/**
+ * Props for numeric diff content output.
+ */
+export interface DiffContentProps {
+  /**
+   * Renders the numeric difference between this date and the component's date.
+   */
+  diff?: DateInput;
+
+  /**
+   * Unit of time for `diff` output (e.g. `'days'`, `'years'`).
+   */
+  unit?: moment.unitOfTime.Diff;
+
+  /**
+   * When true, `diff` returns a floating-point value instead of truncating.
+   */
+  decimal?: boolean;
+}
+
+/**
+ * Props for duration content output.
+ */
+export interface DurationContentProps {
+  /**
+   * Renders the duration between this date and the component's date.
+   */
+  duration?: DateInput;
+
+  /**
+   * Renders the duration between now and the component's date.
+   */
+  durationFromNow?: boolean;
+
+  /**
+   * Passed to moment-duration-format when formatting duration output.
+   */
+  trim?: TrimInput;
+}
+
+/**
+ * Props for parsing and interpreting the date input.
+ */
+export interface DateInputProps {
+  /**
+   * Date to display; falls back to `children` when omitted.
+   */
+  date?: DateInput;
+
+  /**
+   * How to parse the date input when it is not in a standard format.
+   */
+  parse?: ParseInput;
 
   /**
    * Treats the date input as a Unix timestamp in seconds.
@@ -126,6 +196,27 @@ export interface MomentProps {
   tz?: string;
 
   /**
+   * BCP 47 locale string for formatting and parsing.
+   */
+  locale?: string;
+
+  /**
+   * Date input when no `date` prop is given; otherwise standard React children.
+   * Accepts strings, numbers, `Date`, moment instances, etc.
+   */
+  children?: ReactNode | DateInput;
+}
+
+/**
+ * Props for component rendering, lifecycle, and DOM forwarding.
+ */
+export interface RenderProps {
+  /**
+   * HTML element type to render (defaults to the global element, usually `'time'`).
+   */
+  element?: ElementType | null;
+
+  /**
    * Adds a `title` attribute with a formatted version of the date.
    */
   withTitle?: boolean;
@@ -136,49 +227,9 @@ export interface MomentProps {
   titleFormat?: string;
 
   /**
-   * BCP 47 locale string for formatting and parsing.
-   */
-  locale?: string;
-
-  /**
    * Milliseconds between automatic re-renders; `0` disables updates (default 60000).
    */
   interval?: number;
-
-  /**
-   * Renders the numeric difference between this date and the component's date.
-   */
-  diff?: DateInput;
-
-  /**
-   * Renders the duration between this date and the component's date.
-   */
-  duration?: DateInput;
-
-  /**
-   * Renders the duration between now and the component's date.
-   */
-  durationFromNow?: boolean;
-
-  /**
-   * Passed to moment-duration-format when formatting duration output.
-   */
-  trim?: TrimInput;
-
-  /**
-   * Unit of time for `diff` output (e.g. `'days'`, `'years'`).
-   */
-  unit?: moment.unitOfTime.Diff;
-
-  /**
-   * When true, `diff` returns a floating-point value instead of truncating.
-   */
-  decimal?: boolean;
-
-  /**
-   * Per-instance filter applied to content after formatting (overridden by global filter).
-   */
-  filter?: FilterFn;
 
   /**
    * Callback invoked when displayed content changes.
@@ -186,16 +237,25 @@ export interface MomentProps {
   onChange?: OnChangeFn;
 
   /**
-   * Date input when no `date` prop is given; otherwise standard React children.
-   * Accepts strings, numbers, `Date`, moment instances, etc.
-   */
-  children?: ReactNode | DateInput;
-
-  /**
    * Additional props forwarded to the rendered DOM element.
    */
   [key: string]: unknown;
 }
+
+/**
+ * Props accepted by the `<Moment>` component.
+ */
+export interface MomentProps
+  extends ContentBaseProps,
+    DateAdjustmentProps,
+    FromNowContentProps,
+    FromContentProps,
+    ToContentProps,
+    CalendarContentProps,
+    DiffContentProps,
+    DurationContentProps,
+    DateInputProps,
+    RenderProps {}
 
 /**
  * A mounted `<Moment>` instance registered with the shared pooled timer.

@@ -127,66 +127,25 @@ export function getShortRelativeTime(datetime: momentLib.Moment): string {
   return `${years}y`;
 }
 
-/**
- * Returns the rendered content from the given props.
- */
-export function getContent(props: MomentProps): unknown {
-  const {
-    fromNow, fromNowShort, fromNowDuring, from, add, subtract, toNow, to, ago,
-    calendar, diff, duration, durationFromNow, unit, decimal, trim
-  } = props;
-
-  const format = props.format || Moment.globals.format || undefined;
-  const datetime = getDatetime(props);
-  if (add) {
-    datetime.add(add);
-  }
-  if (subtract) {
-    datetime.subtract(subtract);
-  }
-
-  const fromNowPeriod = Boolean(fromNowDuring)
-    && -datetime.diff(momentLib()) < (fromNowDuring as number);
-  let content: unknown = '';
-  if (format && !fromNowPeriod && !(durationFromNow || duration)) {
-    content = datetime.format(format);
-  } else if (from) {
-    content = datetime.from(from as momentLib.MomentInput, ago);
-  } else if (fromNowShort) {
-    content = getShortRelativeTime(datetime);
-  } else if (fromNow || fromNowPeriod) {
-    content = datetime.fromNow(ago);
-  } else if (to) {
-    content = datetime.to(to as momentLib.MomentInput, ago);
-  } else if (toNow) {
-    content = datetime.toNow(ago);
-  } else if (calendar) {
-    content = datetime.calendar(
-      null as unknown as momentLib.MomentInput,
-      calendar as momentLib.CalendarSpec
-    );
-  } else if (diff) {
-    content = datetime.diff(diff as momentLib.MomentInput, unit, decimal);
-  } else if (duration) {
-    content = datetime.diff(duration as momentLib.MomentInput);
-  } else if (durationFromNow) {
-    content = momentLib().diff(datetime);
-  } else {
-    content = datetime.toString();
-  }
-
-  if (duration || durationFromNow) {
-    const d = momentLib.duration(content as momentLib.DurationInputArg1);
-    content = (d as unknown as {
-      format: (template?: string, options?: { trim?: unknown }) => string;
-    }).format(format, { trim });
-  }
-
-  const filter = Moment.globals.filter || props.filter || ((value: unknown) => value);
-  content = filter(content);
-
-  return content;
-}
+export {
+  applyContentFilter,
+  applyDateAdjustments,
+  contentRenderers,
+  formatDurationContent,
+  getContent,
+  renderCalendar,
+  renderDefault,
+  renderDiff,
+  renderDuration,
+  renderDurationFromNow,
+  renderFormat,
+  renderFrom,
+  renderFromNow,
+  renderFromNowShort,
+  renderTo,
+  renderToNow
+} from './renderers';
+export type { ContentContext, ContentRenderer } from './renderers';
 
 /**
  * Returns the title to use when `withTitle` is set.
