@@ -1,6 +1,6 @@
 # Migration guide
 
-This guide covers breaking changes when upgrading from **1.2.3** to the next release, which migrates the library to TypeScript and replaces the class-based `Moment` component with a functional component.
+This guide covers breaking changes when upgrading from **1.2.3** to **2.0.0**, which migrates the library to TypeScript and replaces the class-based `Moment` component with a functional component.
 
 If your usage is limited to rendering `<Moment />` with documented props, global configuration (`Moment.globalFormat`, etc.), and the pooled timer API (`Moment.startPooledTimer()` / `Moment.clearPooledTimer()`), you may not need to change anything. The sections below call out cases that **do** require updates.
 
