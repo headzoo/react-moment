@@ -9,8 +9,10 @@ const PORT   = 8081;
 const app    = express();
 const router = express.Router();
 
+const templatePath = path.resolve(__dirname, 'index.html');
+
 const serverRenderer = (req, res) => {
-  fs.readFile(path.resolve('./index.html'), 'utf8', (err, data) => {
+  fs.readFile(templatePath, 'utf8', (err, data) => {
     if (err) {
       console.error(err);
       return res.status(500).send('An error occurred');

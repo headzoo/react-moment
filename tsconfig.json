@@ -14,5 +14,6 @@
     "outDir": "./dist",
     "lib": ["DOM", "ES2018"]
   },
-  "include": ["src"]
+  "include": ["src"],
+  "exclude": ["**/*.test.ts", "**/*.test.tsx"]
 }

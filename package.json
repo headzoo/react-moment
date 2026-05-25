@@ -51,15 +51,17 @@
   },
   "jest": {
     "testEnvironment": "jsdom",
-    "testRegex": "/tests/.*\\.(ts|tsx|js|jsx)$",
+    "testRegex": "\\.(test|spec)\\.(ts|tsx)$",
     "moduleFileExtensions": [
       "ts",
       "tsx",
       "js",
       "jsx"
     ],
-    "modulePathIgnorePatterns": [
-      "/tests/ssr"
+    "collectCoverageFrom": [
+      "src/**/*.{ts,tsx}",
+      "!src/**/*.test.{ts,tsx}",
+      "!src/**/*.spec.{ts,tsx}"
     ],
     "transform": {
       "^.+\\.(ts|tsx)$": [

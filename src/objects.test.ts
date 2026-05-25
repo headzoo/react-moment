@@ -1,4 +1,4 @@
-import * as objects from '../src/objects';
+import * as objects from './objects';
 
 test('objectKeyFilter', () => {
   const propKeys = {
