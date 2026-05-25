@@ -2,9 +2,7 @@
 
 ## Unreleased
 
-- Migrate to TypeScript and update ESLint configuration for improved type checking. (`3e97835`)
 - Migrate to TypeScript and update ESLint configuration for improved type checking. (`1f09a32`)
-- feat: refactor Moment component to utilize type imports and add getShortRelativeTime method. (`976dcc5`)
 
 ## [1.2.2] - 2026-02-09
 
