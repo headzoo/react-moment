@@ -1,0 +1,93 @@
+#!/usr/bin/env bash
+# Auto-append the subject of the just-made commit to the `## Unreleased`
+# section of CHANGELOG.md and fold the change into the same commit via
+# `git commit --amend`. Recursion is prevented with an env-var guard.
+
+set -euo pipefail
+
+# Recursion guard: this hook calls `git commit --amend` below, which would
+# trigger post-commit again. The amend invocation sets this env var inline.
+[[ -n "${REACT_MOMENT_SKIP_CHANGELOG_HOOK:-}" ]] && exit 0
+
+# Don't run mid-rebase / mid-cherry-pick / mid-revert / mid-merge; those replay
+# commits and would spam the changelog.
+git_dir="$(git rev-parse --git-dir)"
+if [[ -e "$git_dir/MERGE_HEAD" \
+   || -e "$git_dir/CHERRY_PICK_HEAD" \
+   || -e "$git_dir/REVERT_HEAD" \
+   || -d "$git_dir/rebase-merge" \
+   || -d "$git_dir/rebase-apply" ]]; then
+  exit 0
+fi
+
+# Skip merge commits (they have a second parent). Merge subjects are not useful
+# changelog content.
+if git rev-parse --verify -q HEAD^2 >/dev/null; then
+  exit 0
+fi
+
+repo_root="$(git rev-parse --show-toplevel)"
+changelog="$repo_root/CHANGELOG.md"
+[[ -f "$changelog" ]] || exit 0
+grep -q '^## Unreleased' "$changelog" || exit 0
+
+# If the developer included CHANGELOG.md in the commit themselves, trust them
+# and don't auto-append.
+if git diff-tree --no-commit-id --name-only -r HEAD | grep -qx 'CHANGELOG.md'; then
+  exit 0
+fi
+
+subject="$(git log -1 --pretty=%s)"
+short_sha="$(git log -1 --pretty=%h)"
+
+# Skip subjects that aren't meaningful changelog content.
+case "$subject" in
+  "Merge "*|"Revert "*|"fixup!"*|"squash!"*|"chore(changelog)"*|"chore(release)"*)
+    exit 0
+    ;;
+esac
+
+# Skip version-bump-only subjects (e.g. `1.2.3`, `v1.2.3`) so local
+# `npm version` runs don't pollute the changelog.
+if [[ "$subject" =~ ^v?[0-9]+\.[0-9]+\.[0-9]+ ]]; then
+  exit 0
+fi
+
+# Idempotency: if this commit's short SHA is already referenced in
+# `## Unreleased`, do nothing.
+if grep -qF "\`$short_sha\`" "$changelog"; then
+  exit 0
+fi
+
+bullet="- ${subject}. (\`${short_sha}\`)"
+
+python3 - "$changelog" "$bullet" <<'PY'
+import pathlib
+import re
+import sys
+
+path = pathlib.Path(sys.argv[1])
+bullet = sys.argv[2]
+text = path.read_text()
+
+
+def repl(match: re.Match) -> str:
+    heading = match.group(1)
+    body = match.group(2).lstrip("\n")
+    if body:
+        return f"{heading}\n\n{bullet}\n{body}"
+    return f"{heading}\n\n{bullet}\n\n"
+
+
+new_text = re.sub(
+    r"(^## Unreleased[^\n]*)\n+((?:.*?)(?=^## |\Z))",
+    repl,
+    text,
+    count=1,
+    flags=re.S | re.M,
+)
+path.write_text(new_text)
+PY
+
+git add -- "$changelog"
+REACT_MOMENT_SKIP_CHANGELOG_HOOK=1 git commit --amend --no-edit --no-verify --quiet -- "$changelog"

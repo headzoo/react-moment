@@ -73,6 +73,11 @@
   "scripts": {
     "build": "npm run clean && webpack -p",
     "clean": "rimraf ./dist/index.js",
+    "prepare": "git config --local core.hooksPath .githooks 2>/dev/null || true",
+    "release": "gh workflow run Release --ref master -f release_type=patch",
+    "release:patch": "gh workflow run Release --ref master -f release_type=patch",
+    "release:minor": "gh workflow run Release --ref master -f release_type=minor",
+    "release:major": "gh workflow run Release --ref master -f release_type=major",
     "test": "export TZ=America/New_York; jest --coverage",
     "travis-test": "npm run test && cat ./coverage/lcov.info | ./node_modules/.bin/coveralls",
     "lint": "eslint ./src --cache --cache-location=.cache/eslint --ext .js,.jsx",
