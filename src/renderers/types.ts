@@ -1,5 +1,5 @@
 import type momentLib from 'moment';
-import type { MomentContent, MomentProps } from '../types';
+import type { MomentContent, MomentProps, MomentSettings } from '../types';
 
 /**
  * Context passed to each content renderer during getContent.
@@ -9,6 +9,7 @@ export interface ContentContext {
   datetime: momentLib.Moment;
   format: string | undefined;
   fromNowPeriod: boolean;
+  settings: MomentSettings;
 }
 
 /**

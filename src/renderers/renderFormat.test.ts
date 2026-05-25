@@ -1,4 +1,5 @@
 import moment from 'moment';
+import { defaultSettings } from '../MomentContext';
 import type { ContentContext } from './types';
 import { renderFormat } from './renderFormat';
 
@@ -12,6 +13,7 @@ describe('renderFormat', () => {
     datetime,
     format: 'YYYY-MM-DD',
     fromNowPeriod: false,
+    settings: defaultSettings,
     ...overrides
   });
 

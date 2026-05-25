@@ -9,6 +9,8 @@ React component for the [moment](http://momentjs.com/) date library.
 - [Timezone Support](#timezone-support)
 - [Quick Start](#quick-start)
 - [Props](#props)
+    - [MomentProvider](#momentprovider)
+    - [Pooled Timer](#pooled-timer)
     - [Interval](#interval)
     - [Formatting](#formatting)
     - [Parsing Dates](#parsing-dates)
@@ -35,8 +37,6 @@ React component for the [moment](http://momentjs.com/) date library.
     - [Element](#element)
     - [OnChange](#onchange)
     - [Other Props](#other-props)
-- [Pooled Timer](#pooled-timer)
-- [Global Config](#global-config)
 - [Usage with React Native](#usage-with-react-native)
 - [License](#license)
 - [Contributors](#contributors)
@@ -121,7 +121,106 @@ export default function MyComponent() {
 
 
 ### Props
-The component supports the following props. See the [Moment docs](https://momentjs.com/docs/) for more information.
+The `<Moment>` component supports the following props. Defaults for many of these can be set once on a wrapping [`<MomentProvider>`](#momentprovider) instead of repeating them on every instance. See the [Moment docs](https://momentjs.com/docs/) for more information.
+
+
+#### MomentProvider
+Wrap `<Moment>` instances in `<MomentProvider>` to share defaults across a subtree. Providers compose: nested providers inherit and override parent defaults.
+
+* moment
+* locale
+* format
+* parse
+* filter
+* filters
+* renderers
+* element
+* timezone
+* local
+* pool (enables pooled timing for descendants; see [Pooled Timer](#pooled-timer))
+* interval (pooled timer interval in milliseconds)
+
+```jsx
+import React from 'react';
+import moment from 'moment/min/moment-with-locales';
+import Moment, { MomentProvider } from 'react-moment';
+
+export default function App() {
+    return (
+        <MomentProvider
+            moment={moment}
+            locale="fr"
+            format="D MMM YYYY"
+            timezone="America/Los_Angeles"
+            local
+            element="span"
+            filter={(d) => (typeof d === 'string' ? d.toUpperCase() : d)}
+            filters={[
+                (content) => (typeof content === 'string' ? content.trim() : content)
+            ]}
+            renderers={[({ datetime }) => `Y${datetime.year()}`]}
+        >
+            <Moment>1976-04-19T12:59-0500</Moment>
+        </MomentProvider>
+    );
+}
+```
+
+You can override provider values on a per-instance basis using regular `<Moment>` props.
+
+```jsx
+import React from 'react';
+import Moment, { MomentProvider } from 'react-moment';
+
+export default function App() {
+    return (
+        <MomentProvider locale="fr">
+            <div>
+                {/*
+                    Renders using the 'fr' locale from the provider.
+                */}
+                <Moment>1976-04-19T12:59-0500</Moment>
+
+                {/*
+                    Overrides the provider locale and uses 'en' instead.
+                */}
+                <Moment locale="en">1976-04-19T12:59-0500</Moment>
+            </div>
+        </MomentProvider>
+    );
+}
+```
+
+
+#### Pooled Timer
+By default a timer is created for each mounted `<Moment />` instance to update the date value, which is fine when you only have a few instances on the page. However, performance can take a hit when you have many mounted instances. The problem is solved by using a pooled timer.
+
+When pooled timing is enabled, react-moment will only use a single timer to update all `<Moment />` instances within that provider. Wrap the instances in `<MomentProvider pool>` to enable pooling for that subtree only. Different providers maintain independent pools.
+
+```jsx
+import React from 'react';
+import Moment, { MomentProvider } from 'react-moment';
+
+export default function App() {
+    return (
+        <MomentProvider pool>
+            <Moment fromNow>1976-04-19T12:59-0500</Moment>
+            <Moment fromNow>2020-01-01T12:00:00</Moment>
+        </MomentProvider>
+    );
+}
+```
+
+Or set the update interval. This will update the mounted instances every 30 seconds.
+
+```jsx
+<MomentProvider pool interval={30000}>
+    ...
+</MomentProvider>
+```
+
+Note: The `interval` prop set on each `<Moment />` instance is ignored when using pooled timing, except where `interval={0}` to disable updating.
+
 
 #### Interval
 _interval={number}_
@@ -451,9 +550,9 @@ Outputs:
 #### Custom Filters
 _filters={Filter[]}_
 
-An array of custom filter functions applied **in order** before the singular `filter` prop (or `Moment.settings.filter`). Each filter receives and returns `MomentContent` (`string | number`).
+An array of custom filter functions applied **in order** before the singular `filter` prop (or the provider's `filter`). Each filter receives and returns `MomentContent` (`string | number`).
 
-When both `filters` and `filter` are set, the array runs first and the singular filter runs last. `Moment.settings.filter` still takes precedence over `props.filter`, matching the existing behavior.
+When both `filters` and `filter` are set, the array runs first and the singular filter runs last. A provider's `filter` still takes precedence over `props.filter`, matching the existing behavior.
 
 ```jsx
 import React from 'react';
@@ -476,7 +575,7 @@ export default function MyComponent() {
 }
 ```
 
-Custom filters can also be registered globally via `Moment.settings.filters` (see [Global Config](#global-config)).
+Custom filters can also be registered on a `<MomentProvider>` (see [MomentProvider](#momentprovider)).
 
 
 #### Custom Renderers
@@ -494,6 +593,7 @@ interface ContentContext {
   datetime: moment.Moment;
   format: string | undefined;
   fromNowPeriod: boolean;
+  settings: MomentSettings;
 }
 
 type ContentRenderer = (ctx: ContentContext) => MomentContent | undefined;
@@ -528,7 +628,7 @@ Outputs:
 <time>FY1976</time>
 ```
 
-Custom renderers can also be registered globally via `Moment.settings.renderers` (see [Global Config](#global-config)).
+Custom renderers can also be registered on a `<MomentProvider>` (see [MomentProvider](#momentprovider)).
 
 
 #### With Title
@@ -830,121 +930,6 @@ Outputs:
 
 ```html
 <time class="datetime" aria-hidden="true">Mon Apr 19 1976 12:59:00 GMT-0500</time>
-```
-
-
-### Pooled Timer
-By default a timer is created for each mounted `<Moment />` instance to update the date value, which is fine when you only have a few instances on the page. However, performance can take a hit when you have many mounted instance. The problem is solved by using a pooled timer.
-
-When pooled timing is enabled, react-moment will only use a single timer to update all mounted `<Moment />` instances. Pooled timing is enabled by calling `startPooledTimer()` and stopped by calling `clearPooledTimer()`.
-
-Call the `startPooledTimer()` static method from your bootstrapping script (usually index.js) to initialize the timer.
-
-```jsx
-import React from 'react';
-import ReactDOM from 'react-dom';
-import Moment from 'react-moment';
-import App from './components/app';
-
-// Start the pooled timer which runs every 60 seconds
-// (60000 milliseconds) by default.
-Moment.startPooledTimer();
-
-// Or set the update interval. This will update the mounted
-// instances every 30 seconds.
-// Moment.startPooledTimer(30000);
-
-ReactDOM.render(<App />, document.getElementById('mount'));
-```
-
-Note: The `interval` prop set on each `<Moment />` instance is ignored when using pooled timing, except where `interval={0}` to disable updating.
-
-Note: The `startPooledTimer()` method must be called before any `<Moment />` instances are mounted.
-
-
-### Global Config
-Some prop values may be set globally so you don't have to set them on every react-moment instance.
-
-* moment
-* locale
-* format
-* parse
-* filter
-* filters
-* renderers
-* element
-* timezone
-* local
-
-```jsx
-import React from 'react';
-import ReactDOM from 'react-dom';
-import moment from 'moment/min/moment-with-locales';
-import Moment from 'react-moment';
-
-// Sets the moment instance to use.
-Moment.settings.moment = moment;
-
-// Set the locale for every react-moment instance to French.
-Moment.settings.locale = 'fr';
-
-// Set the output format for every react-moment instance.
-Moment.settings.format = 'D MMM YYYY';
-
-// Set the timezone for every instance.
-Moment.settings.timezone = 'America/Los_Angeles';
-
-// Set the output timezone for local for every instance.
-Moment.settings.local = true;
-
-// Use a <span> tag for every react-moment instance.
-Moment.settings.element = 'span';
-
-// Upper case all rendered dates.
-Moment.settings.filter = (d) => {
-    return typeof d === 'string' ? d.toUpperCase() : d;
-};
-
-// Custom filters applied to every instance unless overridden per component.
-Moment.settings.filters = [
-    (content) => (typeof content === 'string' ? content.trim() : content)
-];
-
-// Custom renderers applied to every instance unless overridden per component.
-Moment.settings.renderers = [({ datetime }) => `Y${datetime.year()}`];
-
-const App = () => (
-    <Moment>1976-04-19T12:59-0500</Moment>
-);
-
-ReactDOM.render(<App />, document.getElementById('mount'));
-```
-
-You can override the global values on a per-instance basis using regular props.
-
-```jsx
-import React from 'react';
-import ReactDOM from 'react-dom';
-import Moment from 'react-moment';
-
-// Set the locale for every react-moment instance to French.
-Moment.settings.locale = 'fr';
-
-const App = () => (
-    <div>
-        {/*
-            Renders using the 'fr' locale due to the global setting.
-        */}
-        <Moment>1976-04-19T12:59-0500</Moment>
-
-        {/*
-            Overrides the global locale and uses 'en' instead.
-        */}
-        <Moment locale="en">1976-04-19T12:59-0500</Moment>
-    </div>
-);
-
-ReactDOM.render(<App />, document.getElementById('mount'));
 ```
 
 

@@ -1,4 +1,5 @@
 import moment from 'moment';
+import { defaultSettings } from '../MomentContext';
 import type { ContentContext } from './types';
 import { renderFromNowShort } from './renderFromNowShort';
 
@@ -9,7 +10,8 @@ describe('renderFromNowShort', () => {
     props,
     datetime,
     format: undefined,
-    fromNowPeriod: false
+    fromNowPeriod: false,
+    settings: defaultSettings
   });
 
   it('returns undefined when fromNowShort is omitted', () => {

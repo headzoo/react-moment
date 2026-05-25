@@ -2,7 +2,7 @@ import React from 'react';
 import ReactDOM from 'react-dom';
 import moment from 'moment';
 import 'moment-timezone';
-import Moment from './index';
+import Moment, { MomentProvider } from './index';
 
 const DATE_OUTPUT = 'Mon Apr 19 1976 12:59:00 GMT-0500';
 const DATE_STRING = '1976-04-19T12:59-0500';
@@ -24,23 +24,6 @@ const domOf = (node: HTMLElement): HTMLElement => node;
 const html = (node: HTMLElement): string => node.innerHTML ?? '';
 
 describe('react-moment', () => {
-  beforeEach(() => {
-    Moment.settings = {
-      moment: null,
-      locale: null,
-      local: null,
-      format: null,
-      parse: null,
-      filter: null,
-      filters: null,
-      renderers: null,
-      element: 'time',
-      timezone: null
-    };
-    Moment.pooledElements = [];
-    Moment.pooledTimer = null;
-  });
-
   it('children', () => {
     let date = render(<Moment />);
     const expected = moment().toString();
@@ -145,61 +128,70 @@ describe('react-moment', () => {
   });
 
   it('pooled timer', () => {
-    Moment.startPooledTimer(1);
     const container = document.createElement('div');
-    ReactDOM.render(<Moment />, container);
+    ReactDOM.render(
+      <MomentProvider pool interval={1}>
+        <Moment />
+      </MomentProvider>,
+      container
+    );
     const expected = moment().toString();
     expect((container.firstChild as HTMLElement).innerHTML).toEqual(expected);
     ReactDOM.unmountComponentAtNode(container);
   });
 
-  it('settings.locale', () => {
-    Moment.settings.locale = 'fr';
+  it('provider locale', () => {
     const date = render(
-      <Moment format="D MMM YYYY" date="1976-04-19T12:59-0500" />
+      <MomentProvider locale="fr">
+        <Moment format="D MMM YYYY" date="1976-04-19T12:59-0500" />
+      </MomentProvider>
     );
     expect(html(date)).toEqual('19 avr. 1976');
   });
 
-  it('locale prop overrides settings.locale', () => {
-    Moment.settings.locale = 'fr';
-
+  it('locale prop overrides provider locale', () => {
     const date = render(
-      <Moment format="D MMM YYYY" locale="en" date="1976-04-19T12:59-0500" />
+      <MomentProvider locale="fr">
+        <Moment format="D MMM YYYY" locale="en" date="1976-04-19T12:59-0500" />
+      </MomentProvider>
     );
 
     expect(html(date)).toEqual('19 Apr 1976');
-
-    Moment.settings.locale = null;
   });
 
-  it('settings.timezone', () => {
-    Moment.settings.timezone = 'America/Los_Angeles';
+  it('provider timezone', () => {
     const date = render(
-      <Moment format="YYYY-MM-DD HH" date="1976-04-19T12:59-0500" />
+      <MomentProvider timezone="America/Los_Angeles">
+        <Moment format="YYYY-MM-DD HH" date="1976-04-19T12:59-0500" />
+      </MomentProvider>
     );
     expect(html(date)).toEqual('1976-04-19 09');
   });
 
-  it('settings.local', () => {
-    Moment.settings.local = true;
-    const date = render(<Moment>{DATE_STRING}</Moment>);
+  it('provider local', () => {
+    const date = render(
+      <MomentProvider local>
+        <Moment>{DATE_STRING}</Moment>
+      </MomentProvider>
+    );
     const expected = moment(DATE_STRING).local().toString();
     expect(html(date)).toEqual(expected);
   });
 
-  it('settings.element', () => {
-    Moment.settings.element = 'span';
+  it('provider element', () => {
     const date = render(
-      <Moment parse="YYYY-MM-DD HH:mm">1976-04-19 12:59</Moment>
+      <MomentProvider element="span">
+        <Moment parse="YYYY-MM-DD HH:mm">1976-04-19 12:59</Moment>
+      </MomentProvider>
     );
     expect(domOf(date).tagName).toEqual('SPAN');
   });
 
-  it('settings.element overwrite', () => {
-    Moment.settings.element = 'span';
+  it('provider element overwrite', () => {
     const date = render(
-      <Moment element="div" parse="YYYY-MM-DD HH:mm">1976-04-19 12:59</Moment>
+      <MomentProvider element="span">
+        <Moment element="div" parse="YYYY-MM-DD HH:mm">1976-04-19 12:59</Moment>
+      </MomentProvider>
     );
     expect(domOf(date).tagName).toEqual('DIV');
   });

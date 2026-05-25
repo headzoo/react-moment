@@ -1,40 +1,30 @@
 import momentLib from 'moment';
 import 'moment-duration-format';
-import Moment from './index';
-import { MomentProps } from './types';
-
-// Note on the circular import: this module imports `Moment` from `./index`
-// for access to its static settings (`settings.moment`, `settings.parse`, etc.), and
-// `./index` in turn imports these helpers. The cycle is safe because every
-// helper reads `Moment.*` only from inside its function body, never at module
-// initialization, so by the time any helper runs both modules have finished
-// loading and `Moment` resolves to the live function.
+import type { MomentProps, MomentSettings } from './types';
 
 /**
- * Returns the active moment module reference, lazily initializing
- * `Moment.settings.moment` so callers can still reset it to `null` (as the
- * test suite does in `beforeEach`).
+ * Returns the active moment module reference from settings.
  */
-export function getMomentRef(): typeof momentLib {
-  if (!Moment.settings.moment) {
-    Moment.settings.moment = momentLib;
-  }
-  return Moment.settings.moment;
+export function getMomentRef(settings: MomentSettings): typeof momentLib {
+  return settings.moment ?? momentLib;
 }
 
 /**
  * Returns a moment instance computed from the given props.
  */
-export function getDatetime(props: MomentProps): momentLib.Moment {
+export function getDatetime(
+  props: MomentProps,
+  settings: MomentSettings
+): momentLib.Moment {
   const { utc, unix } = props;
   const dateInput = (props.date ?? props.children) as momentLib.MomentInput;
-  const parse = (props.parse ?? Moment.settings.parse ?? undefined) as
+  const parse = (props.parse ?? settings.parse ?? undefined) as
     | momentLib.MomentFormatSpecification
     | undefined;
-  const tz = props.tz ?? Moment.settings.timezone ?? undefined;
-  const local = props.local ?? Moment.settings.local ?? false;
-  const momentRef = getMomentRef();
-  const locale = props.locale || Moment.settings.locale || momentRef.locale();
+  const tz = props.tz ?? settings.timezone ?? undefined;
+  const local = props.local ?? settings.local ?? false;
+  const momentRef = getMomentRef(settings);
+  const locale = props.locale || settings.locale || momentRef.locale();
 
   let datetime: momentLib.Moment;
   if (utc) {
@@ -61,8 +51,11 @@ export function getDatetime(props: MomentProps): momentLib.Moment {
 /**
  * Returns a compact relative time string without mutating locale settings.
  */
-export function getShortRelativeTime(datetime: momentLib.Moment): string {
-  const momentRef = Moment.settings.moment || momentLib;
+export function getShortRelativeTime(
+  datetime: momentLib.Moment,
+  settings: MomentSettings
+): string {
+  const momentRef = getMomentRef(settings);
   const round = momentRef.relativeTimeRounding();
   const duration = momentRef.duration(momentRef().diff(datetime)).abs();
   const thresholds = {
@@ -150,8 +143,11 @@ export type { ContentContext, ContentRenderer } from './renderers';
 /**
  * Returns the title to use when `withTitle` is set.
  */
-export function getTitle(props: MomentProps): string {
-  const datetime = getDatetime(props);
-  const format = props.titleFormat || Moment.settings.format || '';
+export function getTitle(
+  props: MomentProps,
+  settings: MomentSettings
+): string {
+  const datetime = getDatetime(props, settings);
+  const format = props.titleFormat || settings.format || '';
   return datetime.format(format);
 }

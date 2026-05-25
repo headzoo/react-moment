@@ -1,6 +1,5 @@
 import momentLib from 'moment';
-import Moment from '../index';
-import type { MomentContent, MomentProps } from '../types';
+import type { MomentContent, MomentProps, MomentSettings } from '../types';
 import { getDatetime } from '../utils';
 import { applyContentFilter } from './applyContentFilter';
 import { applyDateAdjustments } from './applyDateAdjustments';
@@ -12,17 +11,20 @@ import type { ContentContext } from './types';
 /**
  * Returns the rendered content from the given props.
  */
-export function getContent(props: MomentProps): MomentContent {
-  const datetime = getDatetime(props);
+export function getContent(
+  props: MomentProps,
+  settings: MomentSettings
+): MomentContent {
+  const datetime = getDatetime(props, settings);
   applyDateAdjustments(props, datetime);
 
-  const format = props.format || Moment.settings.format || undefined;
+  const format = props.format || settings.format || undefined;
   const fromNowPeriod = Boolean(props.fromNowDuring)
     && -datetime.diff(momentLib()) < (props.fromNowDuring as number);
 
-  const ctx: ContentContext = { props, datetime, format, fromNowPeriod };
+  const ctx: ContentContext = { props, datetime, format, fromNowPeriod, settings };
 
-  const customRenderers = props.renderers ?? Moment.settings.renderers ?? [];
+  const customRenderers = props.renderers ?? settings.renderers ?? [];
   const allRenderers = [...customRenderers, ...contentRenderers];
 
   let content: MomentContent | undefined;
@@ -36,5 +38,5 @@ export function getContent(props: MomentProps): MomentContent {
 
   const resolved = content ?? renderDefault(ctx) ?? datetime.toString();
   content = formatDurationContent(ctx, resolved);
-  return applyContentFilter(props, content);
+  return applyContentFilter(props, content, settings);
 }

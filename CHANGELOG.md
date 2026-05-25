@@ -2,6 +2,7 @@
 
 ## Unreleased
 
+- refactor: update Moment component and dependencies for improved functionality. (`05fee45`)
 - chore: update package dependencies and enhance TypeScript support. (`49f7db6`)
 - refactor: migrate global configuration to settings in Moment component. (`be2f893`)
 - refactor: enhance Moment component with custom filters and renderers. (`8d956f1`)

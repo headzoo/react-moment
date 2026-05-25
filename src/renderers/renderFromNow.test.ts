@@ -1,4 +1,5 @@
 import moment from 'moment';
+import { defaultSettings } from '../MomentContext';
 import type { ContentContext } from './types';
 import { renderFromNow } from './renderFromNow';
 
@@ -12,6 +13,7 @@ describe('renderFromNow', () => {
     datetime,
     format: undefined,
     fromNowPeriod: false,
+    settings: defaultSettings,
     ...overrides
   });
 

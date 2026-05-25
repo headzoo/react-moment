@@ -1,4 +1,5 @@
 import moment from 'moment';
+import { defaultSettings } from '../MomentContext';
 import type { ContentContext } from './types';
 import { renderCalendar } from './renderCalendar';
 
@@ -11,7 +12,8 @@ describe('renderCalendar', () => {
     props,
     datetime,
     format: undefined,
-    fromNowPeriod: false
+    fromNowPeriod: false,
+    settings: defaultSettings
   });
 
   it('returns undefined when calendar is omitted', () => {

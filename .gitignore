@@ -5,3 +5,6 @@ stories/build
 coverage
 *.log
 .DS_Store
+
+*storybook.log
+storybook-static

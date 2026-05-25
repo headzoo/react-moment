@@ -15,5 +15,5 @@
     "lib": ["DOM", "ES2018"]
   },
   "include": ["src"],
-  "exclude": ["**/*.test.ts", "**/*.test.tsx"]
+  "exclude": ["**/*.test.ts", "**/*.test.tsx", "**/testHelpers.ts"]
 }

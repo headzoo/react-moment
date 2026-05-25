@@ -64,7 +64,7 @@ export interface CustomRenderersProps {
   /**
    * Array of custom ContentRenderer functions invoked before the built-in
    * renderers. The first renderer (custom or built-in) to return a
-   * non-undefined value wins. Falls back to Moment.settings.renderers.
+   * non-undefined value wins. Falls back to the nearest provider's renderers.
    */
   renderers?: ContentRenderer[];
 }
@@ -75,7 +75,7 @@ export interface CustomRenderersProps {
 export interface CustomFiltersProps {
   /**
    * Custom filters applied in order before the singular filter prop.
-   * Falls back to Moment.settings.filters.
+   * Falls back to the nearest provider's filters.
    */
   filters?: Filter[];
 }
@@ -359,43 +359,73 @@ export interface MomentSettings {
 }
 
 /**
- * Static properties and methods on the `Moment` component function.
+ * Props accepted by `<MomentProvider>`.
  */
-export interface MomentStatics {
+export interface MomentProviderProps {
   /**
-   * Default settings shared by all `<Moment>` instances.
+   * Child components that receive these defaults.
    */
-  settings: MomentSettings;
+  children: ReactNode;
 
   /**
-   * Mounted instances driven by `startPooledTimer`.
+   * When true, one shared timer updates all descendant `<Moment>` instances.
    */
-  pooledElements: PoolEntry[];
+  pool?: boolean;
 
   /**
-   * Shared interval handle when the pooled timer is active, otherwise `null`.
+   * Milliseconds between pooled timer ticks (default 60000).
    */
-  pooledTimer: ReturnType<typeof setInterval> | null;
+  interval?: number;
 
   /**
-   * Starts one timer that updates every registered pooled instance.
+   * Custom moment module instance.
    */
-  startPooledTimer: (interval?: number) => void;
+  moment?: typeof moment | null;
 
   /**
-   * Stops the pooled timer and clears all registered instances.
+   * Default locale applied when a component omits the `locale` prop.
    */
-  clearPooledTimer: () => void;
+  locale?: string | null;
 
   /**
-   * Registers an instance with the pooled timer.
+   * Default `local` flag applied when a component omits the `local` prop.
    */
-  pushPooledElement: (entry: PoolEntry) => void;
+  local?: boolean | null;
 
   /**
-   * Unregisters an instance from the pooled timer.
+   * Default format string applied when a component omits the `format` prop.
    */
-  removePooledElement: (entry: PoolEntry) => void;
+  format?: string | null;
+
+  /**
+   * Default parse spec applied when a component omits the `parse` prop.
+   */
+  parse?: ParseInput | null;
+
+  /**
+   * Default filter applied to all instances unless overridden per component.
+   */
+  filter?: Filter | null;
+
+  /**
+   * Default custom filters applied when a component omits the `filters` prop.
+   */
+  filters?: Filter[] | null;
+
+  /**
+   * Default custom renderers applied when a component omits the `renderers` prop.
+   */
+  renderers?: ContentRenderer[] | null;
+
+  /**
+   * Default element type rendered when a component omits the `element` prop.
+   */
+  element?: ElementType;
+
+  /**
+   * Default timezone applied when a component omits the `tz` prop.
+   */
+  timezone?: string | null;
 }
 
 /**

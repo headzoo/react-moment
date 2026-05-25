@@ -1,5 +1,6 @@
 import type { ElementType, ReactNode } from 'react';
 import type moment from 'moment';
+import type { ContentRenderer } from './renderers/types';
 /**
  * Any value moment.js accepts as a date (string, number, Date, moment instance, etc.).
  */
@@ -17,13 +18,17 @@ export type CalendarInput = boolean | moment.CalendarSpec;
  */
 export type TrimInput = boolean | string;
 /**
- * Transforms the rendered date content before it is displayed.
+ * Values produced by built-in/custom renderers and accepted by filters.
  */
-export type FilterFn = (content: unknown) => unknown;
+export type MomentContent = string | number;
+/**
+ * Transforms rendered content before it is displayed.
+ */
+export type Filter = (content: MomentContent) => MomentContent;
 /**
  * Called whenever the displayed content changes (including on interval updates).
  */
-export type OnChangeFn = (content: unknown) => void;
+export type OnChangeFn = (content: MomentContent) => void;
 /**
  * Shared content-formatting props used across multiple output modes.
  */
@@ -33,13 +38,34 @@ export interface ContentBaseProps {
      */
     format?: string;
     /**
-     * Per-instance filter applied to content after formatting (overridden by global filter).
+     * Per-instance filter applied to content after formatting (overridden by settings.filter).
      */
-    filter?: FilterFn;
+    filter?: Filter;
     /**
      * With relative-time props, omits the "ago" / "in" suffix from the output.
      */
     ago?: boolean;
+}
+/**
+ * Props for custom content renderers.
+ */
+export interface CustomRenderersProps {
+    /**
+     * Array of custom ContentRenderer functions invoked before the built-in
+     * renderers. The first renderer (custom or built-in) to return a
+     * non-undefined value wins. Falls back to the nearest provider's renderers.
+     */
+    renderers?: ContentRenderer[];
+}
+/**
+ * Props for custom content filters.
+ */
+export interface CustomFiltersProps {
+    /**
+     * Custom filters applied in order before the singular filter prop.
+     * Falls back to the nearest provider's filters.
+     */
+    filters?: Filter[];
 }
 /**
  * Props that adjust the parsed date before content rendering.
@@ -179,7 +205,7 @@ export interface DateInputProps {
  */
 export interface RenderProps {
     /**
-     * HTML element type to render (defaults to the global element, usually `'time'`).
+     * HTML element type to render (defaults to the settings element, usually `'time'`).
      */
     element?: ElementType | null;
     /**
@@ -206,7 +232,7 @@ export interface RenderProps {
 /**
  * Props accepted by the `<Moment>` component.
  */
-export interface MomentProps extends ContentBaseProps, DateAdjustmentProps, FromNowContentProps, FromContentProps, ToContentProps, CalendarContentProps, DiffContentProps, DurationContentProps, DateInputProps, RenderProps {
+export interface MomentProps extends ContentBaseProps, DateAdjustmentProps, FromNowContentProps, FromContentProps, ToContentProps, CalendarContentProps, DiffContentProps, DurationContentProps, CustomRenderersProps, CustomFiltersProps, DateInputProps, RenderProps {
 }
 /**
  * A mounted `<Moment>` instance registered with the shared pooled timer.
@@ -222,9 +248,9 @@ export interface PoolEntry {
     update: () => void;
 }
 /**
- * Global defaults shared by all `<Moment>` instances unless a prop overrides them.
+ * Default settings shared by all `<Moment>` instances unless a prop overrides them.
  */
-export interface MomentGlobals {
+export interface MomentSettings {
     /**
      * Custom moment module instance; lazily defaults to the bundled `moment`.
      */
@@ -248,7 +274,15 @@ export interface MomentGlobals {
     /**
      * Default filter applied to all instances unless overridden per component.
      */
-    filter: FilterFn | null;
+    filter: Filter | null;
+    /**
+     * Default custom filters applied when a component omits the `filters` prop.
+     */
+    filters: Filter[] | null;
+    /**
+     * Default custom renderers applied when a component omits the `renderers` prop.
+     */
+    renderers: ContentRenderer[] | null;
     /**
      * Default element type rendered when a component omits the `element` prop.
      */
@@ -259,37 +293,61 @@ export interface MomentGlobals {
     timezone: string | null;
 }
 /**
- * Static properties and methods on the `Moment` component function.
+ * Props accepted by `<MomentProvider>`.
  */
-export interface MomentStatics {
+export interface MomentProviderProps {
     /**
-     * Global defaults shared by all `<Moment>` instances.
+     * Child components that receive these defaults.
      */
-    globals: MomentGlobals;
+    children: ReactNode;
     /**
-     * Mounted instances driven by `startPooledTimer`.
+     * When true, one shared timer updates all descendant `<Moment>` instances.
      */
-    pooledElements: PoolEntry[];
+    pool?: boolean;
     /**
-     * Shared interval handle when the pooled timer is active, otherwise `null`.
+     * Milliseconds between pooled timer ticks (default 60000).
      */
-    pooledTimer: ReturnType<typeof setInterval> | null;
+    interval?: number;
     /**
-     * Starts one timer that updates every registered pooled instance.
+     * Custom moment module instance.
      */
-    startPooledTimer: (interval?: number) => void;
+    moment?: typeof moment | null;
     /**
-     * Stops the pooled timer and clears all registered instances.
+     * Default locale applied when a component omits the `locale` prop.
      */
-    clearPooledTimer: () => void;
+    locale?: string | null;
     /**
-     * Registers an instance with the pooled timer.
+     * Default `local` flag applied when a component omits the `local` prop.
      */
-    pushPooledElement: (entry: PoolEntry) => void;
+    local?: boolean | null;
     /**
-     * Unregisters an instance from the pooled timer.
+     * Default format string applied when a component omits the `format` prop.
      */
-    removePooledElement: (entry: PoolEntry) => void;
+    format?: string | null;
+    /**
+     * Default parse spec applied when a component omits the `parse` prop.
+     */
+    parse?: ParseInput | null;
+    /**
+     * Default filter applied to all instances unless overridden per component.
+     */
+    filter?: Filter | null;
+    /**
+     * Default custom filters applied when a component omits the `filters` prop.
+     */
+    filters?: Filter[] | null;
+    /**
+     * Default custom renderers applied when a component omits the `renderers` prop.
+     */
+    renderers?: ContentRenderer[] | null;
+    /**
+     * Default element type rendered when a component omits the `element` prop.
+     */
+    element?: ElementType;
+    /**
+     * Default timezone applied when a component omits the `tz` prop.
+     */
+    timezone?: string | null;
 }
 /**
  * Known `<Moment>` prop names; used to strip them before forwarding DOM attributes.
