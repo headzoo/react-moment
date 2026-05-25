@@ -2,6 +2,8 @@
 
 ## Unreleased
 
+## 2.0.0-beta.1 - 2026-05-25
+
 - chore: enhance release workflows and add beta publishing support. (`c59dd12`)
 - Migrate to TypeScript and update ESLint configuration for improved type checking. (`1f09a32`)
 
