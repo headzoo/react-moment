@@ -8,6 +8,7 @@ React component for the [moment](http://momentjs.com/) date library.
 [![MIT License](https://img.shields.io/badge/license-MIT-blue.svg?style=flat-square)](https://raw.githubusercontent.com/headzoo/react-moment/master/LICENSE)
 
 - [Installing](#installing)
+- [2.0.0-beta](#200-beta)
 - [Timezone Support](#timezone-support)
 - [Quick Start](#quick-start)
 - [Props](#props)
@@ -48,6 +49,32 @@ Node 8 or greater is required. Use npm to install `react-moment` along with its 
 ```sh
 npm install --save moment react-moment
 ```
+
+### 2.0.0-beta
+
+Version 2.0.0 is in beta. It migrates the library to TypeScript and replaces
+the class-based component with a function component. For typical `<Moment />`
+usage with documented props, your code may not need to change.
+
+Install the beta from npm's `beta` dist-tag:
+
+```sh
+npm install --save moment react-moment@beta
+```
+
+`react-moment@beta` resolves to the latest `2.0.0-beta.x` release. To pin an
+exact version:
+
+```sh
+npm install --save moment react-moment@2.0.0-beta.1
+```
+
+**Changes in 2.0:**
+
+- `prop-types` is no longer a peer dependency (runtime prop validation was removed; types are provided via TypeScript declarations)
+- `Moment` is a function component — code that relied on class-component internals (for example `instanceof Moment`, instance methods on refs, or `TestUtils.findRenderedComponentWithType`) must be updated
+
+See [MIGRATION.md](https://github.com/headzoo/react-moment/blob/2.0.0-beta/MIGRATION.md) for the full upgrade guide and breaking-change details.
 
 
 ### Timezone Support

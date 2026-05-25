@@ -2,6 +2,7 @@
 
 ## Unreleased
 
+- Updates the readme. (`3b4cbf5`)
 - chore: add beta release workflow on master for GitHub Actions discovery. (`3a5c4e1`)
 
 ## [1.2.2] - 2026-02-09
