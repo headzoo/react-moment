@@ -4,7 +4,7 @@ import Moment from './index';
 import { MomentProps } from './types';
 
 // Note on the circular import: this module imports `Moment` from `./index`
-// for access to its static globals (`globalMoment`, `globalParse`, etc.), and
+// for access to its static globals (`globals.moment`, `globals.parse`, etc.), and
 // `./index` in turn imports these helpers. The cycle is safe because every
 // helper reads `Moment.*` only from inside its function body, never at module
 // initialization, so by the time any helper runs both modules have finished
@@ -12,14 +12,14 @@ import { MomentProps } from './types';
 
 /**
  * Returns the active moment module reference, lazily initializing
- * `Moment.globalMoment` so callers can still reset it to `null` (as the
+ * `Moment.globals.moment` so callers can still reset it to `null` (as the
  * test suite does in `beforeEach`).
  */
 export function getMomentRef(): typeof momentLib {
-  if (!Moment.globalMoment) {
-    Moment.globalMoment = momentLib;
+  if (!Moment.globals.moment) {
+    Moment.globals.moment = momentLib;
   }
-  return Moment.globalMoment;
+  return Moment.globals.moment;
 }
 
 /**
@@ -28,13 +28,13 @@ export function getMomentRef(): typeof momentLib {
 export function getDatetime(props: MomentProps): momentLib.Moment {
   const { utc, unix } = props;
   const dateInput = (props.date ?? props.children) as momentLib.MomentInput;
-  const parse = (props.parse ?? Moment.globalParse ?? undefined) as
+  const parse = (props.parse ?? Moment.globals.parse ?? undefined) as
     | momentLib.MomentFormatSpecification
     | undefined;
-  const tz = props.tz ?? Moment.globalTimezone ?? undefined;
-  const local = props.local ?? Moment.globalLocal ?? false;
+  const tz = props.tz ?? Moment.globals.timezone ?? undefined;
+  const local = props.local ?? Moment.globals.local ?? false;
   const momentRef = getMomentRef();
-  const locale = props.locale || Moment.globalLocale || momentRef.locale();
+  const locale = props.locale || Moment.globals.locale || momentRef.locale();
 
   let datetime: momentLib.Moment;
   if (utc) {
@@ -62,17 +62,17 @@ export function getDatetime(props: MomentProps): momentLib.Moment {
  * Returns a compact relative time string without mutating locale settings.
  */
 export function getShortRelativeTime(datetime: momentLib.Moment): string {
-  const momentRef = Moment.globalMoment || momentLib;
+  const momentRef = Moment.globals.moment || momentLib;
   const round = momentRef.relativeTimeRounding();
   const duration = momentRef.duration(momentRef().diff(datetime)).abs();
   const thresholds = {
     ss: momentRef.relativeTimeThreshold('ss') as number,
-    s:  momentRef.relativeTimeThreshold('s') as number,
-    m:  momentRef.relativeTimeThreshold('m') as number,
-    h:  momentRef.relativeTimeThreshold('h') as number,
-    d:  momentRef.relativeTimeThreshold('d') as number,
-    w:  momentRef.relativeTimeThreshold('w') as number | null,
-    M:  momentRef.relativeTimeThreshold('M') as number
+    s: momentRef.relativeTimeThreshold('s') as number,
+    m: momentRef.relativeTimeThreshold('m') as number,
+    h: momentRef.relativeTimeThreshold('h') as number,
+    d: momentRef.relativeTimeThreshold('d') as number,
+    w: momentRef.relativeTimeThreshold('w') as number | null,
+    M: momentRef.relativeTimeThreshold('M') as number
   };
 
   const seconds = round(duration.as('s'));
@@ -136,7 +136,7 @@ export function getContent(props: MomentProps): unknown {
     calendar, diff, duration, durationFromNow, unit, decimal, trim
   } = props;
 
-  const format = props.format || Moment.globalFormat || undefined;
+  const format = props.format || Moment.globals.format || undefined;
   const datetime = getDatetime(props);
   if (add) {
     datetime.add(add);
@@ -182,7 +182,7 @@ export function getContent(props: MomentProps): unknown {
     }).format(format, { trim });
   }
 
-  const filter = Moment.globalFilter || props.filter || ((value: unknown) => value);
+  const filter = Moment.globals.filter || props.filter || ((value: unknown) => value);
   content = filter(content);
 
   return content;
@@ -193,6 +193,6 @@ export function getContent(props: MomentProps): unknown {
  */
 export function getTitle(props: MomentProps): string {
   const datetime = getDatetime(props);
-  const format = props.titleFormat || Moment.globalFormat || '';
+  const format = props.titleFormat || Moment.globals.format || '';
   return datetime.format(format);
 }

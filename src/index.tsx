@@ -19,6 +19,9 @@ import {
   getTitle
 } from './utils';
 
+/**
+ * React function component merged with static globals and pooled-timer API.
+ */
 type MomentComponent = React.FC<MomentProps> & MomentStatics;
 
 /**
@@ -90,7 +93,7 @@ const Moment: MomentComponent = ((props: MomentProps) => {
   }
 
   return React.createElement(
-    (element || Moment.globalElement) as ElementType,
+    (element || Moment.globals.element) as ElementType,
     {
       dateTime: getDatetime(props) as unknown as string,
       ...passProps
@@ -99,15 +102,29 @@ const Moment: MomentComponent = ((props: MomentProps) => {
   );
 }) as MomentComponent;
 
-Moment.globalMoment = null;
-Moment.globalLocale = null;
-Moment.globalLocal = null;
-Moment.globalFormat = null;
-Moment.globalParse = null;
-Moment.globalFilter = null;
-Moment.globalElement = 'time';
-Moment.globalTimezone = null;
+Moment.globals = {
+  // Optional replacement for the imported moment module, useful for custom moment instances.
+  moment: null,
+  // Default locale applied when a component does not receive a locale prop.
+  locale: null,
+  // Forces dates into local time unless a component provides a local prop.
+  local: null,
+  // Default display format used when a component does not receive a format prop.
+  format: null,
+  // Default parse format used when a component does not receive a parse prop.
+  parse: null,
+  // Default content transformer used when a component does not receive a filter prop.
+  filter: null,
+  // Default HTML element used when a component does not receive an element prop.
+  element: 'time',
+  // Default timezone applied when a component does not receive a tz prop.
+  timezone: null
+};
+
+// Registry of mounted component entries updated by the shared pooled timer.
 Moment.pooledElements = [];
+
+// Shared interval handle used to update all pooled component entries.
 Moment.pooledTimer = null;
 
 /**
@@ -160,8 +177,5 @@ Moment.removePooledElement = (entry: PoolEntry) => {
   }
 };
 
-Moment.getDatetime = getDatetime;
-Moment.getShortRelativeTime = getShortRelativeTime;
-Moment.getContent = getContent;
-
+export { getDatetime, getShortRelativeTime, getContent };
 export default Moment;

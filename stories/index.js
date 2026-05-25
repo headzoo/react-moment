@@ -6,7 +6,7 @@ import moment from 'moment';
 
 import Moment from '../src/index';
 
-Moment.globalLocale = 'fr';
+Moment.globals.locale = 'fr';
 
 storiesOf('Moment', module)
   .addDecorator(withKnobs)

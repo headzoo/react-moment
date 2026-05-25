@@ -2,7 +2,7 @@
 
 This guide covers breaking changes when upgrading from **1.2.3** to **2.0.0**, which migrates the library to TypeScript and replaces the class-based `Moment` component with a functional component.
 
-If your usage is limited to rendering `<Moment />` with documented props, global configuration (`Moment.globalFormat`, etc.), and the pooled timer API (`Moment.startPooledTimer()` / `Moment.clearPooledTimer()`), you may not need to change anything. The sections below call out cases that **do** require updates.
+If your usage is limited to rendering `<Moment />` with documented props, global configuration (`Moment.globals.format`, etc.), and the pooled timer API (`Moment.startPooledTimer()` / `Moment.clearPooledTimer()`), you may not need to change anything. The sections below call out cases that **do** require updates.
 
 ## Summary
 
@@ -68,9 +68,9 @@ TestUtils.findRenderedComponentWithType(container, Moment);
 
 Documented static APIs are unchanged in behavior:
 
-- Global configuration: `Moment.globalMoment`, `Moment.globalLocale`, `Moment.globalLocal`, `Moment.globalFormat`, `Moment.globalParse`, `Moment.globalFilter`, `Moment.globalElement`, `Moment.globalTimezone`
+- Global configuration: `Moment.globals.moment`, `Moment.globals.locale`, `Moment.globals.local`, `Moment.globals.format`, `Moment.globals.parse`, `Moment.globals.filter`, `Moment.globals.element`, `Moment.globals.timezone`
 - Pooled timer: `Moment.startPooledTimer(interval?)`, `Moment.clearPooledTimer()`
-- Utilities: `Moment.getDatetime(props)`, `Moment.getContent(props)`, `Moment.getShortRelativeTime(datetime)`
+- Utilities: named exports `getDatetime(props)`, `getContent(props)`, and `getShortRelativeTime(datetime)` from `react-moment`
 
 Normal JSX usage is unchanged:
 
@@ -162,7 +162,7 @@ The published package includes additional `.d.ts` files alongside `dist/index.d.
 
 - `dist/types.d.ts` — `MomentProps`, `MomentStatics`, `PoolEntry`, and related types
 - `dist/objects.d.ts` — `objectKeyFilter` utility
-- `dist/utils.d.ts` — internal helpers (`getDatetime`, `getContent`, etc.)
+- `dist/utils.d.ts` — helper implementations (`getDatetime`, `getContent`, etc.); also re-exported from `dist/index.d.ts`
 
 These are primarily for advanced use and type re-exports; the default import path remains `react-moment`.
 
@@ -174,8 +174,12 @@ The next release's `MomentStatics` interface documents members that were present
 - `Moment.pooledTimer`
 - `Moment.pushPooledElement(entry)`
 - `Moment.removePooledElement(entry)`
-- `Moment.getContent(props)`
-- `Moment.getShortRelativeTime(datetime)`
+
+Helper functions are named exports from the package entry point:
+
+```ts
+import Moment, { getDatetime, getContent, getShortRelativeTime } from 'react-moment';
+```
 
 ---
 
@@ -199,11 +203,11 @@ The supported public API remains the built artifact: `dist/index.js` with types 
 The following continue to work without changes:
 
 - All documented JSX props (`fromNow`, `format`, `unix`, `tz`, `fromNowShort`, etc.)
-- Global configuration statics (`Moment.globalFormat = '...'`, etc.)
+- Global configuration object (`Moment.globals.format = '...'`, etc.)
 - Pooled timer bootstrap (`Moment.startPooledTimer()` in your app entry file)
 - UMD / CommonJS / AMD consumption via `require('react-moment')` or `import Moment from 'react-moment'`
 - SSR via the published `dist/index.js` bundle
-- Default render output (still a `<time>` element unless overridden with `element` or `Moment.globalElement`)
+- Default render output (still a `<time>` element unless overridden with `element` or `Moment.globals.element`)
 
 ---
 

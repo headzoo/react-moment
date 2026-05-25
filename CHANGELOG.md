@@ -2,6 +2,7 @@
 
 ## Unreleased
 
+- refactor: update global configuration properties to use `globals` object in Moment component. (`94520f7`)
 - chore: update beta release workflow and clarify branch usage in documentation. (`5fd9f74`)
 
 ## 2.0.0-beta.1 - 2026-05-25

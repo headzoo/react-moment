@@ -841,14 +841,14 @@ Note: The `startPooledTimer()` method must be called before any `<Moment />` ins
 ### Global Config
 Some prop values may be set globally so you don't have to set them on every react-moment instance.
 
-* globalMoment
-* globalLocale
-* globalFormat
-* globalParse
-* globalFilter
-* globalElement
-* globalTimezone
-* globalLocal
+* moment
+* locale
+* format
+* parse
+* filter
+* element
+* timezone
+* local
 
 ```jsx
 import React  from 'react';
@@ -857,25 +857,25 @@ import moment from 'moment/min/moment-with-locales';
 import Moment from 'react-moment';
 
 // Sets the moment instance to use.
-Moment.globalMoment = moment;
+Moment.globals.moment = moment;
 
 // Set the locale for every react-moment instance to French.
-Moment.globalLocale = 'fr';
+Moment.globals.locale = 'fr';
 
 // Set the output format for every react-moment instance.
-Moment.globalFormat = 'D MMM YYYY';
+Moment.globals.format = 'D MMM YYYY';
 
 // Set the timezone for every instance.
-Moment.globalTimezone = 'America/Los_Angeles';
+Moment.globals.timezone = 'America/Los_Angeles';
 
 // Set the output timezone for local for every instance.
-Moment.globalLocal = true;
+Moment.globals.local = true;
 
 // Use a <span> tag for every react-moment instance.
-Moment.globalElement = 'span';
+Moment.globals.element = 'span';
 
 // Upper case all rendered dates.
-Moment.globalFilter = (d) => {
+Moment.globals.filter = (d) => {
     return d.toUpperCase();
 };
 
@@ -894,7 +894,7 @@ import ReactDOM from 'react-dom';
 import Moment from 'react-moment';
 
 // Set the locale for every react-moment instance to French.
-Moment.globalLocale = 'fr';
+Moment.globals.locale = 'fr';
 
 const App = () => (
     <div>
