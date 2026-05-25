@@ -105,5 +105,8 @@
     "storybook:dev": "start-storybook -p 6006",
     "storybook:build": "build-storybook -o stories/build"
   },
-  "types": "dist/index.d.ts"
+  "types": "dist/index.d.ts",
+  "overrides": {
+    "react-draggable": "4.4.6"
+  }
 }

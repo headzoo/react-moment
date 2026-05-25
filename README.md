@@ -2,8 +2,6 @@ react-moment
 ============
 React component for the [moment](http://momentjs.com/) date library.
 
-[![Build Status](https://img.shields.io/travis/headzoo/react-moment/master.svg?style=flat-square)](https://travis-ci.org/headzoo/react-moment)
-[![Coverage Status](https://img.shields.io/coveralls/github/headzoo/react-moment.svg?style=flat-square)](https://coveralls.io/github/headzoo/react-moment?branch=master)
 [![NPM Downloads](https://img.shields.io/npm/dm/react-moment.svg?style=flat-square)](https://www.npmjs.com/package/react-moment)
 [![MIT License](https://img.shields.io/badge/license-MIT-blue.svg?style=flat-square)](https://raw.githubusercontent.com/headzoo/react-moment/master/LICENSE)
 
@@ -45,12 +43,13 @@ React component for the [moment](http://momentjs.com/) date library.
 
 
 ### Installing
-Node 8 or greater is required. Use npm to install `react-moment` along with its peer dependency, `moment`.
+Requires [React](https://react.dev/) 16.8 or later (hooks), plus the peer dependency `moment`. Install with npm:
 
 ```sh
 npm install --save moment react-moment
 ```
 
+To develop or test this package from source, use Node 16 or later (matching CI).
 
 ### Timezone Support
 The `moment-timezone` package is required to use the timezone related functions.
@@ -66,7 +65,7 @@ import React from 'react';
 import Moment from 'react-moment';
 import 'moment-timezone';
 
-export default class App extends React.Component {
+export default function App() {
     ...
 }
 ```
@@ -75,16 +74,14 @@ export default class App extends React.Component {
 ### Quick Start
 
 ```jsx
-import React  from 'react';
+import React from 'react';
 import Moment from 'react-moment';
 
-export default class MyComponent extends React.Component {
-    render() {
-        return (
-            const dateToFormat = '1976-04-19T12:59-0500';
-            <Moment>{dateToFormat}</Moment>
-        );
-    }
+export default function MyComponent() {
+    const dateToFormat = '1976-04-19T12:59-0500';
+    return (
+        <Moment>{dateToFormat}</Moment>
+    );
 }
 ```
 
@@ -97,32 +94,28 @@ Outputs:
 The above example could also be written this way if you prefer to pass the date using an attribute rather than as a child to `<Moment>`.
 
 ```jsx
-import React  from 'react';
+import React from 'react';
 import Moment from 'react-moment';
 
-export default class MyComponent extends React.Component {
-    render() {
-        return (
-            const dateToFormat = '1976-04-19T12:59-0500';
-            <Moment date={dateToFormat} />
-        );
-    }
+export default function MyComponent() {
+    const dateToFormat = '1976-04-19T12:59-0500';
+    return (
+        <Moment date={dateToFormat} />
+    );
 }
 ```
 
 The date value may be a string, object, array, or `Date` instance.
 
 ```jsx
-import React  from 'react';
+import React from 'react';
 import Moment from 'react-moment';
 
-export default class MyComponent extends React.Component {
-    render() {
-        return (
-            const dateToFormat = new Date('1976-04-19T12:59-0500');
-            <Moment date={dateToFormat} />
-        );
-    }
+export default function MyComponent() {
+    const dateToFormat = new Date('1976-04-19T12:59-0500');
+    return (
+        <Moment date={dateToFormat} />
+    );
 }
 ```
 
@@ -137,33 +130,29 @@ By default the time updates every 60 seconds (60000 milliseconds). Use the `inte
 
 Updates the time every 30 seconds (30000 milliseconds).
 ```jsx
-import React  from 'react';
+import React from 'react';
 import Moment from 'react-moment';
 
-export default class MyComponent extends React.Component {
-    render() {
-        return (
-            <Moment interval={30000}>
-                1976-04-19T12:59-0500
-            </Moment>
-        );
-    }
+export default function MyComponent() {
+    return (
+        <Moment interval={30000}>
+            1976-04-19T12:59-0500
+        </Moment>
+    );
 }
 ```
 
 Disables updating.
 ```jsx
-import React  from 'react';
+import React from 'react';
 import Moment from 'react-moment';
 
-export default class MyComponent extends React.Component {
-    render() {
-        return (
-            <Moment interval={0}>
-                1976-04-19T12:59-0500
-            </Moment>
-        );
-    }
+export default function MyComponent() {
+    return (
+        <Moment interval={0}>
+            1976-04-19T12:59-0500
+        </Moment>
+    );
 }
 ```
 
@@ -174,17 +163,15 @@ _format={string}_
 Formats the date according to the given format string. See the [Moment docs on formatting](https://momentjs.com/docs/#/parsing/string-format/) for more information.
 
 ```jsx
-import React  from 'react';
+import React from 'react';
 import Moment from 'react-moment';
 
-export default class MyComponent extends React.Component {
-    render() {
-        return (
-            <Moment format="YYYY/MM/DD">
-                1976-04-19T12:59-0500
-            </Moment>
-        );
-    }
+export default function MyComponent() {
+    return (
+        <Moment format="YYYY/MM/DD">
+            1976-04-19T12:59-0500
+        </Moment>
+    );
 }
 ```
 
@@ -197,17 +184,15 @@ Outputs:
 For Duration and DurationFromNow formatting, the formatting is done using a separate library. See the [Moment-Duration-Format docs on formatting](https://github.com/jsmreese/moment-duration-format#template) for more information.
 
 ```jsx
-import React  from 'react';
+import React from 'react';
 import Moment from 'react-moment';
 import moment from 'moment';
 
-export default class MyComponent extends React.Component {
+export default function MyComponent() {
     const start = moment().add(-4, 'm');
-    render() {
-        return (
+    return (
         <Moment date={start} format="hh:mm:ss" durationFromNow />
-        );
-    }
+    );
 }
 ```
 
@@ -223,17 +208,15 @@ _trim={string|bool}_
 When formatting duration time, the largest-magnitude tokens are automatically trimmed when they have no value. See the [Moment-Duration-Format docs on trim](https://github.com/jsmreese/moment-duration-format#trim) for more information.
 
 ```jsx
-import React  from 'react';
+import React from 'react';
 import Moment from 'react-moment';
 import moment from 'moment';
 
-export default class MyComponent extends React.Component {
+export default function MyComponent() {
     const start = moment().add(-4, 'm');
-    render() {
-        return (
+    return (
         <Moment date={start} format="hh:mm:ss" trim durationFromNow />
-        );
-    }
+    );
 }
 ```
 
@@ -249,17 +232,15 @@ _parse={string}_
 Moment can parse most standard date formats. Use the `parse` attribute to tell moment how to parse the given date when non-standard. See the [Moment docs on parsing](https://momentjs.com/docs/#/parsing/string-format/) for more information.
 
 ```jsx
-import React  from 'react';
+import React from 'react';
 import Moment from 'react-moment';
 
-export default class MyComponent extends React.Component {
-    render() {
-        return (
-            <Moment parse="YYYY-MM-DD HH:mm">
-                1976-04-19 12:59
-            </Moment>
-        );
-    }
+export default function MyComponent() {
+    return (
+        <Moment parse="YYYY-MM-DD HH:mm">
+            1976-04-19 12:59
+        </Moment>
+    );
 }
 ```
 
@@ -271,22 +252,20 @@ _subtract={object}_
 Used to add and subtract periods of time from the given date, with the time periods expressed as object literals. See the [Moment docs on add and subtract](https://momentjs.com/docs/#/manipulating/add/) for more information.
 
 ```jsx
-import React  from 'react';
+import React from 'react';
 import Moment from 'react-moment';
 
-export default class MyComponent extends React.Component {
-    render() {
-        const date = new Date();
+export default function MyComponent() {
+    const date = new Date();
 
-        return (
-            <div>
-                <Moment add={{ hours: 12 }}>{date}</Moment>
-                <Moment add={{ days: 1, hours: 12 }}>{date}</Moment>
-                <Moment subtract={{ hours: 12 }}>{date}</Moment>
-                <Moment subtract={{ days: 1, hours: 12 }}>{date}</Moment>
-            </div>
-        );
-    }
+    return (
+        <div>
+            <Moment add={{ hours: 12 }}>{date}</Moment>
+            <Moment add={{ days: 1, hours: 12 }}>{date}</Moment>
+            <Moment subtract={{ hours: 12 }}>{date}</Moment>
+            <Moment subtract={{ days: 1, hours: 12 }}>{date}</Moment>
+        </div>
+    );
 }
 ```
 
@@ -296,15 +275,13 @@ _fromNow={bool}_
 Sometimes called timeago or relative time, displays the date as the time _from now_, e.g. "5 minutes ago".
 
 ```jsx
-import React  from 'react';
+import React from 'react';
 import Moment from 'react-moment';
 
-export default class MyComponent extends React.Component {
-    render() {
-        return (
-            <Moment fromNow>1976-04-19T12:59-0500</Moment>
-        );
-    }
+export default function MyComponent() {
+    return (
+        <Moment fromNow>1976-04-19T12:59-0500</Moment>
+    );
 }
 ```
 
@@ -317,15 +294,13 @@ Outputs:
 Including `ago` with `fromNow` will omit the suffix from the relative time.
 
 ```jsx
-import React  from 'react';
+import React from 'react';
 import Moment from 'react-moment';
 
-export default class MyComponent extends React.Component {
-    render() {
-        return (
-            <Moment fromNow ago>1976-04-19T12:59-0500</Moment>
-        );
-    }
+export default function MyComponent() {
+    return (
+        <Moment fromNow ago>1976-04-19T12:59-0500</Moment>
+    );
 }
 ```
 
@@ -341,19 +316,17 @@ _fromNowShort={bool}_
 Displays the relative time in a short format using abbreviated units (e.g., "1h", "2d", "3mo", "1y" instead of "1 hour ago", "2 days ago", etc.).
 
 ```jsx
-import React  from 'react';
+import React from 'react';
 import Moment from 'react-moment';
 
-export default class MyComponent extends React.Component {
-    render() {
-        const date = new Date();
-        return (
-            <div>
-                <Moment fromNowShort>{date}</Moment>
-                {/* Output examples: "1h", "2d", "3mo", "1y" */}
-            </div>
-        );
-    }
+export default function MyComponent() {
+    const date = new Date();
+    return (
+        <div>
+            <Moment fromNowShort>{date}</Moment>
+            {/* Output examples: "1h", "2d", "3mo", "1y" */}
+        </div>
+    );
 }
 ```
 
@@ -387,15 +360,13 @@ Setting _fromNowDuring_ will display the relative time as with _fromNow_ but jus
 _from={string}_
 
 ```jsx
-import React  from 'react';
+import React from 'react';
 import Moment from 'react-moment';
 
-export default class MyComponent extends React.Component {
-    render() {
-        return (
-            <Moment from="2015-04-19">1976-04-19T12:59-0500</Moment>
-        );
-    }
+export default function MyComponent() {
+    return (
+        <Moment from="2015-04-19">1976-04-19T12:59-0500</Moment>
+    );
 }
 ```
 
@@ -412,15 +383,13 @@ _toNow={bool}_
 Similar to `fromNow`, but gives the opposite interval.
 
 ```jsx
-import React  from 'react';
+import React from 'react';
 import Moment from 'react-moment';
 
-export default class MyComponent extends React.Component {
-    render() {
-        return (
-            <Moment toNow>1976-04-19T12:59-0500</Moment>
-        );
-    }
+export default function MyComponent() {
+    return (
+        <Moment toNow>1976-04-19T12:59-0500</Moment>
+    );
 }
 ```
 
@@ -435,15 +404,13 @@ Outputs:
 _to={string}_
 
 ```jsx
-import React  from 'react';
+import React from 'react';
 import Moment from 'react-moment';
 
-export default class MyComponent extends React.Component {
-    render() {
-        return (
-            <Moment to="2015-04-19">1976-04-19T12:59-0500</Moment>
-        );
-    }
+export default function MyComponent() {
+    return (
+        <Moment to="2015-04-19">1976-04-19T12:59-0500</Moment>
+    );
 }
 ```
 
@@ -459,20 +426,18 @@ _filter={Filter}_
 A function which modifies/transforms the rendered content prior to display. The `Filter` type is `(content: MomentContent) => MomentContent`, where `MomentContent` is `string | number` (formatted text or numeric diff/duration values).
 
 ```jsx
-import React  from 'react';
+import React from 'react';
 import Moment from 'react-moment';
 
-export default class MyComponent extends React.Component {
-    render() {
-        const toUpperCaseFilter = (d) => {
-            return typeof d === 'string' ? d.toUpperCase() : d;
-        };
+export default function MyComponent() {
+    const toUpperCaseFilter = (d) => {
+        return typeof d === 'string' ? d.toUpperCase() : d;
+    };
+    const dateToFormat = '1976-04-19T12:59-0500';
 
-        return (
-            const dateToFormat = '1976-04-19T12:59-0500';
-            <Moment filter={toUpperCaseFilter}>{dateToFormat}</Moment>
-        );
-    }
+    return (
+        <Moment filter={toUpperCaseFilter}>{dateToFormat}</Moment>
+    );
 }
 ```
 
@@ -502,14 +467,12 @@ const upperCaseFilter = (content) => (
     typeof content === 'string' ? content.toUpperCase() : content
 );
 
-export default class MyComponent extends React.Component {
-    render() {
-        return (
-            <Moment filters={[trimFilter, upperCaseFilter]}>
-                1976-04-19T12:59-0500
-            </Moment>
-        );
-    }
+export default function MyComponent() {
+    return (
+        <Moment filters={[trimFilter, upperCaseFilter]}>
+            1976-04-19T12:59-0500
+        </Moment>
+    );
 }
 ```
 
@@ -550,14 +513,12 @@ const fiscalYearRenderer = ({ props, datetime }) => {
   return undefined;
 };
 
-export default class MyComponent extends React.Component {
-  render() {
-    return (
-      <Moment fiscalYear renderers={[fiscalYearRenderer]}>
-        1976-04-19T12:59-0500
-      </Moment>
-    );
-  }
+export default function MyComponent() {
+  return (
+    <Moment fiscalYear renderers={[fiscalYearRenderer]}>
+      1976-04-19T12:59-0500
+    </Moment>
+  );
 }
 ```
 
@@ -576,17 +537,15 @@ _withTitle={bool}_
 Adds a `title` attribute to the element with the complete date.
 
 ```jsx
-import React  from 'react';
+import React from 'react';
 import Moment from 'react-moment';
 
-export default class MyComponent extends React.Component {
-    render() {
-        return (
-            <Moment format="D MMM YYYY" withTitle>
-                1976-04-19T12:59-0500
-            </Moment>
-        );
-    }
+export default function MyComponent() {
+    return (
+        <Moment format="D MMM YYYY" withTitle>
+            1976-04-19T12:59-0500
+        </Moment>
+    );
 }
 ```
 
@@ -603,17 +562,15 @@ _titleFormat={string}_
 How the `title` date is formatted when using the `withTitle` attribute.
 
 ```jsx
-import React  from 'react';
+import React from 'react';
 import Moment from 'react-moment';
 
-export default class MyComponent extends React.Component {
-    render() {
-        return (
-            <Moment titleFormat="D MMM YYYY" withTitle>
-                1976-04-19T12:59-0500
-            </Moment>
-        );
-    }
+export default function MyComponent() {
+    return (
+        <Moment titleFormat="D MMM YYYY" withTitle>
+            1976-04-19T12:59-0500
+        </Moment>
+    );
 }
 ```
 
@@ -632,19 +589,17 @@ _decimal={bool}_
 _unit={string}_
 
 ```jsx
-import React  from 'react';
+import React from 'react';
 import Moment from 'react-moment';
 
-export default class MyComponent extends React.Component {
-    render() {
-        return (
-            <div>
-              <Moment diff="2015-04-19">1976-04-19T12:59-0500</Moment>
-              <Moment diff="2015-04-19" unit="days">1976-04-19T12:59-0500</Moment>
-              <Moment diff="2015-04-19" unit="years" decimal>1976-04-19T12:59-0500</Moment>
-            </div>
-        );
-    }
+export default function MyComponent() {
+    return (
+        <div>
+          <Moment diff="2015-04-19">1976-04-19T12:59-0500</Moment>
+          <Moment diff="2015-04-19" unit="days">1976-04-19T12:59-0500</Moment>
+          <Moment diff="2015-04-19" unit="years" decimal>1976-04-19T12:59-0500</Moment>
+        </div>
+    );
 }
 ```
 
@@ -656,17 +611,15 @@ _date={string}_
 Shows the duration (elapsed time) between two dates. `duration` property should be behind `date` property time-wise.
 
 ```jsx
-import React  from 'react';
+import React from 'react';
 import Moment from 'react-moment';
 
-export default class MyComponent extends React.Component {
-    render() {
-        return (
-            <Moment duration="2018-11-1T10:59-0500"
-                    date="2018-11-1T12:59-0500"
-            />
-        );
-    }
+export default function MyComponent() {
+    return (
+        <Moment duration="2018-11-1T10:59-0500"
+                date="2018-11-1T12:59-0500"
+        />
+    );
 }
 ```
 
@@ -677,17 +630,15 @@ _durationFromNow={bool}_
 Shows the duration (elapsed time) between now and the provided datetime.
 
 ```jsx
-import React  from 'react';
+import React from 'react';
 import Moment from 'react-moment';
 
-export default class MyComponent extends React.Component {
-    render() {
-        return (
-            <Moment date="2018-11-1T12:59-0500"
-                    durationFromNow
-            />
-        );
-    }
+export default function MyComponent() {
+    return (
+        <Moment date="2018-11-1T12:59-0500"
+                durationFromNow
+        />
+    );
 }
 ```
 
@@ -697,16 +648,14 @@ _unix={bool}_
 Tells Moment to parse the given date value as a unix timestamp.
 
 ```jsx
-import React  from 'react';
+import React from 'react';
 import Moment from 'react-moment';
 
-export default class MyComponent extends React.Component {
-    render() {
-        const unixTimestamp = 198784740;
-        return (
-            <Moment unix>{unixTimestamp}</Moment>
-        );
-    }
+export default function MyComponent() {
+    const unixTimestamp = 198784740;
+    return (
+        <Moment unix>{unixTimestamp}</Moment>
+    );
 }
 ```
 
@@ -722,17 +671,15 @@ _local={bool}_
 Outputs the result in local time.
 
 ```jsx
-import React  from 'react';
+import React from 'react';
 import Moment from 'react-moment';
 
-export default class MyComponent extends React.Component {
-    render() {
-        return (
-            <Moment local>
-                2018-11-01T12:59-0500
-            </Moment>
-        );
-    }
+export default function MyComponent() {
+    return (
+        <Moment local>
+            2018-11-01T12:59-0500
+        </Moment>
+    );
 }
 ```
 
@@ -749,19 +696,17 @@ _tz={string}_
 Sets the timezone. To enable server side rendering (SSR), client and server has to provide same datetime, based on common Timezone. The `tz` attribute will enable set the common timezone.
 
 ```jsx
-import React  from 'react';
+import React from 'react';
 import Moment from 'react-moment';
 import 'moment-timezone';
 
-export default class MyComponent extends React.Component {
-    render() {
-        const unixTimestamp = 198784740;
-        return (
-            <Moment unix tz="America/Los_Angeles">
-                {unixTimestamp}
-            </Moment>
-        );
-    }
+export default function MyComponent() {
+    const unixTimestamp = 198784740;
+    return (
+        <Moment unix tz="America/Los_Angeles">
+            {unixTimestamp}
+        </Moment>
+    );
 }
 ```
 
@@ -777,26 +722,24 @@ _calendar={object|bool}_
 Customize the strings used for the calendar function.
 
 ```jsx
-import React  from 'react';
+import React from 'react';
 import Moment from 'react-moment';
 
-export default class MyComponent extends React.Component {
-    render() {
-        const calendarStrings = {
-            lastDay : '[Yesterday at] LT',
-            sameDay : '[Today at] LT',
-            nextDay : '[Tomorrow at] LT',
-            lastWeek : '[last] dddd [at] LT',
-            nextWeek : 'dddd [at] LT',
-            sameElse : 'L'
-        };
+export default function MyComponent() {
+    const calendarStrings = {
+        lastDay : '[Yesterday at] LT',
+        sameDay : '[Today at] LT',
+        nextDay : '[Tomorrow at] LT',
+        lastWeek : '[last] dddd [at] LT',
+        nextWeek : 'dddd [at] LT',
+        sameElse : 'L'
+    };
 
-        return (
-            <Moment calendar={calendarStrings}>
-                '1976-04-19T12:59-0500'
-            </Moment>
-        );
-    }
+    return (
+        <Moment calendar={calendarStrings}>
+            1976-04-19T12:59-0500
+        </Moment>
+    );
 }
 ```
 
@@ -807,16 +750,14 @@ _locale={string}_
 Sets the locale used to display the date.
 
 ```jsx
-import React  from 'react';
+import React from 'react';
 import Moment from 'react-moment';
 
-export default class MyComponent extends React.Component {
-    render() {
-        const dateToFormat = '1976-04-19T12:59-0500';
-        return (
-            <Moment locale="de">{dateToFormat}</Moment>
-        );
-    }
+export default function MyComponent() {
+    const dateToFormat = '1976-04-19T12:59-0500';
+    return (
+        <Moment locale="de">{dateToFormat}</Moment>
+    );
 }
 ```
 
@@ -833,15 +774,13 @@ _element={string|React.Component}_
 The element type to render as (string or function).
 
 ```jsx
-import React  from 'react';
+import React from 'react';
 import Moment from 'react-moment';
 
-export default class MyComponent extends React.Component {
-    render() {
-        return (
-            <Moment element="span">1976-04-19T12:59-0500</Moment>
-        );
-    }
+export default function MyComponent() {
+    return (
+        <Moment element="span">1976-04-19T12:59-0500</Moment>
+    );
 }
 ```
 
@@ -858,17 +797,15 @@ _onChange={func}_
 The `onChange` prop is called each time the date is updated, which by default is every 60 seconds. The function receives the new date value.
 
 ```jsx
-import React  from 'react';
+import React from 'react';
 import Moment from 'react-moment';
 
-export default class MyComponent extends React.Component {
-    render() {
-        return (
-            <Moment onChange={(val) => { console.log(val); }}>
-                1976-04-19T12:59-0500
-            </Moment>
-        );
-    }
+export default function MyComponent() {
+    return (
+        <Moment onChange={(val) => { console.log(val); }}>
+            1976-04-19T12:59-0500
+        </Moment>
+    );
 }
 ```
 
@@ -877,17 +814,15 @@ export default class MyComponent extends React.Component {
 Any other properties are passed to the `<time>` element.
 
 ```jsx
-import React  from 'react';
+import React from 'react';
 import Moment from 'react-moment';
 
-export default class MyComponent extends React.Component {
-    render() {
-        return (
-            <Moment className="datetime" aria-hidden={true}>
-                1976-04-19T12:59-0500
-            </Moment>
-        );
-    }
+export default function MyComponent() {
+    return (
+        <Moment className="datetime" aria-hidden={true}>
+            1976-04-19T12:59-0500
+        </Moment>
+    );
 }
 ```
 
@@ -942,7 +877,7 @@ Some prop values may be set globally so you don't have to set them on every reac
 * local
 
 ```jsx
-import React  from 'react';
+import React from 'react';
 import ReactDOM from 'react-dom';
 import moment from 'moment/min/moment-with-locales';
 import Moment from 'react-moment';
@@ -988,7 +923,7 @@ ReactDOM.render(<App />, document.getElementById('mount'));
 You can override the global values on a per-instance basis using regular props.
 
 ```jsx
-import React  from 'react';
+import React from 'react';
 import ReactDOM from 'react-dom';
 import Moment from 'react-moment';
 
