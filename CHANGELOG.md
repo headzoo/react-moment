@@ -2,6 +2,7 @@
 
 ## Unreleased
 
+- chore: remove .travis.yml and webpack.config.js, update package dependencies, and modify .npmignore. (`557176b`)
 - chore: update peerDependencies for React version compatibility and remove unused test script. (`195e313`)
 
 ## 2.0.0-beta.2 - 2026-05-25
