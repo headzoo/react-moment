@@ -51,8 +51,8 @@ export function useMomentUpdate(
       return undefined;
     }
     const entry: PoolEntry = {
-      getProps: () => propsRef.current,
-      update: () => triggerUpdate.current(),
+      getProps:         () => propsRef.current,
+      update:           () => triggerUpdate.current(),
       getLastUpdatedAt: () => lastUpdatedAtRef.current,
       setLastUpdatedAt: (time: number) => {
         lastUpdatedAtRef.current = time;
