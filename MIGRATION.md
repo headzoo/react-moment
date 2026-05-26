@@ -2,11 +2,11 @@
 
 This guide covers breaking changes when upgrading from **1.2.3** to **2.0.0**, which migrates the library to TypeScript and replaces the class-based `Moment` component with a functional component.
 
-If your usage is limited to rendering `<Moment />` with documented props, global configuration (`Moment.settings.format`, etc.), and the pooled timer API (`Moment.startPooledTimer()` / `Moment.clearPooledTimer()`), you may not need to change anything. The sections below call out cases that **do** require updates.
+If your usage is limited to rendering `<Moment />` with documented props, you may not need to change anything. Code that uses global configuration (`Moment.settings.format`, etc.) or the static pooled timer API (`Moment.startPooledTimer()` / `Moment.clearPooledTimer()`) must move those defaults into a wrapping `<MomentProvider>`.
 
 ## Summary
 
-| Area | 1.2.3 | Next release |
+| Area | 1.2.3 | 2.0.0 |
 | --- | --- | --- |
 | Component implementation | React class component | React function component (hooks) |
 | Source language | JavaScript (`.jsx` / `.js`) | TypeScript (`.tsx` / `.ts`) |
@@ -21,20 +21,20 @@ If your usage is limited to rendering `<Moment />` with documented props, global
 
 **1.2.3** listed `prop-types` as a peer dependency and validated props at runtime via `PropTypes`.
 
-The next release removes runtime validation entirely. Type information is provided only through TypeScript declarations.
+**2.0.0** removes runtime validation entirely. Type information is provided only through TypeScript declarations.
 
 ### What to change
 
 - Remove `prop-types` from your dependencies if you installed it solely to satisfy `react-moment`'s peer dependency warning.
 - Do not expect development-time console warnings from `react-moment` when invalid props are passed; rely on your own TypeScript checks or tests instead.
 
-### Peer dependencies (next release)
+### Peer dependencies (2.0.0)
 
 ```json
 {
   "peerDependencies": {
     "moment": "^2.29.0",
-    "react": "^16.0 || ^17.0.0 || ^18.0.0"
+    "react": "^18.0.0 || ^19.0.0"
   }
 }
 ```
@@ -43,7 +43,7 @@ The next release removes runtime validation entirely. Type information is provid
 
 ## `Moment` is no longer a class component
 
-In **1.2.3**, `Moment` extended `React.Component`. It is now a function component with static properties attached for global configuration and utilities.
+In **1.2.3**, `Moment` extended `React.Component`. It is now a function component. Shared defaults that previously lived on `Moment.settings` are supplied with `<MomentProvider>`.
 
 ### Breaking if you relied on class-component internals
 
@@ -64,13 +64,25 @@ ref.current.componentWillUnmount();
 TestUtils.findRenderedComponentWithType(container, Moment);
 ```
 
-### What still works
+### Global settings now use `MomentProvider`
 
-Documented static APIs are unchanged in behavior:
+The `Moment.settings` object has been removed. Move global defaults to a provider that wraps the `<Moment>` instances that should receive them:
 
-- Global configuration: `Moment.settings.moment`, `Moment.settings.locale`, `Moment.settings.local`, `Moment.settings.format`, `Moment.settings.parse`, `Moment.settings.filter`, `Moment.settings.element`, `Moment.settings.timezone`
-- Pooled timer: `Moment.startPooledTimer(interval?)`, `Moment.clearPooledTimer()`
-- Utilities: named exports `getDatetime(props)`, `getContent(props)`, and `getShortRelativeTime(datetime)` from `react-moment`
+```jsx
+// 1.2.3
+Moment.settings.locale = 'fr';
+Moment.settings.format = 'D MMM YYYY';
+Moment.settings.element = 'span';
+
+// 2.0.0
+<MomentProvider locale="fr" format="D MMM YYYY" element="span">
+    <Moment>{date}</Moment>
+</MomentProvider>
+```
+
+`<MomentProvider>` accepts the former settings fields as props: `moment`, `locale`, `local`, `format`, `parse`, `filter`, `filters`, `renderers`, `element`, and `timezone`. Providers compose, so nested providers inherit parent defaults and override only the props they set.
+
+Named utility exports are still available from `react-moment`: `getDatetime(props)`, `getContent(props)`, and `getShortRelativeTime(datetime)`.
 
 Normal JSX usage is unchanged:
 
@@ -85,11 +97,23 @@ Normal JSX usage is unchanged:
 
 ---
 
-## Pooled timer registry type change
+## Pooled timer configuration moved to `MomentProvider`
 
-**1.2.3** stored mounted `Moment` **class instances** in `Moment.pooledElements` and validated entries with `instanceof Moment` inside `pushPooledElement`.
+**1.2.3** enabled pooled timing with static methods and stored mounted `Moment` **class instances** in `Moment.pooledElements`.
 
-The next release stores lightweight **pool entries** instead:
+**2.0.0** enables pooled timing per provider. Wrap the relevant subtree in `<MomentProvider pool>` and set the pooled interval with the provider's `interval` prop:
+
+```jsx
+// 1.2.3
+Moment.startPooledTimer(30000);
+
+// 2.0.0
+<MomentProvider pool interval={30000}>
+    <Moment fromNow>{date}</Moment>
+</MomentProvider>
+```
+
+Provider-backed pools store lightweight **pool entries** instead of component instances:
 
 ```ts
 interface PoolEntry {
@@ -98,10 +122,13 @@ interface PoolEntry {
 }
 ```
 
-### Breaking if you accessed the pool directly
+### Breaking if you used static pooling APIs or accessed the pool directly
 
 ```jsx
 // 1.2.3 — no longer valid
+Moment.startPooledTimer();
+Moment.clearPooledTimer();
+
 Moment.pooledElements.forEach((instance) => {
   instance.update();
 });
@@ -111,7 +138,7 @@ Moment.pushPooledElement(myMomentInstance);
 
 ### What to change
 
-- Use `Moment.startPooledTimer()` and `Moment.clearPooledTimer()` as documented in the README; do not manually push to `pooledElements` unless you provide a `PoolEntry`-shaped object with `getProps` and `update` functions.
+- Use `<MomentProvider pool>` instead of `Moment.startPooledTimer()` / `Moment.clearPooledTimer()`.
 - If you inspected `pooledElements`, iterate entries and call `entry.update()` or read props via `entry.getProps()` instead of treating entries as component instances.
 
 ---
@@ -129,7 +156,7 @@ declare class Moment extends Component<MomentProps, any> { /* ... */ }
 export default Moment;
 ```
 
-**Next release:**
+**2.0.0:**
 
 ```ts
 declare const Moment: React.FC<MomentProps> & MomentStatics;
@@ -142,7 +169,7 @@ Update code that types refs or variables as `Moment` (the class) or `Component<M
 
 Notable differences:
 
-| Prop / area | 1.2.3 | Next release |
+| Prop / area | 1.2.3 | 2.0.0 |
 | --- | --- | --- |
 | `add` / `subtract` | `subtractOrAddTypes` (loose object) | `moment.DurationInputObject` |
 | `date`, `from`, `to`, etc. | `dateTypes` (`string \| number \| array \| object`) | `moment.MomentInput` |
@@ -166,20 +193,33 @@ The published package includes additional `.d.ts` files alongside `dist/index.d.
 
 These are primarily for advanced use and type re-exports; the default import path remains `react-moment`.
 
-### New static members in typings
+### Removed static members in typings
 
-The next release's `MomentStatics` interface documents members that were present at runtime in **1.2.3** but omitted or incomplete in the old hand-written declarations, including:
+**2.0.0** removes the public static members used for global settings and pooled timers. Replace them with `<MomentProvider>` props:
 
+- `Moment.settings`
+- `Moment.startPooledTimer(interval?)`
+- `Moment.clearPooledTimer()`
 - `Moment.pooledElements`
 - `Moment.pooledTimer`
 - `Moment.pushPooledElement(entry)`
 - `Moment.removePooledElement(entry)`
 
-Helper functions are named exports from the package entry point:
+Helper functions remain named exports from the package entry point:
 
 ```ts
 import Moment, { getDatetime, getContent, getShortRelativeTime } from 'react-moment';
 ```
+
+In React components, prefer `useMomentContent` instead of calling those helpers directly. It uses the same formatting pipeline as `<Moment>`, respects `<MomentProvider>` defaults, and returns `{ content, datetime, title? }` with automatic re-renders when dates change:
+
+```ts
+import { useMomentContent } from 'react-moment';
+
+const { content, datetime } = useMomentContent({ fromNow: true, children: date });
+```
+
+For read-only access to provider settings, use `useMomentContext`.
 
 ---
 
@@ -187,7 +227,7 @@ import Moment, { getDatetime, getContent, getShortRelativeTime } from 'react-mom
 
 If you imported from source paths inside the package (unusual for npm consumers), file extensions and locations changed:
 
-| 1.2.3 | Next release |
+| 1.2.3 | 2.0.0 |
 | --- | --- |
 | `src/index.jsx` | `src/index.tsx` |
 | `src/types.js` | `src/types.ts` |
@@ -203,11 +243,9 @@ The supported public API remains the built artifact: `dist/index.js` with types 
 The following continue to work without changes:
 
 - All documented JSX props (`fromNow`, `format`, `unix`, `tz`, `fromNowShort`, etc.)
-- Global configuration object (`Moment.settings.format = '...'`, etc.)
-- Pooled timer bootstrap (`Moment.startPooledTimer()` in your app entry file)
 - UMD / CommonJS / AMD consumption via `require('react-moment')` or `import Moment from 'react-moment'`
 - SSR via the published `dist/index.js` bundle
-- Default render output (still a `<time>` element unless overridden with `element` or `Moment.settings.element`)
+- Default render output (still a `<time>` element unless overridden with the `element` prop or `<MomentProvider element="...">`)
 
 ---
 
@@ -215,6 +253,8 @@ The following continue to work without changes:
 
 1. Upgrade `react-moment` to the new version.
 2. Remove `prop-types` if it is only present for this package's peer dependency.
-3. Search your codebase for `instanceof Moment`, refs to `Moment` instance methods, or direct use of `Moment.pooledElements` / `Moment.pushPooledElement`.
-4. If you use TypeScript, fix type errors from the updated `MomentProps` and function-component typing.
-5. Run your test suite; replace any tests that call `componentWillUnmount()` on a rendered `Moment` instance with a normal React unmount (`ReactDOM.unmountComponentAtNode(container)` or `@testing-library/react`'s `unmount()`).
+3. Replace `Moment.settings` assignments with `<MomentProvider>` props.
+4. Replace `Moment.startPooledTimer()` / `Moment.clearPooledTimer()` with `<MomentProvider pool>`.
+5. Search your codebase for `instanceof Moment`, refs to `Moment` instance methods, or direct use of `Moment.pooledElements` / `Moment.pushPooledElement`.
+6. If you use TypeScript, fix type errors from the updated `MomentProps` and function-component typing.
+7. Run your test suite; replace any tests that call `componentWillUnmount()` on a rendered `Moment` instance with a normal React unmount (`ReactDOM.unmountComponentAtNode(container)` or `@testing-library/react`'s `unmount()`).
