@@ -2,16 +2,23 @@ import type momentLib from 'moment';
 import type { MomentProps } from '../types';
 
 /**
- * Applies add/subtract adjustments to the parsed datetime.
+ * Returns a copy of the datetime with add/subtract adjustments applied.
+ * The input moment is not mutated.
  */
 export function applyDateAdjustments(
   props: MomentProps,
   datetime: momentLib.Moment
-): void {
+): momentLib.Moment {
+  if (!props.add && !props.subtract) {
+    return datetime;
+  }
+
+  const adjusted = datetime.clone();
   if (props.add) {
-    datetime.add(props.add);
+    adjusted.add(props.add);
   }
   if (props.subtract) {
-    datetime.subtract(props.subtract);
+    adjusted.subtract(props.subtract);
   }
+  return adjusted;
 }

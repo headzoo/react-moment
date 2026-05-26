@@ -11,9 +11,9 @@ describe('renderFrom', () => {
   const ctx = (props: ContentContext['props']): ContentContext => ({
     props,
     datetime,
-    format: undefined,
+    format:        undefined,
     fromNowPeriod: false,
-    settings: defaultSettings
+    settings:      defaultSettings
   });
 
   it('returns undefined when from is omitted', () => {

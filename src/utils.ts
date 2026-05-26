@@ -1,12 +1,57 @@
 import momentLib from 'moment';
-import 'moment-duration-format';
+import { setupMomentDurationFormat } from './setupMomentDurationFormat';
+import type {} from 'moment-timezone';
 import type { MomentProps, MomentSettings } from './types';
+import { applyDateAdjustments } from './renderers/applyDateAdjustments';
+
+setupMomentDurationFormat(momentLib);
 
 /**
  * Returns the active moment module reference from settings.
  */
 export function getMomentRef(settings: MomentSettings): typeof momentLib {
   return settings.moment ?? momentLib;
+}
+
+/**
+ * Ensures the active moment instance has timezone support from moment-timezone.
+ */
+function assertMomentTimezoneSupported(momentRef: typeof momentLib): void {
+  if (typeof momentRef().tz !== 'function') {
+    throw new Error(
+      '[react-moment] The `tz` prop requires moment-timezone. '
+      + 'Install the `moment-timezone` package and import "moment-timezone" '
+      + 'before using timezone features.'
+    );
+  }
+}
+
+/**
+ * Converts unix-seconds input to milliseconds, or null when the value is not numeric.
+ */
+function toUnixMilliseconds(input: momentLib.MomentInput): number | null {
+  if (input === null || input === undefined) {
+    return null;
+  }
+
+  let seconds: number;
+  if (typeof input === 'number') {
+    seconds = input;
+  } else if (typeof input === 'string') {
+    const trimmed = input.trim();
+    if (trimmed === '') {
+      return null;
+    }
+    seconds = Number(trimmed);
+  } else {
+    return null;
+  }
+
+  if (!Number.isFinite(seconds)) {
+    return null;
+  }
+
+  return seconds * 1000;
 }
 
 /**
@@ -33,20 +78,35 @@ export function getDatetime(
     // moment#unix fails because of a deprecation,
     // but since moment#unix(s) is implemented as moment(s * 1000),
     // this works equivalently
-    datetime = momentRef((dateInput as number) * 1000, parse, locale);
+    const unixMs = toUnixMilliseconds(dateInput);
+    datetime = unixMs === null
+      ? momentRef.invalid()
+      : momentRef(unixMs, parse, locale);
   } else {
     datetime = momentRef(dateInput, parse, locale);
   }
   if (tz) {
-    datetime = (datetime as momentLib.Moment & {
-      tz: (zone: string) => momentLib.Moment;
-    }).tz(tz);
+    assertMomentTimezoneSupported(momentRef);
+    datetime = datetime.tz(tz);
   } else if (local) {
     datetime = datetime.local();
   }
 
   return datetime;
 }
+
+/**
+ * Returns a moment instance with add/subtract adjustments applied.
+ */
+export function getAdjustedDatetime(
+  props: MomentProps,
+  settings: MomentSettings
+): momentLib.Moment {
+  return applyDateAdjustments(props, getDatetime(props, settings));
+}
+
+/** Default week threshold when moment's `w` threshold is null (weeks disabled). */
+const DEFAULT_WEEK_THRESHOLD = 4;
 
 /**
  * Returns a compact relative time string without mutating locale settings.
@@ -60,12 +120,12 @@ export function getShortRelativeTime(
   const duration = momentRef.duration(momentRef().diff(datetime)).abs();
   const thresholds = {
     ss: momentRef.relativeTimeThreshold('ss') as number,
-    s: momentRef.relativeTimeThreshold('s') as number,
-    m: momentRef.relativeTimeThreshold('m') as number,
-    h: momentRef.relativeTimeThreshold('h') as number,
-    d: momentRef.relativeTimeThreshold('d') as number,
-    w: momentRef.relativeTimeThreshold('w') as number | null,
-    M: momentRef.relativeTimeThreshold('M') as number
+    s:  momentRef.relativeTimeThreshold('s') as number,
+    m:  momentRef.relativeTimeThreshold('m') as number,
+    h:  momentRef.relativeTimeThreshold('h') as number,
+    d:  momentRef.relativeTimeThreshold('d') as number,
+    w:  momentRef.relativeTimeThreshold('w') as number | null,
+    M:  momentRef.relativeTimeThreshold('M') as number
   };
 
   const seconds = round(duration.as('s'));
@@ -97,16 +157,17 @@ export function getShortRelativeTime(
   if (days <= 1) {
     return '1d';
   }
-  if (days < thresholds.d) {
-    return `${days}d`;
-  }
-  if (thresholds.w !== null) {
+  const weekThreshold = thresholds.w ?? DEFAULT_WEEK_THRESHOLD;
+  if (days >= 7) {
     if (weeks <= 1) {
       return '1w';
     }
-    if (weeks < thresholds.w) {
+    if (weeks < weekThreshold) {
       return `${weeks}w`;
     }
+  }
+  if (days < thresholds.d) {
+    return `${days}d`;
   }
   if (months <= 1) {
     return '1mo';
@@ -142,12 +203,16 @@ export type { ContentContext, ContentRenderer } from './renderers';
 
 /**
  * Returns the title to use when `withTitle` is set.
+ * Format resolution: `titleFormat` → `format` → provider `format` → ISO default.
  */
 export function getTitle(
   props: MomentProps,
   settings: MomentSettings
 ): string {
-  const datetime = getDatetime(props, settings);
-  const format = props.titleFormat || settings.format || '';
+  const datetime = getAdjustedDatetime(props, settings);
+  if (!datetime.isValid()) {
+    return '';
+  }
+  const format = props.titleFormat || props.format || settings.format || '';
   return datetime.format(format);
 }

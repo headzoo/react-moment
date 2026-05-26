@@ -7,13 +7,17 @@ React component for the [moment](http://momentjs.com/) date library.
 
 - [Installing](#installing)
     - [CDN](#cdn)
-- [2.0.0-beta](#200-beta)
+- [2.0.x](#20x)
 - [Timezone Support](#timezone-support)
 - [Quick Start](#quick-start)
+- [Hooks](#hooks)
+    - [useMomentContent](#usemomentcontent)
+    - [useMomentContext](#usemomentcontext)
 - [Props](#props)
     - [MomentProvider](#momentprovider)
     - [Pooled Timer](#pooled-timer)
     - [Interval](#interval)
+    - [Output mode precedence](#output-mode-precedence)
     - [Formatting](#formatting)
     - [Parsing Dates](#parsing-dates)
     - [Add and Subtract](#add-and-subtract)
@@ -44,7 +48,7 @@ React component for the [moment](http://momentjs.com/) date library.
 
 
 ### Installing
-Requires [React](https://react.dev/) 16.8 or later (hooks), plus the peer dependency `moment`. Install with npm:
+Requires [React](https://react.dev/) 18 or later, plus the peer dependency `moment`. Install with npm:
 
 ```sh
 npm install --save moment react-moment
@@ -66,9 +70,6 @@ A pre-built UMD bundle is published alongside the npm package and can be loaded 
     <script crossorigin src="https://unpkg.com/react@18/umd/react.production.min.js"></script>
     <script crossorigin src="https://unpkg.com/react-dom@18/umd/react-dom.production.min.js"></script>
     <script crossorigin src="https://unpkg.com/moment@2/min/moment.min.js"></script>
-
-    <!-- react-moment's UMD build reads React from `window.react` (lowercase). -->
-    <script>window.react = window.React;</script>
     <script crossorigin src="https://unpkg.com/react-moment@2.0.1/dist/index.umd.js"></script>
 
     <script>
@@ -88,16 +89,26 @@ Outputs:
 <time>Mon Apr 19 1976 12:59:00 GMT-0500</time>
 ```
 
-### 2.0.0
+### 2.0.x
 
-The new 2.0.0 is still in beta. It migrates the library to TypeScript and replaces the class-based `Moment` component with a functional component. It is not recommended to use this version in production.
+The new 2.0.x is still in beta. It migrates the library to TypeScript and replaces the class-based `Moment` component with a functional component. It is not recommended to use this version in production.
 
-Changes in 2.0:
+Changes in 2.0.x:
 
 - `prop-types` is no longer a peer dependency (runtime prop validation was removed; types are provided via TypeScript declarations)
 - `Moment` is a function component — code that relied on class-component internals (for example `instanceof Moment`, instance methods on refs, or `TestUtils.findRenderedComponentWithType`) must be updated
 
 See [MIGRATION.md](https://github.com/headzoo/react-moment/blob/master/MIGRATION.md) for the full upgrade guide and breaking-change details.
+
+
+### Duration Formatting
+The `moment-duration-format` package is required for the `duration` and `durationFromNow` props.
+
+```sh
+npm install --save moment-duration-format
+```
+
+It is an optional peer dependency — install it only when you use duration formatting.
 
 
 ### Timezone Support
@@ -165,6 +176,88 @@ export default function MyComponent() {
     return (
         <Moment date={dateToFormat} />
     );
+}
+```
+
+
+### Hooks
+
+Use hooks when you need formatted output without rendering a `<time>` element, or when building custom UI around the same logic as `<Moment>`.
+
+#### useMomentContent
+
+`useMomentContent` accepts the same props as `<Moment>` except [`element`](#element). It uses the same formatting pipeline as the component, including [`<MomentProvider>`](#momentprovider) defaults, `add` / `subtract`, timezone, and locale handling.
+
+**Return value**
+
+| Property | Type | Description |
+| --- | --- | --- |
+| `content` | `string \| number` | Formatted output (same value `<Moment>` would render as text). |
+| `datetime` | `moment.Moment` | The **adjusted** moment used to produce `content`, not the raw input. Includes `add`, `subtract`, `utc`, `local`, `tz`, and provider defaults. |
+| `title` | `string` (optional) | Present when `withTitle` is set; uses the same format resolution as the `title` attribute ([`titleFormat`](#title-format) → [`format`](#formatting) → provider [`format`](#formatting) → ISO default). |
+
+**Updates and callbacks**
+
+- Pass [`interval`](#interval) to re-render when relative times change (default `60000` ms). Use `interval={0}` to disable periodic updates.
+- Pass [`onChange`](#onchange) to receive the current `content` on mount and after each update — same semantics as `<Moment>`.
+- Hooks inside a [`<MomentProvider pool>`](#pooled-timer) subtree register with the shared timer the same way `<Moment>` does.
+
+TypeScript types `UseMomentContentProps` and `UseMomentContentResult` are exported from the package entry point.
+
+```jsx
+import React from 'react';
+import { useMomentContent } from 'react-moment';
+
+export default function RelativeLabel({ date }) {
+    const { content, datetime } = useMomentContent({
+        fromNow: true,
+        children: date,
+        interval: 60000
+    });
+
+    return (
+        <span title={datetime.format()}>{content}</span>
+    );
+}
+```
+
+With `withTitle`, the hook returns a pre-formatted `title` string:
+
+```jsx
+const { content, title } = useMomentContent({
+    format: 'D MMM YYYY',
+    withTitle: true,
+    titleFormat: 'YYYY-MM-DD',
+    children: date
+});
+// content → "19 Apr 1976", title → "1976-04-19"
+```
+
+#### useMomentContext
+
+`useMomentContext()` returns the nearest [`MomentContext`](#momentprovider) value:
+
+| Property | Type | Description |
+| --- | --- | --- |
+| `settings` | `MomentSettings` | Merged defaults from the nearest `<MomentProvider>` chain (or built-in defaults when no provider is mounted). Same keys as [MomentProvider props](#momentprovider). |
+| `pool` | `PoolController \| null` | Present when the nearest provider has `pool` enabled; used internally by `<Moment>` and `useMomentContent` to share a single timer. |
+
+Use this hook when custom components need the same locale, format, timezone, or other defaults as sibling `<Moment>` instances without duplicating props.
+
+TypeScript type `MomentContextValue` is exported from the package entry point.
+
+```jsx
+import React from 'react';
+import { useMomentContext, useMomentContent } from 'react-moment';
+
+export default function FormattedDate({ date }) {
+    const { settings } = useMomentContext();
+    const { content } = useMomentContent({
+        children: date,
+        format: settings.format ?? 'LL'
+    });
+
+    return <span>{content}</span>;
 }
 ```
 
@@ -267,7 +360,7 @@ Or set the update interval. This will update the mounted instances every 30 seco
 </MomentProvider>
 ```
 
-Note: The `interval` prop set on each `<Moment />` instance is ignored when using pooled timing, except where `interval={0}` to disable updating.
+Note: When using pooled timing, the provider `interval` controls how often the pool checks for updates. Descendants without an `interval` prop update on every provider tick. Per-instance `interval` values are honored so mixed update cadences can share one timer. Use `interval={0}` on a `<Moment />` instance to disable updating for that instance only.
 
 
 #### Interval
@@ -302,6 +395,27 @@ export default function MyComponent() {
     );
 }
 ```
+
+
+#### Output mode precedence
+
+Built-in output props (`format`, `from`, `fromNow`, `calendar`, and so on) are resolved by an ordered chain of renderers: the first renderer that applies wins. Custom `renderers` run before this chain (see [Custom Renderers](#custom-renderers)).
+
+When multiple built-in modes are set at once, only the highest-priority one takes effect. For example, if both `format` and `fromNow` are set, the formatted output is shown and `fromNow` is ignored. The exception is [`fromNowDuring`](#from-now-during): while the date falls within that window (in milliseconds), relative output is shown as with `fromNow`; after that window, `format` is used instead.
+
+Built-in order (highest to lowest priority):
+
+1. `format`
+2. `from`
+3. `fromNowShort`
+4. `fromNow`
+5. `to`
+6. `toNow`
+7. `calendar`
+8. `diff`
+9. `duration`
+10. `durationFromNow`
+11. default (`datetime.toString()`)
 
 
 #### Formatting
@@ -491,11 +605,7 @@ Examples of short format output:
 - "1y" - 1 year ago
 - "2y" - 2 years ago
 
-You can also use the `ago` prop to customize the output:
-
-```jsx
-<Moment fromNowShort ago>2023-01-15T10:30:00</Moment>
-```
+Short format never includes an "ago" or "in" suffix, so the [`ago`](#from-now) prop does not apply to `fromNowShort`.
 
 #### From Now During
 
@@ -572,7 +682,37 @@ _filters={Filter[]}_
 
 An array of filter functions applied **in order** to the rendered content before display. Each filter receives and returns `MomentContent` (`string | number` — formatted text or numeric diff/duration values). The `Filter` type is `(content: MomentContent) => MomentContent`.
 
-Per-instance `filters` override a provider's `filters` when set.
+When both a `<MomentProvider>` and a `<Moment>` set `filters`, the arrays are concatenated: provider filters run first, then per-instance filters.
+
+If a filter throws, react-moment logs the error with `console.error`, skips that filter, and continues with the remaining filters using the last successful result.
+
+```jsx
+import React from 'react';
+import Moment, { MomentProvider } from 'react-moment';
+
+const trimFilter = (content) => (
+    typeof content === 'string' ? content.trim() : content
+);
+
+const upperCaseFilter = (content) => (
+    typeof content === 'string' ? content.toUpperCase() : content
+);
+
+export default function MyComponent() {
+    return (
+        <MomentProvider filters={[trimFilter]}>
+            {/*
+                trimFilter runs first (provider), then upperCaseFilter (instance).
+            */}
+            <Moment filters={[upperCaseFilter]}>
+                1976-04-19T12:59-0500
+            </Moment>
+        </MomentProvider>
+    );
+}
+```
+
+On a single `<Moment>` without a provider, pass all filters on the instance:
 
 ```jsx
 import React from 'react';
@@ -602,6 +742,10 @@ Filters can also be registered on a `<MomentProvider>` (see [MomentProvider](#mo
 _renderers={ContentRenderer[]}_
 
 An array of custom content renderer functions invoked **before** the built-in renderers. The first renderer (custom or built-in) to return a non-`undefined` value wins. Return `undefined` from a custom renderer to fall through to the next renderer in the chain.
+
+When both a `<MomentProvider>` and a `<Moment>` set `renderers`, the arrays are concatenated: provider renderers are tried first, then per-instance renderers, then the built-in renderers.
+
+If a renderer throws, react-moment logs the error with `console.error` and tries the next renderer in the chain (same as returning `undefined`).
 
 Each renderer receives a `ContentContext` object:
 
@@ -654,7 +798,9 @@ Custom renderers can also be registered on a `<MomentProvider>` (see [MomentProv
 #### With Title
 _withTitle={bool}_
 
-Adds a `title` attribute to the element with the complete date.
+Adds a `title` attribute to the element. Title format resolution: [`titleFormat`](#title-format) → [`format`](#formatting) (instance or [`<MomentProvider>`](#momentprovider) default) → moment's default ISO-style output (`datetime.format('')`, e.g. `1976-04-19T12:59:00-05:00`).
+
+When `titleFormat` is set, it formats only the title; visible text still follows `format` and the usual output props.
 
 ```jsx
 import React from 'react';
@@ -662,7 +808,7 @@ import Moment from 'react-moment';
 
 export default function MyComponent() {
     return (
-        <Moment format="D MMM YYYY" withTitle>
+        <Moment withTitle>
             1976-04-19T12:59-0500
         </Moment>
     );
@@ -672,14 +818,28 @@ export default function MyComponent() {
 Outputs:
 
 ```html
-<time title="1976-04-19T12:59-0500">19 Apr 1976</time>
+<time title="1976-04-19T12:59:00-05:00">Mon Apr 19 1976 12:59:00 GMT-0500</time>
+```
+
+When `format` is set and `titleFormat` is omitted, the title uses the same format string as the visible text:
+
+```jsx
+<Moment format="D MMM YYYY" withTitle>
+    1976-04-19T12:59-0500
+</Moment>
+```
+
+Outputs:
+
+```html
+<time title="19 Apr 1976">19 Apr 1976</time>
 ```
 
 
 #### Title Format
 _titleFormat={string}_
 
-How the `title` date is formatted when using the `withTitle` attribute.
+Formats the `title` attribute when using `withTitle`. Does not affect the visible text unless `format` is also set (or inherited from a provider).
 
 ```jsx
 import React from 'react';
@@ -697,7 +857,7 @@ export default function MyComponent() {
 Outputs:
 
 ```html
-<time title="19 Apr 1976">1976-04-19T12:59-0500</time>
+<time title="19 Apr 1976">Mon Apr 19 1976 12:59:00 GMT-0500</time>
 ```
 
 
@@ -914,7 +1074,9 @@ Outputs:
 #### OnChange
 _onChange={func}_
 
-The `onChange` prop is called each time the date is updated, which by default is every 60 seconds. The function receives the new date value.
+The `onChange` prop is called with the current displayed content when the component mounts, and again after each automatic update. By default, updates run every 60 seconds (`interval`, default `60000`). Set `interval={0}` to disable periodic updates while still receiving the initial callback on mount.
+
+The callback receives the rendered content string (or number for modes such as `diff`), not a `Date` or moment instance.
 
 ```jsx
 import React from 'react';

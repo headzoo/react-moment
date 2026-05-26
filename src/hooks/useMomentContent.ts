@@ -1,7 +1,7 @@
-import { useMomentContext } from '../MomentContext';
 import type moment from 'moment';
+import { useMomentContext } from '../MomentContext';
 import type { MomentContent, MomentProps } from '../types';
-import { getContent, getDatetime, getTitle } from '../utils';
+import { getAdjustedDatetime, getContent, getTitle } from '../utils';
 import { useMomentUpdate } from './useMomentUpdate';
 
 /**
@@ -14,6 +14,7 @@ export type UseMomentContentProps = Omit<MomentProps, 'element'>;
  */
 export interface UseMomentContentResult {
   content: MomentContent;
+  /** Same adjusted moment used to produce `content` (includes add/subtract and provider defaults). */
   datetime: moment.Moment;
   title?: string;
 }
@@ -30,7 +31,7 @@ export function useMomentContent(
     currentProps.onChange?.(getContent(currentProps, settings));
   });
 
-  const datetime = getDatetime(props, settings);
+  const datetime = getAdjustedDatetime(props, settings);
   const content = getContent(props, settings);
   const result: UseMomentContentResult = { content, datetime };
 

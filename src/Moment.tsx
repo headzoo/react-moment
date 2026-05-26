@@ -10,7 +10,7 @@ import {
   momentPropKeys
 } from './types';
 import {
-  getDatetime,
+  getAdjustedDatetime,
   getContent,
   getTitle
 } from './utils';
@@ -31,6 +31,7 @@ const Moment: React.FC<MomentProps> = (props: MomentProps) => {
   });
 
   const content = getContent(props, settings);
+  const datetime = getAdjustedDatetime(props, settings);
 
   const { withTitle, element, ...remaining } = props;
   const passProps = objectKeyFilter(
@@ -42,12 +43,16 @@ const Moment: React.FC<MomentProps> = (props: MomentProps) => {
     passProps.title = getTitle(props, settings);
   }
 
+  const domProps: Record<string, unknown> = { ...passProps };
+  if (datetime.isValid()) {
+    domProps.dateTime = datetime.toISOString();
+  }
+
+  const tag = (element ?? settings.element ?? 'time') as ElementType;
+
   return React.createElement(
-    (element || settings.element) as ElementType,
-    {
-      dateTime: getDatetime(props, settings) as unknown as string,
-      ...passProps
-    },
+    tag,
+    domProps,
     content as ReactNode
   );
 };

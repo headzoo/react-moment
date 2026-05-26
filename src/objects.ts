@@ -2,20 +2,16 @@
  * Performs a key comparison between two objects, deleting from the first where
  * the keys exist in the second.
  *
- * Can be used to remove unwanted component prop values. For example:
+ * Can be used to remove unwanted component prop values before passing the rest
+ * to a DOM element. For example, `<Moment>` strips its own props and forwards
+ * the remainder:
  *
  * ```tsx
- * function Item(props) {
- *   const { children, className, ...rest } = props;
- *   return (
- *     <div
- *       {...objectKeyFilter(rest, Item.propKeys)}
- *       className={classNames('dp-item', className)}
- *     >
- *       {children}
- *     </div>
- *   );
- * }
+ * const passProps = objectKeyFilter(
+ *   remaining as Record<string, unknown>,
+ *   momentPropKeys
+ * );
+ * return React.createElement(tag, passProps, content);
  * ```
  */
 export function objectKeyFilter<T extends Record<string, unknown>>(
@@ -25,7 +21,7 @@ export function objectKeyFilter<T extends Record<string, unknown>>(
   const obj2Keys = Object.keys(obj2);
   const newProps: Partial<T> = { ...obj1 };
   Object.keys(newProps)
-    .filter((key) => obj2Keys.indexOf(key) !== -1)
+    .filter(key => obj2Keys.indexOf(key) !== -1)
     .forEach((key) => {
       delete (newProps as Record<string, unknown>)[key];
     });

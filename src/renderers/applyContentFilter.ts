@@ -1,17 +1,25 @@
 import type { MomentContent, MomentProps, MomentSettings } from '../types';
 
 /**
- * Applies the global or per-instance content filters.
+ * Applies provider and per-instance content filters in order.
  */
 export function applyContentFilter(
   props: MomentProps,
   content: MomentContent,
   settings: MomentSettings
 ): MomentContent {
-  const customFilters = props.filters ?? settings.filters ?? [];
+  const customFilters = [
+    ...(settings.filters ?? []),
+    ...(props.filters ?? [])
+  ];
   let result = content;
   for (const customFilter of customFilters) {
-    result = customFilter(result);
+    try {
+      result = customFilter(result);
+    } catch (error) {
+      // eslint-disable-next-line no-console
+      console.error('[react-moment] Content filter threw:', error);
+    }
   }
   return result;
 }

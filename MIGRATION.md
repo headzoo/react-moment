@@ -12,7 +12,7 @@ If your usage is limited to rendering `<Moment />` with documented props, you ma
 | Source language | JavaScript (`.jsx` / `.js`) | TypeScript (`.tsx` / `.ts`) |
 | Runtime prop validation | PropTypes | None (TypeScript types only) |
 | `prop-types` peer dependency | Required | Removed |
-| Published entry point | `dist/index.js` | `dist/index.js` (unchanged) |
+| Published entry point | `dist/index.js` | `dist/index.cjs.js` (main), `dist/index.mjs` (ESM), `dist/index.umd.js` (CDN) |
 | Type declarations | Hand-written class typings | Generated from TypeScript source |
 
 ---
@@ -95,6 +95,15 @@ Normal JSX usage is unchanged:
 
 **1.2.3** declared defaults via `static defaultProps` on the class. The functional component applies the same effective defaults through runtime fallbacks (for example, `interval ?? 60000`, no filters when none are provided, falsy boolean props treated as `false`). Typical usage does not need changes.
 
+### `onChange` fires on mount
+
+**2.0.0** invokes `onChange` once when `<Moment>` or `useMomentContent` mounts, with the initial formatted content, then again on each interval tick (including when registered with a pooled `<MomentProvider pool>` timer). This matches typical controlled-component expectations: you can sync external state immediately without waiting for the first timer.
+
+- `interval={0}` disables periodic re-renders but still calls `onChange` on mount.
+- The callback receives `MomentContent` (`string | number`), not a `Date` or moment object.
+
+If you previously assumed `onChange` only ran after the first `interval` elapsed, initialize state from rendered output or accept the extra mount callback.
+
 ---
 
 ## Pooled timer configuration moved to `MomentProvider`
@@ -167,7 +176,11 @@ For multiple transforms, pass them in order:
 
 ### Precedence change
 
-In **1.x** and early **2.0 beta**, the provider's `filter` overrode a per-instance `filter` when both were set. With `filters`, per-instance values override the provider's (standard React-style precedence). Code that depended on the provider-wins behavior must be reorganized — typically by moving the transform into `filters` on the instance, or by composing both arrays manually.
+In **1.x**, the provider's `filter` overrode a per-instance `filter` when both were set. In **2.0**, `filters` and `renderers` from a `<MomentProvider>` and a `<Moment>` are **merged**: provider entries run first, then per-instance entries.
+
+For `filters`, all functions run in order (provider filters first, then instance filters). For `renderers`, the merged chain is tried in order; the first renderer to return a non-`undefined` value wins (still before built-in renderers).
+
+Code that depended on provider-only transforms when both were set will now run both arrays. To restore the old behavior, move the desired transform entirely onto the instance (or provider) instead of splitting across both.
 
 ---
 
@@ -204,7 +217,7 @@ Notable differences:
 | `parse` | `string \| Array<any>` | `moment.MomentFormatSpecification` |
 | `calendar` | `boolean \| object` | `boolean \| moment.CalendarSpec` |
 | `unit` | `string` | `moment.unitOfTime.Diff` |
-| `onChange` | `(content: any) => any` | `(content: MomentContent) => void` |
+| `onChange` | `(content: any) => any`; fires on interval ticks | `(content: MomentContent) => void`; fires on mount and on each tick (see above) |
 | `element` | `string \| FunctionComponent \| ComponentClass` | `ElementType \| null` |
 | Passthrough DOM props | Explicit optional props (`className`, `style`, …) | Index signature `[key: string]: unknown` |
 
@@ -238,7 +251,7 @@ Helper functions remain named exports from the package entry point:
 import Moment, { getDatetime, getContent, getShortRelativeTime } from 'react-moment';
 ```
 
-In React components, prefer `useMomentContent` instead of calling those helpers directly. It uses the same formatting pipeline as `<Moment>`, respects `<MomentProvider>` defaults, and returns `{ content, datetime, title? }` with automatic re-renders when dates change:
+In React components, prefer `useMomentContent` instead of calling those helpers directly. It uses the same formatting pipeline as `<Moment>`, respects `<MomentProvider>` defaults, and returns `{ content, datetime, title? }` with automatic re-renders when dates change. The returned `datetime` is the same adjusted moment used to produce `content` (including `add`, `subtract`, `utc`, `local`, `tz`, and provider defaults), not the raw parsed input:
 
 ```ts
 import { useMomentContent } from 'react-moment';
@@ -261,7 +274,7 @@ If you imported from source paths inside the package (unusual for npm consumers)
 | `src/objects.js` | `src/objects.ts` |
 | — | `src/utils.ts` (new; date/content helpers) |
 
-The supported public API remains the built artifact: `dist/index.js` with types at `dist/index.d.ts`. Deep imports from `src/` are not part of the supported API.
+The supported public API remains the built artifacts (`dist/index.cjs.js`, `dist/index.mjs`, `dist/index.umd.js`) with types at `dist/index.d.ts`. Deep imports from `src/` are not part of the supported API.
 
 ---
 
@@ -271,7 +284,6 @@ The following continue to work without changes:
 
 - All documented JSX props (`fromNow`, `format`, `unix`, `tz`, `fromNowShort`, etc.)
 - UMD / CommonJS / AMD consumption via `require('react-moment')` or `import Moment from 'react-moment'`
-- SSR via the published `dist/index.js` bundle
 - Default render output (still a `<time>` element unless overridden with the `element` prop or `<MomentProvider element="...">`)
 
 ---

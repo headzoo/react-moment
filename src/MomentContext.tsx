@@ -31,20 +31,20 @@ export interface MomentContextValue {
  * Built-in defaults used when no `<MomentProvider>` is mounted.
  */
 export const defaultSettings: MomentSettings = {
-  moment: null,
-  locale: null,
-  local: null,
-  format: null,
-  parse: null,
-  filters: null,
+  moment:    null,
+  locale:    null,
+  local:     null,
+  format:    null,
+  parse:     null,
+  filters:   null,
   renderers: null,
-  element: 'time',
-  timezone: null
+  element:   'time',
+  timezone:  null
 };
 
 const defaultContextValue: MomentContextValue = {
   settings: defaultSettings,
-  pool: null
+  pool:     null
 };
 
 export const MomentContext = createContext<MomentContextValue>(defaultContextValue);
@@ -151,15 +151,24 @@ export function MomentProvider({
       return undefined;
     }
     const timer = setInterval(() => {
+      const now = Date.now();
       entriesRef.current.forEach((entry) => {
-        if (entry.getProps().interval !== 0) {
-          entry.update();
+        const props = entry.getProps();
+        if (props.interval === 0) {
+          return;
         }
+        if (
+          props.interval !== undefined
+          && now - entry.getLastUpdatedAt() < props.interval
+        ) {
+          return;
+        }
+        entry.update();
+        entry.setLastUpdatedAt(now);
       });
     }, interval);
     return () => {
       clearInterval(timer);
-      entriesRef.current.clear();
     };
   }, [enablePool, interval]);
 

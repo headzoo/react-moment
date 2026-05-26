@@ -49,7 +49,10 @@ const meta = {
     diff: { control: 'text' },
     duration: { control: 'text' },
     durationFromNow: { control: 'boolean' },
-    trim: { control: 'boolean' },
+    trim: {
+      control: 'select',
+      options: [true, false, ' largest ', 'small'],
+    },
     unit: { control: 'text' },
     decimal: { control: 'boolean' },
     filters: { control: false },

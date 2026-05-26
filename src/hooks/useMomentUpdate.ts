@@ -24,6 +24,12 @@ export function useMomentUpdate(
     onTickRef.current?.(propsRef.current);
   });
 
+  const lastUpdatedAtRef = useRef(Date.now());
+
+  useEffect(() => {
+    onTickRef.current?.(propsRef.current);
+  }, []);
+
   useEffect(() => {
     if (pool) {
       return undefined;
@@ -46,12 +52,15 @@ export function useMomentUpdate(
     }
     const entry: PoolEntry = {
       getProps: () => propsRef.current,
-      update: () => triggerUpdate.current()
+      update: () => triggerUpdate.current(),
+      getLastUpdatedAt: () => lastUpdatedAtRef.current,
+      setLastUpdatedAt: (time: number) => {
+        lastUpdatedAtRef.current = time;
+      }
     };
     pool.add(entry);
     return () => {
       pool.remove(entry);
     };
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [pool]);
 }

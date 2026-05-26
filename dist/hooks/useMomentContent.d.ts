@@ -9,6 +9,7 @@ export type UseMomentContentProps = Omit<MomentProps, 'element'>;
  */
 export interface UseMomentContentResult {
     content: MomentContent;
+    /** Same adjusted moment used to produce `content` (includes add/subtract and provider defaults). */
     datetime: moment.Moment;
     title?: string;
 }

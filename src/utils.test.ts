@@ -2,6 +2,7 @@ import moment from 'moment';
 import 'moment-timezone';
 import type { Filter } from './types';
 import { makeSettings } from './testHelpers';
+import { type FormattableDuration } from './renderers/formatDurationContent';
 import {
   getMomentRef,
   getDatetime,
@@ -37,7 +38,7 @@ describe('utils', () => {
 
     it('prefers date prop over children', () => {
       const datetime = getDatetime({
-        date: DATE_STRING,
+        date:     DATE_STRING,
         children: '2000-01-01'
       }, settings);
       expect(datetime.toString()).toEqual(DATE_OUTPUT);
@@ -51,7 +52,7 @@ describe('utils', () => {
     it('parses with parse format', () => {
       const datetime = getDatetime({
         children: '1976-04-19 12:59',
-        parse: 'YYYY-MM-DD HH:mm'
+        parse:    'YYYY-MM-DD HH:mm'
       }, settings);
       expect(datetime.toString()).toEqual(DATE_OUTPUT);
     });
@@ -61,6 +62,19 @@ describe('utils', () => {
       expect(datetime.toString()).toEqual(DATE_OUTPUT);
     });
 
+    it('parses unix timestamps from numeric strings', () => {
+      const datetime = getDatetime({
+        unix:     true,
+        children: String(DATE_UNIX)
+      }, settings);
+      expect(datetime.toString()).toEqual(DATE_OUTPUT);
+    });
+
+    it('returns an invalid moment for non-numeric unix input', () => {
+      const datetime = getDatetime({ unix: true, children: 'not-a-number' }, settings);
+      expect(datetime.isValid()).toBe(false);
+    });
+
     it('parses utc input', () => {
       const datetime = getDatetime({ utc: true, children: '1976-04-19T12:59' }, settings);
       expect(datetime.toString()).toEqual('Mon Apr 19 1976 12:59:00 GMT+0000');
@@ -68,8 +82,8 @@ describe('utils', () => {
 
     it('applies timezone', () => {
       const datetime = getDatetime({
-        unix: true,
-        tz: 'America/Los_Angeles',
+        unix:     true,
+        tz:       'America/Los_Angeles',
         children: DATE_UNIX
       }, settings);
       expect(datetime.toString()).toEqual('Mon Apr 19 1976 09:59:00 GMT-0800');
@@ -92,6 +106,27 @@ describe('utils', () => {
       expect(datetime.format('YYYY-MM-DD HH')).toEqual('1976-04-19 09');
     });
 
+    it('throws a clear error when tz is used without moment-timezone', () => {
+      let getDatetimeWithoutTz: typeof getDatetime;
+      let makeSettingsWithoutTz: typeof makeSettings;
+      let bareMoment: typeof moment;
+
+      jest.isolateModules(() => {
+        bareMoment = jest.requireActual('moment');
+        ({ getDatetime: getDatetimeWithoutTz } = require('./utils') as typeof import('./utils'));
+        ({ makeSettings: makeSettingsWithoutTz } = require('./testHelpers') as typeof import('./testHelpers'));
+      });
+
+      expect(() => getDatetimeWithoutTz(
+        { tz: 'America/Los_Angeles', children: DATE_STRING },
+        makeSettingsWithoutTz({ moment: bareMoment! })
+      )).toThrow(
+        '[react-moment] The `tz` prop requires moment-timezone. '
+        + 'Install the `moment-timezone` package and import "moment-timezone" '
+        + 'before using timezone features.'
+      );
+    });
+
     it('respects settings.local', () => {
       const withLocal = makeSettings({ local: true });
       const datetime = getDatetime({ children: DATE_STRING }, withLocal);
@@ -107,7 +142,7 @@ describe('utils', () => {
     it('locale prop overrides settings.locale', () => {
       const withLocale = makeSettings({ locale: 'fr' });
       const datetime = getDatetime({
-        locale: 'en',
+        locale:   'en',
         children: '1976-04-19T12:59-0500'
       }, withLocale);
       expect(datetime.format('D MMM YYYY')).toEqual('19 Apr 1976');
@@ -115,10 +150,28 @@ describe('utils', () => {
   });
 
   describe('getShortRelativeTime', () => {
+    type RelativeThresholdKey = 'ss' | 's' | 'm' | 'h' | 'd' | 'w' | 'M';
+
+    const snapshotThresholds = (): Record<RelativeThresholdKey, number | null> => ({
+      ss: moment.relativeTimeThreshold('ss'),
+      s:  moment.relativeTimeThreshold('s'),
+      m:  moment.relativeTimeThreshold('m'),
+      h:  moment.relativeTimeThreshold('h'),
+      d:  moment.relativeTimeThreshold('d'),
+      w:  moment.relativeTimeThreshold('w'),
+      M:  moment.relativeTimeThreshold('M')
+    });
+
+    const restoreThresholds = (saved: Record<RelativeThresholdKey, number | null>) => {
+      (Object.keys(saved) as RelativeThresholdKey[]).forEach((key) => {
+        moment.relativeTimeThreshold(key, saved[key]);
+      });
+    };
+
     it('returns compact units for common spans', () => {
       expect(getShortRelativeTime(moment().add(-1, 'hour'), settings)).toEqual('1h');
       expect(getShortRelativeTime(moment().add(-1, 'day'), settings)).toEqual('1d');
-      expect(getShortRelativeTime(moment().add(-2, 'weeks'), settings)).toEqual('14d');
+      expect(getShortRelativeTime(moment().add(-2, 'weeks'), settings)).toEqual('2w');
       expect(getShortRelativeTime(moment().add(-3, 'months'), settings)).toEqual('3mo');
       expect(getShortRelativeTime(moment().add(-2, 'years'), settings)).toEqual('2y');
     });
@@ -126,6 +179,61 @@ describe('utils', () => {
     it('returns 1s for times within the ss threshold', () => {
       expect(getShortRelativeTime(moment().subtract(30, 'seconds'), settings)).toEqual('1s');
       expect(getShortRelativeTime(moment().subtract(5, 'seconds'), settings)).toEqual('1s');
+    });
+
+    it('returns seconds between ss and s thresholds when configured', () => {
+      const saved = snapshotThresholds();
+      moment.relativeTimeThreshold('s', 60);
+      moment.relativeTimeThreshold('ss', 9);
+
+      expect(getShortRelativeTime(moment().subtract(15, 'seconds'), settings)).toEqual('15s');
+
+      restoreThresholds(saved);
+    });
+
+    it('returns minutes and hours between unit thresholds', () => {
+      const saved = snapshotThresholds();
+      moment.relativeTimeThreshold('m', 60);
+      moment.relativeTimeThreshold('h', 48);
+
+      expect(getShortRelativeTime(moment().subtract(10, 'minutes'), settings)).toEqual('10m');
+      expect(getShortRelativeTime(moment().subtract(5, 'hours'), settings)).toEqual('5h');
+
+      restoreThresholds(saved);
+    });
+
+    it('returns week units for multi-day spans before falling back to days', () => {
+      expect(getShortRelativeTime(moment().subtract(8, 'days'), settings)).toEqual('1w');
+      expect(getShortRelativeTime(moment().subtract(3, 'weeks'), settings)).toEqual('3w');
+    });
+
+    it('respects a custom week threshold from settings.moment', () => {
+      const saved = snapshotThresholds();
+      moment.relativeTimeThreshold('w', 5);
+
+      expect(getShortRelativeTime(moment().subtract(1, 'week'), settings)).toEqual('1w');
+      expect(getShortRelativeTime(moment().subtract(2, 'weeks'), settings)).toEqual('2w');
+      expect(getShortRelativeTime(moment().subtract(5, 'weeks'), settings)).not.toEqual('5w');
+
+      restoreThresholds(saved);
+    });
+
+    it('returns 1m for exactly one minute', () => {
+      expect(getShortRelativeTime(moment().subtract(1, 'minute'), settings)).toEqual('1m');
+    });
+
+    it('returns days when weeks exceed the week threshold', () => {
+      const saved = snapshotThresholds();
+      moment.relativeTimeThreshold('w', 4);
+      moment.relativeTimeThreshold('d', 45);
+
+      expect(getShortRelativeTime(moment().subtract(35, 'days'), settings)).toEqual('35d');
+
+      restoreThresholds(saved);
+    });
+
+    it('returns 1y for exactly one year', () => {
+      expect(getShortRelativeTime(moment().subtract(1, 'year'), settings)).toEqual('1y');
     });
 
     it('does not mutate locale settings', () => {
@@ -176,15 +284,15 @@ describe('utils', () => {
       const iso = twoHoursAgo.format();
 
       expect(getContent({
-        format: 'YYYY-MM-DD HH:mm',
+        format:        'YYYY-MM-DD HH:mm',
         fromNowDuring: 3 * hour,
-        children: iso
+        children:      iso
       }, settings)).toEqual(twoHoursAgo.fromNow());
 
       expect(getContent({
-        format: 'YYYY-MM-DD HH:mm',
+        format:        'YYYY-MM-DD HH:mm',
         fromNowDuring: 1 * hour,
-        children: iso
+        children:      iso
       }, settings)).toEqual(twoHoursAgo.format('YYYY-MM-DD HH:mm'));
     });
 
@@ -199,14 +307,14 @@ describe('utils', () => {
       expect(getContent({ diff: '2016-09-20T12:00', children: DATE_STRING }, settings))
         .toEqual(moment(DATE_STRING).diff('2016-09-20T12:00'));
       expect(getContent({
-        diff: '2016-09-20T12:00',
-        unit: 'days',
+        diff:     '2016-09-20T12:00',
+        unit:     'days',
         children: DATE_STRING
       }, settings)).toEqual(moment(DATE_STRING).diff('2016-09-20T12:00', 'days'));
       expect(getContent({
-        diff: '2016-09-20T12:00',
-        unit: 'years',
-        decimal: true,
+        diff:     '2016-09-20T12:00',
+        unit:     'years',
+        decimal:  true,
         children: DATE_STRING
       }, settings)).toEqual(moment(DATE_STRING).diff('2016-09-20T12:00', 'years', true));
     });
@@ -219,41 +327,39 @@ describe('utils', () => {
     });
 
     it('returns calendar output', () => {
+      const reference = moment();
+      const spec = { sameElse: 'YYYY-MM-DD HH:mm' };
+
       expect(getContent({ calendar: true, children: DATE_STRING }, settings))
-        .toEqual(moment(DATE_STRING).calendar());
+        .toEqual(moment(DATE_STRING).calendar(reference));
       expect(getContent({
-        calendar: { sameElse: 'YYYY-MM-DD HH:mm' },
+        calendar: spec,
         children: DATE_STRING
-      }, settings)).toEqual(moment(DATE_STRING).calendar(
-        null as unknown as moment.MomentInput,
-        { sameElse: 'YYYY-MM-DD HH:mm' }
-      ));
+      }, settings)).toEqual(moment(DATE_STRING).calendar(reference, spec));
     });
 
     it('returns formatted duration output', () => {
       const durationStart = moment();
       const durationEnd = moment().add(-2, 'hours');
 
-      const expected = (moment.duration(durationStart.diff(durationEnd)) as unknown as {
-        format: (template?: string) => string;
-      }).format();
+      const expected = (moment.duration(durationStart.diff(durationEnd)) as FormattableDuration)
+        .format();
 
       expect(getContent({
         duration: durationEnd.format(),
-        date: durationStart.format()
+        date:     durationStart.format()
       }, settings)).toEqual(expected);
     });
 
     it('returns formatted durationFromNow output', () => {
       const start = moment('2020-01-01T12:00:00');
       const props = {
-        date: start.format(),
-        format: 'hh:mm:ss',
+        date:            start.format(),
+        format:          'hh:mm:ss',
         durationFromNow: true
       };
-      const expected = (moment.duration(moment().diff(getDatetime(props, settings))) as unknown as {
-        format: (template?: string) => string;
-      }).format('hh:mm:ss');
+      const expected = (moment.duration(moment().diff(getDatetime(props, settings))) as FormattableDuration)
+        .format('hh:mm:ss');
 
       expect(getContent(props, settings)).toEqual(expected);
     });
@@ -263,38 +369,48 @@ describe('utils', () => {
       const durationEnd = moment().add(-2, 'hour').add(-5, 'minute');
       const diffMs = durationStart.diff(durationEnd);
 
-      const expected = (moment.duration(diffMs) as unknown as {
-        format: (template?: string, options?: { trim?: unknown }) => string;
-      }).format('H:mm', { trim: 'small' });
+      const expected = (moment.duration(diffMs) as FormattableDuration)
+        .format('H:mm', { trim: 'small' });
 
       expect(getContent({
         duration: durationEnd.format(),
-        date: durationStart.format(),
-        format: 'H:mm',
-        trim: 'small'
+        date:     durationStart.format(),
+        format:   'H:mm',
+        trim:     'small'
       }, settings)).toEqual(expected);
     });
 
     it('applies prop and settings filters', () => {
-      const filter: Filter = (value) => (typeof value === 'string' ? value.toUpperCase() : value);
+      const filter: Filter = value => (typeof value === 'string' ? value.toUpperCase() : value);
       expect(getContent({
-        parse: 'YYYY-MM-DD HH:mm',
-        filters: [filter],
+        parse:    'YYYY-MM-DD HH:mm',
+        filters:  [filter],
         children: '1976-04-19 12:59'
       }, settings)).toEqual(DATE_OUTPUT.toUpperCase());
 
       const withFilter = makeSettings({ filters: [filter] });
       expect(getContent({
-        parse: 'YYYY-MM-DD HH:mm',
+        parse:    'YYYY-MM-DD HH:mm',
         children: '1976-04-19 12:59'
       }, withFilter)).toEqual(DATE_OUTPUT.toUpperCase());
     });
   });
 
   describe('getTitle', () => {
+    it('returns empty string for invalid date input', () => {
+      expect(getTitle({ children: 'not-a-date' }, settings)).toEqual('');
+    });
+
     it('formats with titleFormat', () => {
       expect(getTitle({
         titleFormat: 'YYYY-MM-DD',
+        children:    DATE_STRING
+      }, settings)).toEqual('1976-04-19');
+    });
+
+    it('falls back to props.format', () => {
+      expect(getTitle({
+        format:   'YYYY-MM-DD',
         children: DATE_STRING
       }, settings)).toEqual('1976-04-19');
     });

@@ -1,4 +1,4 @@
-import type { ElementType, ReactNode } from 'react';
+import type { ComponentPropsWithoutRef, ElementType, ReactNode } from 'react';
 import type moment from 'moment';
 import type { ContentRenderer } from './renderers/types';
 
@@ -29,6 +29,8 @@ export type MomentContent = string | number;
 
 /**
  * Transforms rendered content before it is displayed.
+ * If a filter throws, the error is logged with `console.error` and that
+ * filter is skipped; remaining filters still run on the last successful result.
  */
 export type Filter = (content: MomentContent) => MomentContent;
 
@@ -47,7 +49,7 @@ export interface ContentBaseProps {
   format?: string;
 
   /**
-   * With relative-time props, omits the "ago" / "in" suffix from the output.
+   * With `fromNow`, `from`, `toNow`, and `to`, omits the "ago" / "in" suffix from the output.
    */
   ago?: boolean;
 }
@@ -59,7 +61,8 @@ export interface CustomRenderersProps {
   /**
    * Array of custom ContentRenderer functions invoked before the built-in
    * renderers. The first renderer (custom or built-in) to return a
-   * non-undefined value wins. Falls back to the nearest provider's renderers.
+   * non-undefined value wins. Composes with the nearest provider's renderers
+   * (provider entries run first).
    */
   renderers?: ContentRenderer[];
 }
@@ -70,7 +73,7 @@ export interface CustomRenderersProps {
 export interface CustomFiltersProps {
   /**
    * Custom filters applied in order after formatting.
-   * Falls back to the nearest provider's filters.
+   * Composes with the nearest provider's filters (provider entries run first).
    */
   filters?: Filter[];
 }
@@ -233,20 +236,26 @@ export interface DateInputProps {
 
 /**
  * Props for component rendering, lifecycle, and DOM forwarding.
+ * Extends default `<time>` element props so passthrough DOM attributes are typed.
  */
-export interface RenderProps {
+export interface RenderProps extends Omit<
+  ComponentPropsWithoutRef<'time'>,
+  'children' | 'onChange'
+> {
   /**
    * HTML element type to render (defaults to the settings element, usually `'time'`).
+   * `null` inherits the provider default, then falls back to `'time'`.
    */
   element?: ElementType | null;
 
   /**
-   * Adds a `title` attribute with a formatted version of the date.
+   * Adds a `title` attribute. Format resolution: `titleFormat` → `format` → provider `format` → ISO default.
    */
   withTitle?: boolean;
 
   /**
-   * moment.js format string used for the `title` attribute when `withTitle` is set.
+   * moment.js format string for the `title` attribute when `withTitle` is set.
+   * When omitted, the title uses the same format resolution as the visible text.
    */
   titleFormat?: string;
 
@@ -256,14 +265,14 @@ export interface RenderProps {
   interval?: number;
 
   /**
-   * Callback invoked when displayed content changes.
+   * Callback invoked with the displayed content on mount and after each interval tick.
    */
   onChange?: OnChangeFn;
 
   /**
-   * Additional props forwarded to the rendered DOM element.
+   * Shown when the date input is invalid instead of moment's "Invalid date" string.
    */
-  [key: string]: unknown;
+  fallback?: MomentContent;
 }
 
 /**
@@ -296,6 +305,16 @@ export interface PoolEntry {
    * Triggers a re-render and optional `onChange` for this instance.
    */
   update: () => void;
+
+  /**
+   * Milliseconds since epoch when this instance was last updated by the pool.
+   */
+  getLastUpdatedAt: () => number;
+
+  /**
+   * Records when this instance was last updated by the pool.
+   */
+  setLastUpdatedAt: (time: number) => void;
 }
 
 /**
@@ -404,8 +423,9 @@ export interface MomentProviderProps {
 
   /**
    * Default element type rendered when a component omits the `element` prop.
+   * `null` falls back to `'time'`.
    */
-  element?: ElementType;
+  element?: ElementType | null;
 
   /**
    * Default timezone applied when a component omits the `tz` prop.
@@ -416,36 +436,46 @@ export interface MomentProviderProps {
 /**
  * Known `<Moment>` prop names; used to strip them before forwarding DOM attributes.
  */
-export const momentPropKeys: Record<string, true> = {
-  element: true,
-  date: true,
-  parse: true,
-  format: true,
-  add: true,
-  subtract: true,
-  ago: true,
-  fromNow: true,
-  fromNowShort: true,
-  fromNowDuring: true,
-  from: true,
-  toNow: true,
-  to: true,
-  calendar: true,
-  unix: true,
-  utc: true,
-  local: true,
-  tz: true,
-  withTitle: true,
-  titleFormat: true,
-  locale: true,
-  interval: true,
-  diff: true,
-  duration: true,
-  durationFromNow: true,
-  trim: true,
-  unit: true,
-  decimal: true,
-  filters: true,
-  renderers: true,
-  onChange: true
-};
+export const momentPropKeyList = [
+  'element',
+  'children',
+  'date',
+  'parse',
+  'format',
+  'add',
+  'subtract',
+  'ago',
+  'fromNow',
+  'fromNowShort',
+  'fromNowDuring',
+  'from',
+  'toNow',
+  'to',
+  'calendar',
+  'unix',
+  'utc',
+  'local',
+  'tz',
+  'withTitle',
+  'titleFormat',
+  'locale',
+  'interval',
+  'diff',
+  'duration',
+  'durationFromNow',
+  'trim',
+  'unit',
+  'decimal',
+  'filters',
+  'renderers',
+  'onChange',
+  'fallback'
+] as const satisfies readonly (keyof MomentProps)[];
+
+export const momentPropKeys: Record<(typeof momentPropKeyList)[number], true> =  momentPropKeyList.reduce(
+  (acc, key) => {
+    acc[key] = true;
+    return acc;
+  },
+    {} as Record<(typeof momentPropKeyList)[number], true>
+);

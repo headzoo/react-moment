@@ -1,7 +1,10 @@
 import React, { act } from 'react';
-import { createRoot, type Root } from 'react-dom/client';
 import moment from 'moment';
 import { MomentProvider } from '../index';
+import {
+  enableReactActEnvironment,
+  renderHookWithResult,
+} from '../testHelpers';
 import type { UseMomentContentResult } from './useMomentContent';
 import { useMomentContent } from './useMomentContent';
 
@@ -14,41 +17,21 @@ const renderHook = (
   props: HookProps,
   onResult: (result: UseMomentContentResult) => void,
   providerProps?: React.ComponentProps<typeof MomentProvider>
-): { unmount: () => void } => {
-  const container = document.createElement('div');
-  const root: Root = createRoot(container);
-
-  const HookHost = ({ hookProps }: { hookProps: HookProps }) => {
-    const result = useMomentContent(hookProps);
-    onResult(result);
-    return null;
-  };
-
-  const content = <HookHost hookProps={props} />;
-  const tree = providerProps
-    ? <MomentProvider {...providerProps}>{content}</MomentProvider>
-    : content;
-
-  act(() => {
-    root.render(tree);
-  });
-
-  return {
-    unmount: () => {
-      act(() => {
-        root.unmount();
-      });
-    }
-  };
-};
+): { unmount: () => void } => renderHookWithResult({
+  props,
+  useHook: useMomentContent,
+  onResult,
+  wrapper: providerProps
+    ? children => <MomentProvider {...providerProps}>{children}</MomentProvider>
+    : undefined,
+});
 
 describe('useMomentContent', () => {
   const originalMomentNow = moment.now;
 
   beforeEach(() => {
     moment.now = originalMomentNow;
-    (globalThis as typeof globalThis & { IS_REACT_ACT_ENVIRONMENT?: boolean })
-      .IS_REACT_ACT_ENVIRONMENT = true;
+    enableReactActEnvironment();
   });
 
   afterEach(() => {
@@ -81,14 +64,46 @@ describe('useMomentContent', () => {
     expect(result!.content).toEqual('1976-04-19');
   });
 
+  it('returns the adjusted datetime used for content when add is set', () => {
+    let result: UseMomentContentResult | undefined;
+
+    renderHook(
+      { add: { days: 1 }, format: 'YYYY-MM-DD', date: DATE_STRING },
+      (value) => {
+        result = value;
+      }
+    );
+
+    expect(result!.content).toEqual('1976-04-20');
+    expect(result!.datetime.toISOString()).toEqual(
+      moment(DATE_STRING).add(1, 'day').toISOString()
+    );
+  });
+
+  it('returns the adjusted datetime used for content when subtract is set', () => {
+    let result: UseMomentContentResult | undefined;
+
+    renderHook(
+      { subtract: { days: 1 }, format: 'YYYY-MM-DD', date: DATE_STRING },
+      (value) => {
+        result = value;
+      }
+    );
+
+    expect(result!.content).toEqual('1976-04-18');
+    expect(result!.datetime.toISOString()).toEqual(
+      moment(DATE_STRING).subtract(1, 'day').toISOString()
+    );
+  });
+
   it('includes title when withTitle is set', () => {
     let result: UseMomentContentResult | undefined;
 
     renderHook(
       {
-        withTitle: true,
+        withTitle:   true,
         titleFormat: 'YYYY-MM-DD',
-        date: DATE_STRING
+        date:        DATE_STRING
       },
       (value) => {
         result = value;
@@ -151,7 +166,7 @@ describe('useMomentContent', () => {
     expect(result!.content).toEqual('6 minutes ago');
   });
 
-  it('calls onChange on interval tick but not on first render', () => {
+  it('calls onChange on mount and on each interval tick', () => {
     const fixedNow = moment('2020-01-01T12:00:00');
     let nowMs = fixedNow.valueOf();
     moment.now = () => nowMs;
@@ -163,21 +178,39 @@ describe('useMomentContent', () => {
     renderHook(
       {
         date,
-        fromNow: true,
+        fromNow:  true,
         interval: 1000,
         onChange
       },
       () => {}
     );
 
-    expect(onChange).not.toHaveBeenCalled();
+    expect(onChange).toHaveBeenCalledTimes(1);
+    expect(onChange).toHaveBeenCalledWith('5 minutes ago');
 
     act(() => {
       nowMs = fixedNow.clone().add(1, 'minute').valueOf();
       jest.advanceTimersByTime(1000);
     });
 
+    expect(onChange).toHaveBeenCalledTimes(2);
+    expect(onChange).toHaveBeenLastCalledWith('6 minutes ago');
+  });
+
+  it('calls onChange on mount when interval is 0', () => {
+    const onChange = jest.fn();
+
+    renderHook(
+      {
+        date:     '2020-01-01T12:00:00',
+        format:   'YYYY-MM-DD',
+        interval: 0,
+        onChange
+      },
+      () => {}
+    );
+
     expect(onChange).toHaveBeenCalledTimes(1);
-    expect(onChange).toHaveBeenCalledWith('6 minutes ago');
+    expect(onChange).toHaveBeenCalledWith('2020-01-01');
   });
 });

@@ -14,7 +14,7 @@ describe('applyContentFilter', () => {
   });
 
   it('chains filters in order', () => {
-    const appendSuffix: Filter = (value) => (
+    const appendSuffix: Filter = value => (
       typeof value === 'string' ? `${value}!` : value
     );
     expect(applyContentFilter({
@@ -23,17 +23,35 @@ describe('applyContentFilter', () => {
   });
 
   it('uses settings.filters when props.filters is omitted', () => {
-    const appendSuffix: Filter = (value) => (
+    const appendSuffix: Filter = value => (
       typeof value === 'string' ? `${value}!` : value
     );
     const withFilters = makeSettings({ filters: [appendSuffix, toUpperCaseFilter] });
     expect(applyContentFilter({}, 'hello', withFilters)).toEqual('HELLO!');
   });
 
-  it('prefers props.filters over settings.filters', () => {
-    const withFilters = makeSettings({ filters: [() => 'global'] });
+  it('skips a throwing filter and continues the chain', () => {
+    const errorSpy = jest.spyOn(console, 'error').mockImplementation(() => {});
+    const appendSuffix: Filter = value => (
+      typeof value === 'string' ? `${value}!` : value
+    );
+    const throwingFilter: Filter = () => { throw new Error('bad'); };
+
     expect(applyContentFilter({
-      filters: [() => 'prop']
-    }, 'hello', withFilters)).toEqual('prop');
+      filters: [appendSuffix, throwingFilter, toUpperCaseFilter]
+    }, 'hello', settings)).toEqual('HELLO!');
+
+    expect(errorSpy).toHaveBeenCalled();
+    errorSpy.mockRestore();
+  });
+
+  it('merges provider and instance filters with provider first', () => {
+    const appendSuffix: Filter = value => (
+      typeof value === 'string' ? `${value}!` : value
+    );
+    const withFilters = makeSettings({ filters: [appendSuffix] });
+    expect(applyContentFilter({
+      filters: [toUpperCaseFilter]
+    }, 'hello', withFilters)).toEqual('HELLO!');
   });
 });

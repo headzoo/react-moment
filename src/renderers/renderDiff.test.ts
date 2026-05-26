@@ -11,9 +11,9 @@ describe('renderDiff', () => {
   const ctx = (props: ContentContext['props']): ContentContext => ({
     props,
     datetime,
-    format: undefined,
+    format:        undefined,
     fromNowPeriod: false,
-    settings: defaultSettings
+    settings:      defaultSettings
   });
 
   it('returns undefined when diff is omitted', () => {
@@ -32,9 +32,9 @@ describe('renderDiff', () => {
 
   it('passes decimal to moment.diff', () => {
     expect(renderDiff(ctx({
-      diff: '2016-09-20T12:00',
-      unit: 'years',
-      decimal: true,
+      diff:     '2016-09-20T12:00',
+      unit:     'years',
+      decimal:  true,
       children: DATE_STRING
     }))).toEqual(datetime.diff('2016-09-20T12:00', 'years', true));
   });

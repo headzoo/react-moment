@@ -63,6 +63,10 @@
     "react/jsx-uses-react": 2,
     "react/jsx-uses-vars": 2,
     "react/react-in-jsx-scope": 2,
+    "react/jsx-filename-extension": [2, { "extensions": [".jsx", ".tsx"] }],
+    "import/no-cycle": "off",
+    "no-restricted-syntax": "off",
+    "no-continue": "off",
     "no-var": 2,
     "vars-on-top": 0,
     "comma-dangle": 0,
@@ -93,6 +97,18 @@
     "@typescript-eslint/no-unused-vars": ["error", { "argsIgnorePattern": "^_" }],
     "@typescript-eslint/no-explicit-any": "off"
   },
+  "overrides": [
+    {
+      "files": ["**/*.test.ts", "**/*.test.tsx"],
+      "rules": {
+        "@typescript-eslint/no-empty-function": "off",
+        "global-require": "off",
+        "@typescript-eslint/no-require-imports": "off",
+        "react/destructuring-assignment": "off",
+        "@typescript-eslint/no-non-null-assertion": "off"
+      }
+    }
+  ],
   "plugins": [
     "react",
     "jsx-a11y",

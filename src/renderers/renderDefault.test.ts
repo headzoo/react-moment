@@ -10,11 +10,11 @@ describe('renderDefault', () => {
   it('returns datetime.toString()', () => {
     const datetime = moment(DATE_STRING);
     const ctx = {
-      props: {},
+      props:         {},
       datetime,
-      format: undefined,
+      format:        undefined,
       fromNowPeriod: false,
-      settings: defaultSettings
+      settings:      defaultSettings
     } as ContentContext;
 
     expect(renderDefault(ctx)).toEqual(DATE_OUTPUT);

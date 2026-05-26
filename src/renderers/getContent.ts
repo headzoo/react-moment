@@ -1,8 +1,10 @@
-import momentLib from 'moment';
+import {
+  getInvalidFallbackContent,
+  warnInvalidDatetime
+} from '../invalidDatetime';
 import type { MomentContent, MomentProps, MomentSettings } from '../types';
-import { getDatetime } from '../utils';
+import { getAdjustedDatetime, getMomentRef } from '../utils';
 import { applyContentFilter } from './applyContentFilter';
-import { applyDateAdjustments } from './applyDateAdjustments';
 import { formatDurationContent } from './formatDurationContent';
 import { contentRenderers } from './registry';
 import { renderDefault } from './renderDefault';
@@ -15,21 +17,36 @@ export function getContent(
   props: MomentProps,
   settings: MomentSettings
 ): MomentContent {
-  const datetime = getDatetime(props, settings);
-  applyDateAdjustments(props, datetime);
+  const datetime = getAdjustedDatetime(props, settings);
+
+  if (!datetime.isValid()) {
+    warnInvalidDatetime(datetime, props);
+    return getInvalidFallbackContent(props);
+  }
 
   const format = props.format || settings.format || undefined;
+  const momentRef = getMomentRef(settings);
   const fromNowPeriod = Boolean(props.fromNowDuring)
-    && -datetime.diff(momentLib()) < (props.fromNowDuring as number);
+    && -datetime.diff(momentRef()) < (props.fromNowDuring as number);
 
   const ctx: ContentContext = { props, datetime, format, fromNowPeriod, settings };
 
-  const customRenderers = props.renderers ?? settings.renderers ?? [];
+  const customRenderers = [
+    ...(settings.renderers ?? []),
+    ...(props.renderers ?? [])
+  ];
   const allRenderers = [...customRenderers, ...contentRenderers];
 
   let content: MomentContent | undefined;
   for (const render of allRenderers) {
-    const result = render(ctx);
+    let result: MomentContent | undefined;
+    try {
+      result = render(ctx);
+    } catch (error) {
+      // eslint-disable-next-line no-console
+      console.error('[react-moment] Content renderer threw:', error);
+      continue;
+    }
     if (result !== undefined) {
       content = result;
       break;

@@ -12,11 +12,10 @@
     "@types/jest": "^29.5.14",
     "@types/react": "^18.3.29",
     "@types/react-dom": "^18.3.7",
-    "@typescript-eslint/eslint-plugin": "^5.62.0",
-    "@typescript-eslint/parser": "^5.62.0",
-    "coveralls": "^3.0.3",
+    "@typescript-eslint/eslint-plugin": "^8.57.0",
+    "@typescript-eslint/parser": "^8.57.0",
     "esbuild": "^0.25.0",
-    "eslint": "^10.4.0",
+    "eslint": "^8.57.0",
     "eslint-config-airbnb": "^17.1.0",
     "eslint-plugin-import": "^2.16.0",
     "eslint-plugin-jsx-a11y": "^6.2.1",
@@ -29,7 +28,7 @@
     "moment-timezone": "^0.5.23",
     "react": "^18.0.0",
     "react-dom": "^18.0.0",
-    "rimraf": "^2.6.3",
+    "rimraf": "^6.0.0",
     "storybook": "^10.4.1",
     "ts-jest": "^29.4.11",
     "typescript": "^5.9.3",
@@ -43,11 +42,6 @@
       "tsx",
       "js",
       "jsx"
-    ],
-    "collectCoverageFrom": [
-      "src/**/*.{ts,tsx}",
-      "!src/**/*.test.{ts,tsx}",
-      "!src/**/*.spec.{ts,tsx}"
     ],
     "transform": {
       "^.+\\.(ts|tsx)$": [
@@ -66,15 +60,49 @@
     "time"
   ],
   "license": "MIT",
+  "engines": {
+    "node": ">=18"
+  },
+  "files": [
+    "dist/"
+  ],
   "main": "./dist/index.cjs.js",
   "module": "./dist/index.mjs",
   "types": "dist/index.d.ts",
   "unpkg": "./dist/index.umd.js",
   "jsdelivr": "./dist/index.umd.js",
-  "sideEffects": false,
+  "sideEffects": [
+    "./dist/index.mjs",
+    "./dist/index.cjs.js",
+    "./dist/index.umd.js"
+  ],
   "exports": {
     ".": {
       "types": "./dist/index.d.ts",
+      "import": "./dist/index.mjs",
+      "require": "./dist/index.cjs.js",
+      "default": "./dist/index.cjs.js"
+    },
+    "./utils": {
+      "types": "./dist/utils.d.ts",
+      "import": "./dist/index.mjs",
+      "require": "./dist/index.cjs.js",
+      "default": "./dist/index.cjs.js"
+    },
+    "./objects": {
+      "types": "./dist/objects.d.ts",
+      "import": "./dist/index.mjs",
+      "require": "./dist/index.cjs.js",
+      "default": "./dist/index.cjs.js"
+    },
+    "./renderers": {
+      "types": "./dist/renderers/index.d.ts",
+      "import": "./dist/index.mjs",
+      "require": "./dist/index.cjs.js",
+      "default": "./dist/index.cjs.js"
+    },
+    "./types": {
+      "types": "./dist/types.d.ts",
       "import": "./dist/index.mjs",
       "require": "./dist/index.cjs.js",
       "default": "./dist/index.cjs.js"
@@ -83,14 +111,20 @@
   },
   "peerDependencies": {
     "moment": "^2.29.0",
+    "moment-duration-format": "^2.2.2",
     "react": "^18.0.0 || ^19.0.0"
+  },
+  "peerDependenciesMeta": {
+    "moment-duration-format": {
+      "optional": true
+    }
   },
   "repository": {
     "type": "git",
     "url": "git+https://github.com/headzoo/react-moment.git"
   },
   "scripts": {
-    "build": "npm run clean && node scripts/build.js && tsc --emitDeclarationOnly -p tsconfig.json",
+    "build": "npm run clean && node scripts/build.js && npm run typecheck && tsc --emitDeclarationOnly -p tsconfig.json",
     "clean": "rimraf ./dist",
     "prepare": "git config --local core.hooksPath .githooks 2>/dev/null || true",
     "release": "gh workflow run Release --ref master -f release_type=patch",
@@ -98,7 +132,8 @@
     "release:minor": "gh workflow run Release --ref master -f release_type=minor",
     "release:major": "gh workflow run Release --ref master -f release_type=major",
     "release:beta": "gh workflow run release-beta.yml --ref master",
-    "test": "export TZ=America/New_York; jest --coverage",
+    "test": "export TZ=America/New_York; jest",
+    "typecheck": "tsc --noEmit -p tsconfig.json",
     "lint": "eslint ./src --cache --cache-location=.cache/eslint --ext .ts,.tsx",
     "lint:fix": "npm run lint -- --fix",
     "storybook:dev": "storybook dev -p 6006",

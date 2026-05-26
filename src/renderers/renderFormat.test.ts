@@ -9,11 +9,11 @@ describe('renderFormat', () => {
   const datetime = moment(DATE_STRING);
 
   const ctx = (overrides: Partial<ContentContext> = {}): ContentContext => ({
-    props: { children: DATE_STRING },
+    props:         { children: DATE_STRING },
     datetime,
-    format: 'YYYY-MM-DD',
+    format:        'YYYY-MM-DD',
     fromNowPeriod: false,
-    settings: defaultSettings,
+    settings:      defaultSettings,
     ...overrides
   });
 

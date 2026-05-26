@@ -1,4 +1,4 @@
-import type { ElementType, ReactNode } from 'react';
+import type { ComponentPropsWithoutRef, ElementType, ReactNode } from 'react';
 import type moment from 'moment';
 import type { ContentRenderer } from './renderers/types';
 /**
@@ -23,6 +23,8 @@ export type TrimInput = boolean | string;
 export type MomentContent = string | number;
 /**
  * Transforms rendered content before it is displayed.
+ * If a filter throws, the error is logged with `console.error` and that
+ * filter is skipped; remaining filters still run on the last successful result.
  */
 export type Filter = (content: MomentContent) => MomentContent;
 /**
@@ -49,7 +51,8 @@ export interface CustomRenderersProps {
     /**
      * Array of custom ContentRenderer functions invoked before the built-in
      * renderers. The first renderer (custom or built-in) to return a
-     * non-undefined value wins. Falls back to the nearest provider's renderers.
+     * non-undefined value wins. Composes with the nearest provider's renderers
+     * (provider entries run first).
      */
     renderers?: ContentRenderer[];
 }
@@ -59,7 +62,7 @@ export interface CustomRenderersProps {
 export interface CustomFiltersProps {
     /**
      * Custom filters applied in order after formatting.
-     * Falls back to the nearest provider's filters.
+     * Composes with the nearest provider's filters (provider entries run first).
      */
     filters?: Filter[];
 }
@@ -198,10 +201,12 @@ export interface DateInputProps {
 }
 /**
  * Props for component rendering, lifecycle, and DOM forwarding.
+ * Extends default `<time>` element props so passthrough DOM attributes are typed.
  */
-export interface RenderProps {
+export interface RenderProps extends Omit<ComponentPropsWithoutRef<'time'>, 'children' | 'onChange'> {
     /**
      * HTML element type to render (defaults to the settings element, usually `'time'`).
+     * `null` inherits the provider default, then falls back to `'time'`.
      */
     element?: ElementType | null;
     /**
@@ -217,13 +222,13 @@ export interface RenderProps {
      */
     interval?: number;
     /**
-     * Callback invoked when displayed content changes.
+     * Callback invoked with the displayed content on mount and after each interval tick.
      */
     onChange?: OnChangeFn;
     /**
-     * Additional props forwarded to the rendered DOM element.
+     * Shown when the date input is invalid instead of moment's "Invalid date" string.
      */
-    [key: string]: unknown;
+    fallback?: MomentContent;
 }
 /**
  * Props accepted by the `<Moment>` component.
@@ -242,6 +247,14 @@ export interface PoolEntry {
      * Triggers a re-render and optional `onChange` for this instance.
      */
     update: () => void;
+    /**
+     * Milliseconds since epoch when this instance was last updated by the pool.
+     */
+    getLastUpdatedAt: () => number;
+    /**
+     * Records when this instance was last updated by the pool.
+     */
+    setLastUpdatedAt: (time: number) => void;
 }
 /**
  * Default settings shared by all `<Moment>` instances unless a prop overrides them.
@@ -330,8 +343,9 @@ export interface MomentProviderProps {
     renderers?: ContentRenderer[] | null;
     /**
      * Default element type rendered when a component omits the `element` prop.
+     * `null` falls back to `'time'`.
      */
-    element?: ElementType;
+    element?: ElementType | null;
     /**
      * Default timezone applied when a component omits the `tz` prop.
      */
@@ -340,4 +354,5 @@ export interface MomentProviderProps {
 /**
  * Known `<Moment>` prop names; used to strip them before forwarding DOM attributes.
  */
-export declare const momentPropKeys: Record<string, true>;
+export declare const momentPropKeyList: readonly ["element", "children", "date", "parse", "format", "add", "subtract", "ago", "fromNow", "fromNowShort", "fromNowDuring", "from", "toNow", "to", "calendar", "unix", "utc", "local", "tz", "withTitle", "titleFormat", "locale", "interval", "diff", "duration", "durationFromNow", "trim", "unit", "decimal", "filters", "renderers", "onChange", "fallback"];
+export declare const momentPropKeys: Record<(typeof momentPropKeyList)[number], true>;
