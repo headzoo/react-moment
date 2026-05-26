@@ -52,12 +52,14 @@ npm install --save moment react-moment
 
 ### 2.0.0
 
+The new 2.0.0 is still in beta. It migrates the library to TypeScript and replaces the class-based `Moment` component with a functional component. It is not recommended to use this version in production.
+
 Changes in 2.0:
 
 - `prop-types` is no longer a peer dependency (runtime prop validation was removed; types are provided via TypeScript declarations)
 - `Moment` is a function component — code that relied on class-component internals (for example `instanceof Moment`, instance methods on refs, or `TestUtils.findRenderedComponentWithType`) must be updated
 
-See [MIGRATION.md](https://github.com/headzoo/react-moment/blob/2.0.0-beta/MIGRATION.md) for the full upgrade guide and breaking-change details.
+See [MIGRATION.md](https://github.com/headzoo/react-moment/blob/master/MIGRATION.md) for the full upgrade guide and breaking-change details.
 
 
 ### Timezone Support
