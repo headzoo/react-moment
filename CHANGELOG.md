@@ -2,6 +2,8 @@
 
 ## Unreleased
 
+- chore: update react-moment version in README to 2.0.2. (`781cccf`)
+
 ## 2.0.2 - 2026-05-26
 
 - refactor: align formatting of function properties in useMomentUpdate hook. (`f415f21`)

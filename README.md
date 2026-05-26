@@ -70,7 +70,7 @@ A pre-built UMD bundle is published alongside the npm package and can be loaded 
     <script crossorigin src="https://unpkg.com/react@18/umd/react.production.min.js"></script>
     <script crossorigin src="https://unpkg.com/react-dom@18/umd/react-dom.production.min.js"></script>
     <script crossorigin src="https://unpkg.com/moment@2/min/moment.min.js"></script>
-    <script crossorigin src="https://unpkg.com/react-moment@2.0.1/dist/index.umd.js"></script>
+    <script crossorigin src="https://unpkg.com/react-moment@2.0.2/dist/index.umd.js"></script>
 
     <script>
         const Moment = window['react-moment'].default;
