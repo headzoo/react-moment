@@ -2,6 +2,8 @@
 
 ## Unreleased
 
+- chore: update peerDependencies for React version compatibility and remove unused test script. (`195e313`)
+
 ## 2.0.0-beta.2 - 2026-05-25
 
 - refactor: update Moment component and dependencies for improved functionality. (`05fee45`)
