@@ -2,6 +2,7 @@
 
 ## Unreleased
 
+- refactor: remove singular filter prop and update documentation for filters. (`b12910e`)
 - Updates the readme. (`cf15655`)
 - docs: update migration guide for 2.0.0 release. (`09d18d2`)
 - chore: update README with new instructions and examples. (`2825c4f`)

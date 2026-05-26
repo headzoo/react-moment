@@ -1,7 +1,7 @@
 import type { MomentContent, MomentProps, MomentSettings } from '../types';
 
 /**
- * Applies the global or per-instance content filter.
+ * Applies the global or per-instance content filters.
  */
 export function applyContentFilter(
   props: MomentProps,
@@ -13,7 +13,5 @@ export function applyContentFilter(
   for (const customFilter of customFilters) {
     result = customFilter(result);
   }
-
-  const filter = settings.filter || props.filter || ((value: MomentContent) => value);
-  return filter(result);
+  return result;
 }

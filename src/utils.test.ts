@@ -279,11 +279,11 @@ describe('utils', () => {
       const filter: Filter = (value) => (typeof value === 'string' ? value.toUpperCase() : value);
       expect(getContent({
         parse: 'YYYY-MM-DD HH:mm',
-        filter,
+        filters: [filter],
         children: '1976-04-19 12:59'
       }, settings)).toEqual(DATE_OUTPUT.toUpperCase());
 
-      const withFilter = makeSettings({ filter });
+      const withFilter = makeSettings({ filters: [filter] });
       expect(getContent({
         parse: 'YYYY-MM-DD HH:mm',
         children: '1976-04-19 12:59'

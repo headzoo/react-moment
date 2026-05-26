@@ -22,8 +22,7 @@ React component for the [moment](http://momentjs.com/) date library.
     - [From](#from)
     - [To Now](#to-now)
     - [To](#to)
-    - [Filter](#filter)
-    - [Custom Filters](#custom-filters)
+    - [Filters](#filters)
     - [Custom Renderers](#custom-renderers)
     - [With Title](#with-title)
     - [Title Format](#title-format)
@@ -142,7 +141,6 @@ Wrap `<Moment>` instances in `<MomentProvider>` to share defaults across a subtr
 * locale
 * format
 * parse
-* filter
 * filters
 * renderers
 * element
@@ -165,9 +163,9 @@ export default function App() {
             timezone="America/Los_Angeles"
             local
             element="span"
-            filter={(d) => (typeof d === 'string' ? d.toUpperCase() : d)}
             filters={[
-                (content) => (typeof content === 'string' ? content.trim() : content)
+                (content) => (typeof content === 'string' ? content.trim() : content),
+                (content) => (typeof content === 'string' ? content.toUpperCase() : content)
             ]}
             renderers={[({ datetime }) => `Y${datetime.year()}`]}
         >
@@ -530,40 +528,12 @@ Outputs:
 <time>39 years</time>
 ```
 
-#### Filter
-_filter={Filter}_
-
-A function which modifies/transforms the rendered content prior to display. The `Filter` type is `(content: MomentContent) => MomentContent`, where `MomentContent` is `string | number` (formatted text or numeric diff/duration values).
-
-```jsx
-import React from 'react';
-import Moment from 'react-moment';
-
-export default function MyComponent() {
-    const toUpperCaseFilter = (d) => {
-        return typeof d === 'string' ? d.toUpperCase() : d;
-    };
-    const dateToFormat = '1976-04-19T12:59-0500';
-
-    return (
-        <Moment filter={toUpperCaseFilter}>{dateToFormat}</Moment>
-    );
-}
-```
-
-Outputs:
-
-```html
-<time>MON APR 19 1976 12:59:00 GMT-0500</time>
-```
-
-
-#### Custom Filters
+#### Filters
 _filters={Filter[]}_
 
-An array of custom filter functions applied **in order** before the singular `filter` prop (or the provider's `filter`). Each filter receives and returns `MomentContent` (`string | number`).
+An array of filter functions applied **in order** to the rendered content before display. Each filter receives and returns `MomentContent` (`string | number` — formatted text or numeric diff/duration values). The `Filter` type is `(content: MomentContent) => MomentContent`.
 
-When both `filters` and `filter` are set, the array runs first and the singular filter runs last. A provider's `filter` still takes precedence over `props.filter`, matching the existing behavior.
+Per-instance `filters` override a provider's `filters` when set.
 
 ```jsx
 import React from 'react';
@@ -586,7 +556,7 @@ export default function MyComponent() {
 }
 ```
 
-Custom filters can also be registered on a `<MomentProvider>` (see [MomentProvider](#momentprovider)).
+Filters can also be registered on a `<MomentProvider>` (see [MomentProvider](#momentprovider)).
 
 
 #### Custom Renderers

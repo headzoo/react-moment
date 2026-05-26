@@ -38,10 +38,6 @@ export interface ContentBaseProps {
      */
     format?: string;
     /**
-     * Per-instance filter applied to content after formatting (overridden by settings.filter).
-     */
-    filter?: Filter;
-    /**
      * With relative-time props, omits the "ago" / "in" suffix from the output.
      */
     ago?: boolean;
@@ -62,7 +58,7 @@ export interface CustomRenderersProps {
  */
 export interface CustomFiltersProps {
     /**
-     * Custom filters applied in order before the singular filter prop.
+     * Custom filters applied in order after formatting.
      * Falls back to the nearest provider's filters.
      */
     filters?: Filter[];
@@ -272,10 +268,6 @@ export interface MomentSettings {
      */
     parse: ParseInput | null;
     /**
-     * Default filter applied to all instances unless overridden per component.
-     */
-    filter: Filter | null;
-    /**
      * Default custom filters applied when a component omits the `filters` prop.
      */
     filters: Filter[] | null;
@@ -328,10 +320,6 @@ export interface MomentProviderProps {
      * Default parse spec applied when a component omits the `parse` prop.
      */
     parse?: ParseInput | null;
-    /**
-     * Default filter applied to all instances unless overridden per component.
-     */
-    filter?: Filter | null;
     /**
      * Default custom filters applied when a component omits the `filters` prop.
      */

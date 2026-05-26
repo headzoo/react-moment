@@ -13,21 +13,6 @@ describe('applyContentFilter', () => {
     expect(applyContentFilter({}, 'hello', settings)).toEqual('hello');
   });
 
-  it('applies props.filter', () => {
-    expect(applyContentFilter({ filter: toUpperCaseFilter }, 'hello', settings)).toEqual('HELLO');
-  });
-
-  it('applies settings.filter when props.filter is omitted', () => {
-    const withFilter = makeSettings({ filter: toUpperCaseFilter });
-    expect(applyContentFilter({}, 'hello', withFilter)).toEqual('HELLO');
-  });
-
-  it('prefers settings.filter over props.filter', () => {
-    const withFilter = makeSettings({ filter: toUpperCaseFilter });
-    const filter: Filter = (value) => (typeof value === 'string' ? value.toLowerCase() : value);
-    expect(applyContentFilter({ filter }, 'Hello', withFilter)).toEqual('HELLO');
-  });
-
   it('chains filters in order', () => {
     const appendSuffix: Filter = (value) => (
       typeof value === 'string' ? `${value}!` : value
@@ -35,26 +20,6 @@ describe('applyContentFilter', () => {
     expect(applyContentFilter({
       filters: [appendSuffix, toUpperCaseFilter]
     }, 'hello', settings)).toEqual('HELLO!');
-  });
-
-  it('applies filters before singular filter', () => {
-    const appendSuffix: Filter = (value) => (
-      typeof value === 'string' ? `${value}!` : value
-    );
-    expect(applyContentFilter({
-      filters: [appendSuffix],
-      filter: toUpperCaseFilter
-    }, 'hello', settings)).toEqual('HELLO!');
-  });
-
-  it('applies filters before settings.filter', () => {
-    const appendSuffix: Filter = (value) => (
-      typeof value === 'string' ? `${value}!` : value
-    );
-    const withFilter = makeSettings({ filter: toUpperCaseFilter });
-    expect(applyContentFilter({
-      filters: [appendSuffix]
-    }, 'hello', withFilter)).toEqual('HELLO!');
   });
 
   it('uses settings.filters when props.filters is omitted', () => {

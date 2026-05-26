@@ -80,7 +80,7 @@ Moment.settings.element = 'span';
 </MomentProvider>
 ```
 
-`<MomentProvider>` accepts the former settings fields as props: `moment`, `locale`, `local`, `format`, `parse`, `filter`, `filters`, `renderers`, `element`, and `timezone`. Providers compose, so nested providers inherit parent defaults and override only the props they set.
+`<MomentProvider>` accepts the former settings fields as props: `moment`, `locale`, `local`, `format`, `parse`, `filters`, `renderers`, `element`, and `timezone`. Providers compose, so nested providers inherit parent defaults and override only the props they set.
 
 Named utility exports are still available from `react-moment`: `getDatetime(props)`, `getContent(props)`, and `getShortRelativeTime(datetime)`.
 
@@ -93,7 +93,7 @@ Normal JSX usage is unchanged:
 
 ### Default prop behavior
 
-**1.2.3** declared defaults via `static defaultProps` on the class. The functional component applies the same effective defaults through runtime fallbacks (for example, `interval ?? 60000`, identity `filter` when none is provided, falsy boolean props treated as `false`). Typical usage does not need changes.
+**1.2.3** declared defaults via `static defaultProps` on the class. The functional component applies the same effective defaults through runtime fallbacks (for example, `interval ?? 60000`, no filters when none are provided, falsy boolean props treated as `false`). Typical usage does not need changes.
 
 ---
 
@@ -143,6 +143,34 @@ Moment.pushPooledElement(myMomentInstance);
 
 ---
 
+## Singular `filter` prop removed
+
+The `filter` prop has been removed from `<Moment>` and `<MomentProvider>`. Use the `filters: Filter[]` array instead.
+
+### What to change
+
+```jsx
+// 1.x / early 2.0 beta
+<Moment filter={toUpper}>{date}</Moment>
+<MomentProvider filter={toUpper}>...</MomentProvider>
+
+// 2.0
+<Moment filters={[toUpper]}>{date}</Moment>
+<MomentProvider filters={[toUpper]}>...</MomentProvider>
+```
+
+For multiple transforms, pass them in order:
+
+```jsx
+<Moment filters={[trim, toUpper]}>{date}</Moment>
+```
+
+### Precedence change
+
+In **1.x** and early **2.0 beta**, the provider's `filter` overrode a per-instance `filter` when both were set. With `filters`, per-instance values override the provider's (standard React-style precedence). Code that depended on the provider-wins behavior must be reorganized — typically by moving the transform into `filters` on the instance, or by composing both arrays manually.
+
+---
+
 ## TypeScript declaration changes
 
 Type declarations are now generated from the TypeScript source (`tsc --emitDeclarationOnly`) rather than hand-maintained class typings.
@@ -176,7 +204,6 @@ Notable differences:
 | `parse` | `string \| Array<any>` | `moment.MomentFormatSpecification` |
 | `calendar` | `boolean \| object` | `boolean \| moment.CalendarSpec` |
 | `unit` | `string` | `moment.unitOfTime.Diff` |
-| `filter` | `(date: string) => string` | `Filter` — `(content: MomentContent) => MomentContent` |
 | `onChange` | `(content: any) => any` | `(content: MomentContent) => void` |
 | `element` | `string \| FunctionComponent \| ComponentClass` | `ElementType \| null` |
 | Passthrough DOM props | Explicit optional props (`className`, `style`, …) | Index signature `[key: string]: unknown` |
@@ -257,4 +284,5 @@ The following continue to work without changes:
 4. Replace `Moment.startPooledTimer()` / `Moment.clearPooledTimer()` with `<MomentProvider pool>`.
 5. Search your codebase for `instanceof Moment`, refs to `Moment` instance methods, or direct use of `Moment.pooledElements` / `Moment.pushPooledElement`.
 6. If you use TypeScript, fix type errors from the updated `MomentProps` and function-component typing.
-7. Run your test suite; replace any tests that call `componentWillUnmount()` on a rendered `Moment` instance with a normal React unmount (`ReactDOM.unmountComponentAtNode(container)` or `@testing-library/react`'s `unmount()`).
+7. Replace `filter={fn}` (on `<Moment>` or `<MomentProvider>`) with `filters={[fn]}`.
+8. Run your test suite; replace any tests that call `componentWillUnmount()` on a rendered `Moment` instance with a normal React unmount (`ReactDOM.unmountComponentAtNode(container)` or `@testing-library/react`'s `unmount()`).

@@ -45,7 +45,7 @@ describe('getContent', () => {
     const filter: Filter = (value) => (typeof value === 'string' ? value.toUpperCase() : value);
     expect(getContent({
       format: 'YYYY-MM-DD',
-      filter,
+      filters: [filter],
       children: DATE_STRING
     }, settings)).toEqual('1976-04-19'.toUpperCase());
   });
@@ -88,8 +88,7 @@ describe('getContent', () => {
     );
     expect(getContent({
       format: 'YYYY-MM-DD',
-      filters: [appendSuffix],
-      filter,
+      filters: [appendSuffix, filter],
       children: DATE_STRING
     }, settings)).toEqual('1976-04-19!'.toUpperCase());
   });

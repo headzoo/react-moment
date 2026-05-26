@@ -26,4 +26,4 @@ export declare function useMomentContext(): MomentContextValue;
 /**
  * Supplies default settings and optional pooled timing to descendant `<Moment>` instances.
  */
-export declare function MomentProvider({ children, pool: enablePool, interval, moment: momentProp, locale, local, format, parse, filter, filters, renderers, element, timezone }: MomentProviderProps): React.ReactElement;
+export declare function MomentProvider({ children, pool: enablePool, interval, moment: momentProp, locale, local, format, parse, filters, renderers, element, timezone }: MomentProviderProps): React.ReactElement;

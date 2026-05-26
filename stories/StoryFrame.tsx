@@ -1,6 +1,6 @@
 import React from 'react';
 
-const SKIP_META_KEYS = new Set(['onChange', 'filter', 'filters', 'renderers']);
+const SKIP_META_KEYS = new Set(['onChange', 'filters', 'renderers']);
 
 const NUMERIC_PROPS = new Set(['diff', 'duration', 'durationFromNow', 'decimal', 'unit']);
 

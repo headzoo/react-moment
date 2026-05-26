@@ -52,7 +52,6 @@ const meta = {
     trim: { control: 'boolean' },
     unit: { control: 'text' },
     decimal: { control: 'boolean' },
-    filter: { control: false },
     filters: { control: false },
     renderers: { control: false },
     onChange: { control: false },
@@ -106,14 +105,6 @@ export const Locale: Story = {
 export const Format: Story = {
   name: 'format',
   args: { format: 'D MMM YYYY', date: DATE_STRING },
-};
-
-export const Filter: Story = {
-  name: 'filter',
-  args: {
-    filter: (content) => String(content).toUpperCase(),
-    date: DATE_STRING,
-  },
 };
 
 export const Filters: Story = {
