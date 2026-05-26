@@ -2,6 +2,8 @@
 
 ## Unreleased
 
+## 2.0.2 - 2026-05-26
+
 - refactor: align formatting of function properties in useMomentUpdate hook. (`f415f21`)
 - refactor: update prop handling and improve TypeScript definitions. (`f8cbd42`)
 - chore: update ESLint configuration and dependencies, enhance TypeScript support, and improve documentation. (`e546327`)
