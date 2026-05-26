@@ -147,6 +147,15 @@ describe('utils', () => {
       }, withLocale);
       expect(datetime.format('D MMM YYYY')).toEqual('19 Apr 1976');
     });
+
+    it('honors explicit empty locale prop instead of falling through to settings', () => {
+      const withLocale = makeSettings({ locale: 'fr' });
+      const datetime = getDatetime({
+        locale:   '',
+        children: '1976-04-19T12:59-0500'
+      }, withLocale);
+      expect(datetime.format('D MMM YYYY')).toEqual('19 Apr 1976');
+    });
   });
 
   describe('getShortRelativeTime', () => {

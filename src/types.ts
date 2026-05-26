@@ -249,7 +249,8 @@ export interface RenderProps extends Omit<
   element?: ElementType | null;
 
   /**
-   * Adds a `title` attribute. Format resolution: `titleFormat` → `format` → provider `format` → ISO default.
+   * Adds a `title` attribute. Format resolution: `titleFormat` → `format` → provider `format`
+   * → moment's default ISO-style output (`datetime.format('')`, e.g. `1976-04-19T12:59:00-05:00`).
    */
   withTitle?: boolean;
 
@@ -432,50 +433,3 @@ export interface MomentProviderProps {
    */
   timezone?: string | null;
 }
-
-/**
- * Known `<Moment>` prop names; used to strip them before forwarding DOM attributes.
- */
-export const momentPropKeyList = [
-  'element',
-  'children',
-  'date',
-  'parse',
-  'format',
-  'add',
-  'subtract',
-  'ago',
-  'fromNow',
-  'fromNowShort',
-  'fromNowDuring',
-  'from',
-  'toNow',
-  'to',
-  'calendar',
-  'unix',
-  'utc',
-  'local',
-  'tz',
-  'withTitle',
-  'titleFormat',
-  'locale',
-  'interval',
-  'diff',
-  'duration',
-  'durationFromNow',
-  'trim',
-  'unit',
-  'decimal',
-  'filters',
-  'renderers',
-  'onChange',
-  'fallback'
-] as const satisfies readonly (keyof MomentProps)[];
-
-export const momentPropKeys: Record<(typeof momentPropKeyList)[number], true> =  momentPropKeyList.reduce(
-  (acc, key) => {
-    acc[key] = true;
-    return acc;
-  },
-    {} as Record<(typeof momentPropKeyList)[number], true>
-);

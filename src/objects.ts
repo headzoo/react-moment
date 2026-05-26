@@ -9,7 +9,7 @@
  * ```tsx
  * const passProps = objectKeyFilter(
  *   remaining as Record<string, unknown>,
- *   momentPropKeys
+ *   knownMomentPropKeys
  * );
  * return React.createElement(tag, passProps, content);
  * ```

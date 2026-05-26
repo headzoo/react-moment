@@ -69,7 +69,7 @@ export function getDatetime(
   const tz = props.tz ?? settings.timezone ?? undefined;
   const local = props.local ?? settings.local ?? false;
   const momentRef = getMomentRef(settings);
-  const locale = props.locale || settings.locale || momentRef.locale();
+  const locale = props.locale ?? settings.locale ?? momentRef.locale();
 
   let datetime: momentLib.Moment;
   if (utc) {
@@ -203,7 +203,8 @@ export type { ContentContext, ContentRenderer } from './renderers';
 
 /**
  * Returns the title to use when `withTitle` is set.
- * Format resolution: `titleFormat` → `format` → provider `format` → ISO default.
+ * Format resolution: `titleFormat` → `format` → provider `format`
+ * → moment's default ISO-style output (`datetime.format('')`, e.g. `1976-04-19T12:59:00-05:00`).
  */
 export function getTitle(
   props: MomentProps,

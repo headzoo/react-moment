@@ -5,10 +5,8 @@ import React, {
 import { useMomentUpdate } from './hooks/useMomentUpdate';
 import { useMomentContext } from './MomentContext';
 import { objectKeyFilter } from './objects';
-import {
-  MomentProps,
-  momentPropKeys
-} from './types';
+import { momentPropKeys } from './momentPropKeys';
+import { MomentProps } from './types';
 import {
   getAdjustedDatetime,
   getContent,

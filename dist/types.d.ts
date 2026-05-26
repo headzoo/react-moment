@@ -40,7 +40,7 @@ export interface ContentBaseProps {
      */
     format?: string;
     /**
-     * With relative-time props, omits the "ago" / "in" suffix from the output.
+     * With `fromNow`, `from`, `toNow`, and `to`, omits the "ago" / "in" suffix from the output.
      */
     ago?: boolean;
 }
@@ -210,11 +210,13 @@ export interface RenderProps extends Omit<ComponentPropsWithoutRef<'time'>, 'chi
      */
     element?: ElementType | null;
     /**
-     * Adds a `title` attribute with a formatted version of the date.
+     * Adds a `title` attribute. Format resolution: `titleFormat` → `format` → provider `format`
+     * → moment's default ISO-style output (`datetime.format('')`, e.g. `1976-04-19T12:59:00-05:00`).
      */
     withTitle?: boolean;
     /**
-     * moment.js format string used for the `title` attribute when `withTitle` is set.
+     * moment.js format string for the `title` attribute when `withTitle` is set.
+     * When omitted, the title uses the same format resolution as the visible text.
      */
     titleFormat?: string;
     /**
@@ -351,8 +353,3 @@ export interface MomentProviderProps {
      */
     timezone?: string | null;
 }
-/**
- * Known `<Moment>` prop names; used to strip them before forwarding DOM attributes.
- */
-export declare const momentPropKeyList: readonly ["element", "children", "date", "parse", "format", "add", "subtract", "ago", "fromNow", "fromNowShort", "fromNowDuring", "from", "toNow", "to", "calendar", "unix", "utc", "local", "tz", "withTitle", "titleFormat", "locale", "interval", "diff", "duration", "durationFromNow", "trim", "unit", "decimal", "filters", "renderers", "onChange", "fallback"];
-export declare const momentPropKeys: Record<(typeof momentPropKeyList)[number], true>;

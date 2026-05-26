@@ -20,5 +20,7 @@ export { applyContentFilter, applyDateAdjustments, contentRenderers, formatDurat
 export type { ContentContext, ContentRenderer } from './renderers';
 /**
  * Returns the title to use when `withTitle` is set.
+ * Format resolution: `titleFormat` → `format` → provider `format`
+ * → moment's default ISO-style output (`datetime.format('')`, e.g. `1976-04-19T12:59:00-05:00`).
  */
 export declare function getTitle(props: MomentProps, settings: MomentSettings): string;
