@@ -2,6 +2,8 @@ react-moment
 ============
 React component for the [moment](http://momentjs.com/) date library.
 
+Moment is now a legacy project and is no longer being maintained. As such, this library is no longer being maintained outside of critical bug fixes.
+
 [![NPM Downloads](https://img.shields.io/npm/dm/react-moment.svg?style=flat-square)](https://www.npmjs.com/package/react-moment)
 [![MIT License](https://img.shields.io/badge/license-MIT-blue.svg?style=flat-square)](https://raw.githubusercontent.com/headzoo/react-moment/master/LICENSE)
 
@@ -91,7 +93,7 @@ Outputs:
 
 ### 2.0.x
 
-The new 2.0.x is still in beta. It migrates the library to TypeScript and replaces the class-based `Moment` component with a functional component. It is not recommended to use this version in production.
+Version 2.0.x migrates the library to TypeScript and replaces the class-based `Moment` component with a functional component.
 
 Changes in 2.0.x:
 

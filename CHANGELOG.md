@@ -2,6 +2,7 @@
 
 ## Unreleased
 
+- docs: update README to reflect the deprecation of Moment.js and clarify the status of version 2.0.x. (`a964d8c`)
 - chore: update react-moment version in README to 2.0.2. (`781cccf`)
 
 ## 2.0.2 - 2026-05-26
