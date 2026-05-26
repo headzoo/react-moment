@@ -6,6 +6,7 @@ React component for the [moment](http://momentjs.com/) date library.
 [![MIT License](https://img.shields.io/badge/license-MIT-blue.svg?style=flat-square)](https://raw.githubusercontent.com/headzoo/react-moment/master/LICENSE)
 
 - [Installing](#installing)
+    - [CDN](#cdn)
 - [2.0.0-beta](#200-beta)
 - [Timezone Support](#timezone-support)
 - [Quick Start](#quick-start)
@@ -47,6 +48,44 @@ Requires [React](https://react.dev/) 16.8 or later (hooks), plus the peer depend
 
 ```sh
 npm install --save moment react-moment
+```
+
+#### CDN
+A pre-built UMD bundle is published alongside the npm package and can be loaded directly from [unpkg](https://unpkg.com/) (or any other npm CDN). Load `react`, `react-dom`, and `moment` first, then `react-moment`. The component is exposed on the global `window['react-moment']`.
+
+```html
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8" />
+    <title>react-moment via CDN</title>
+</head>
+<body>
+    <div id="root"></div>
+
+    <script crossorigin src="https://unpkg.com/react@18/umd/react.production.min.js"></script>
+    <script crossorigin src="https://unpkg.com/react-dom@18/umd/react-dom.production.min.js"></script>
+    <script crossorigin src="https://unpkg.com/moment@2/min/moment.min.js"></script>
+
+    <!-- react-moment's UMD build reads React from `window.react` (lowercase). -->
+    <script>window.react = window.React;</script>
+    <script crossorigin src="https://unpkg.com/react-moment@2.0.1/dist/index.umd.js"></script>
+
+    <script>
+        const Moment = window['react-moment'].default;
+        const root = ReactDOM.createRoot(document.getElementById('root'));
+        root.render(
+            React.createElement(Moment, null, '1976-04-19T12:59-0500')
+        );
+    </script>
+</body>
+</html>
+```
+
+Outputs:
+
+```html
+<time>Mon Apr 19 1976 12:59:00 GMT-0500</time>
 ```
 
 ### 2.0.0

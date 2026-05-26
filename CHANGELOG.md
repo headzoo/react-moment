@@ -2,6 +2,7 @@
 
 ## Unreleased
 
+- docs: add CDN usage section to README for easier integration. (`31edffb`)
 - refactor: remove singular filter prop and update documentation for filters. (`b12910e`)
 - Updates the readme. (`cf15655`)
 - docs: update migration guide for 2.0.0 release. (`09d18d2`)
